@@ -1,0 +1,183 @@
+html {
+	background-color: rgba(11, 14, 23, .6);
+	font-family: helvetica;
+	zoom: .75;
+}
+
+/*
+Color Palette
+*/
+
+/* blue */
+.b {
+	color: rgba(33, 43, 67, 1);
+}
+.b-bg {
+	background-color: rgba(33, 43, 67, 1);
+}
+/* royal */
+.r {
+	color: rgba(42, 27, 71, .4);
+}
+.r-bg {
+	background-color: rgba(42, 27, 71, .4);
+}
+/* dark */
+.d {
+	color: rgba(11, 14, 23, .6);
+}
+.d-bg {
+	background-color: rgba(11, 14, 23, .6);
+}
+/* white */
+.w {
+/*	color: rgba(232, 227, 241, 1);*/
+	color: rgba(11, 14, 23, .6);
+}
+.w-bg {
+	/*background-color: rgba(232, 227, 241, 1);*/
+	background-color: rgba(11, 14, 23, .6);
+}
+
+/*
+Core Styles
+*/
+
+a {
+	color: rgba(11, 14, 23, .6);
+	text-decoration: none;
+}
+a:hover {
+	color: rgba(232, 227, 241, 1);
+}
+
+#wrapper {
+	position: relative;
+	margin: 0 auto;
+	width: 1200px;
+	height: 2000px;
+}
+#wrapper .navigation {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 1176px;
+	height: 72px;
+	padding: 28px 12px 24px;
+	border-bottom: 4px solid rgba(11, 14, 23, .6);
+}
+#wrapper .navigation .page {
+	position: relative;
+	width: 384px;
+	height: 40px;
+	font-size: 32px;
+	letter-spacing: 6px;
+	text-align: center;
+	display: inline-block;
+	font-size: 0px;
+}
+#wrapper .navigation .page {
+	font-size: 32px;
+}
+#wrapper .content {
+	position: absolute;
+	left: 0px;
+	width: 1200px;
+}
+#footer {
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	width: 1200px;
+	height: 72px;
+}
+
+/*
+Index - Specific Styles
+*/
+#index .content {
+	top: 0px;
+	height: 2000px;
+}
+#index .content .iris {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+#index .content .enter {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 240px;
+	height: 40px;
+	margin: -20px 0 0 -120px;
+	font-size: 32px;
+	letter-spacing: 6px;
+	text-align: center;
+}
+#index .arc {
+
+}
+
+/*
+Portfolio Styles
+*/
+
+#portfolio .content {
+	top: 128px;
+	height: 1872px;
+}
+
+/*
+Interactives Styles
+*/
+
+#interactives .content {
+	top: 128px;
+	height: 1872px;
+}
+
+/*
+Music Styles
+*/
+
+#music .content {
+	top: 128px;
+	height: 1872px;
+}
+
+/*
+Photography Styles
+*/
+
+#photography .content {
+	top: 128px;
+	height: 1872px;
+}
+
+/*
+Sound Design Styles
+*/
+
+#sounddesign .content {
+	top: 128px;
+	height: 1872px;
+}
+
+/*
+Technologies Styles
+*/
+
+#technologies .content {
+	top: 128px;
+	height: 1872px;
+}
+
+/*
+Web Sites Styles
+*/
+
+#websites .content {
+	top: 128px;
+	height: 1872px;
+}

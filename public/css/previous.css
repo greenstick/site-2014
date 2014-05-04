@@ -1,0 +1,340 @@
+/*sitestyle.css*/
+
+/*Copyright Benjamin Cordier 2013*/
+
+/*Layout styles*/
+#wrapper {
+    position: relative;
+    width: 80%;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 20px outset rgba(0, 204, 170, 0.2);
+    background-color: rgba(0, 160, 134, 0.2);
+}
+
+#content
+{
+    width: 80%;
+    margin: 0 auto;
+    position: relative;
+    border-style: 1px solid #ffffff;
+}
+
+html {
+    font-family: 'Josefin Sans', sans-serif;
+    background-image: url(images/cubes.png);
+}
+
+/*non functional background texture*/
+html:after
+{
+
+}
+
+.center
+{
+	margin: 0 auto;
+	padding: 0 auto;
+	text-align: center;
+}
+
+/*Font styles*/
+h1
+{
+font-family: 'Shojumaru', cursive;
+color: #ffffff;
+font-size: 3em;
+text-shadow: 2px 3px 0 rgba(0, 204, 170, 0.5);
+}
+
+h2
+{
+font-family: 'Condiment', cursive;
+color: #ffffff;
+font-size: 2em;
+text-shadow: 1px 2px 0 rgba(0, 204, 170, 0.5);
+}
+
+h3
+{
+font-family: 'Josefin Sans', sans-serif;
+color: #ffffff;
+font-size: 1.5em;
+}
+
+h4
+{
+font-family: 'Josefin Sans', sans-serif;
+color: #ffffff;
+font-size: 1em;
+}
+
+h5
+{
+font-family: 'Josefin Sans', sans-serif;
+color: #ffffff;
+font-size: .75em;
+}
+
+h6
+{
+font-family: 'Josefin Sans', sans-serif;
+color: #ffffff;
+font-size: .25em;
+}
+
+/*Links & Nav styles*/
+a{text-decoration: none;}
+a:link{color: #ffffff;}
+a:visited{color: #ffffff;}
+a:hover{color: rgba(40,150,255,0,3);}
+
+/* Wiggle animation for menu
+@-webkit-keyframes wiggle
+{
+    0%   {-webkit-transform: rotateZ(0deg);}
+    20%  {-webkit-transform: rotateZ(2deg);}
+    40%  {-webkit-transform: rotateZ(-2deg);}
+    60%  {-webkit-transform: rotateZ(2deg);}
+    80%  {-webkit-transform: rotateZ(-2deg);}
+    100% {-webkit-transform: rotateZ(0deg);}
+}
+
+.animate
+{
+    	-webkit-animation-name: wiggle;
+	-webkit-animation-duration: .5s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: ease-in;
+}
+*/
+
+li
+{
+	display: inline;
+	transition: text-shadow .5s;
+	-webkit-transition: text-shadow .5s;
+	-moz-transition: text-shadow .5s;
+	-o-transition: text-shadow .5s;
+	-ms-transition: text-shadow .5s;
+}
+
+li:hover { text-shadow: 1px 2px 0 rgba(0, 204, 170, 0.5);}
+
+.navigation
+{
+	list-style-type: none;
+	margin:0 auto;
+	padding:0;
+	text-align: center;
+}
+
+/*Content styles*/
+article
+{
+	color: #ffffff;
+	width: inherit 80%;
+	height: inherit 80%;
+	margin: 0 auto;
+	position: relative;
+	border-top: outset 4px rgba(0, 204, 170, 0.2);
+	border-bottom: outset 4px rgba(0, 204, 170, 0.2);
+	text-align: justify;
+	text-shadow: 1px 1px 0 rgba(0, 204, 170, 0.5);
+	padding: 5%;
+}
+
+img
+{
+    border: 10px outset rgba(0, 204, 170, 0.2);
+}
+
+/*Break styles*/
+div.break
+{
+	color:#ffffff;
+	text-align: center;
+	padding: 8px;
+
+	transition: text-shadow .8s, background-color .8s;
+	-webkit-transition: text-shadow .8s, background-color .8s;
+	-moz-transition: text-shadow .8s, background-color .8s;
+	-o-transition: text-shadow .8s, background-color .8s;
+	-ms-transition: text-shadow .8s, background-color .8s;
+}
+
+div.break:hover
+{
+	background-color: rgba(0, 160, 134, 0.1);
+	text-shadow: 1px 2px 0 rgba(0, 204, 170, 0.5);
+}
+
+/*Media Specific styles*/
+
+/*_______________________
+ *Smaller
+ */
+@media only screen and (max-width:1200px)
+{
+	
+#wrapper
+{
+    width: 860px;
+    height: 100%;
+    position: relative;
+    margin: 0 auto;
+    z-index: 0;
+    border: 16px outset rgba(0, 204, 170, 0.2);
+    background-color: rgba(0, 160, 134, 0.2);
+}
+
+}
+
+/*_______________________
+ *Ipad landscape
+ */
+@media only screen and (max-width:1024px) /*only screen and (max-device-width:1024px) and (orientation:landscape)*/
+{
+
+#wrapper
+{
+    width: 780px;
+    height: 100%;
+    position: relative;
+    margin: 0 auto;
+    z-index: 0;
+    border: 12px outset rgba(0, 204, 170, 0.2);
+    background-color: rgba(0, 160, 134, 0.2);
+}
+
+h1
+{
+font-family: 'Shojumaru', cursive;
+color: #ffffff;
+font-size: 2.8em;
+text-shadow: 2px 3px 0 rgba(0, 204, 170, 0.5);
+}
+
+h2
+{
+font-family: 'Condiment', cursive;
+color: #ffffff;
+font-size: 1.8em;
+text-shadow: 1px 2px 0 rgba(0, 204, 170, 0.5);
+}
+
+h3
+{
+font-family: 'Josefin Sans', sans-serif;
+color: #ffffff;
+font-size: 1.4em;
+}
+
+img
+{
+    border: 6px outset rgba(0, 204, 170, 0.2);
+}
+
+}
+
+/*_______________________
+ *Ipad portrait
+ */
+@media only screen and (max-width:768px) /*only screen and (min-device-width:768px) and (orientation:portrait)*/
+{
+
+#wrapper
+{
+    width: 600px;
+    height: 100%;
+    position: relative;
+    margin: 0 auto;
+    z-index: 0;
+    border: 8px outset rgba(0, 204, 170, 0.2);
+    background-color: rgba(0, 160, 134, 0.2);
+}
+
+h1
+{
+font-family: 'Shojumaru', cursive;
+color: #ffffff;
+font-size: 2.6em;
+text-shadow: 2px 3px 0 rgba(0, 204, 170, 0.5);
+}
+
+h2
+{
+font-family: 'Condiment', cursive;
+color: #ffffff;
+font-size: 1.8em;
+text-shadow: 1px 2px 0 rgba(0, 204, 170, 0.5);
+}
+
+h3
+{
+font-family: 'Josefin Sans', sans-serif;
+color: #ffffff;
+font-size: 1.2em;
+}
+
+img
+{
+    border: 4px outset rgba(0, 204, 170, 0.2);
+}
+
+}
+
+/*_______________________
+ *Smartphone
+ */
+@media only screen and (max-width:480px) /*only screen and (min-device-width:320px) and (max-device-width:480px)*/
+{
+
+#wrapper
+{
+    width: 320px;
+    height: 100%;
+    position: relative;
+    margin: 0 auto;
+    z-index: 0;
+    border: 4px outset rgba(0, 204, 170, 0.2);
+    background-color: rgba(0, 160, 134, 0.2);
+}
+
+h1
+{
+font-family: 'Shojumaru', cursive;
+color: #ffffff;
+font-size: 2em;
+text-shadow: 2px 3px 0 rgba(0, 204, 170, 0.5);
+}
+
+h2
+{
+font-family: 'Condiment', cursive;
+color: #ffffff;
+font-size: 1.4em;
+text-shadow: 1px 2px 0 rgba(0, 204, 170, 0.5);
+}
+
+h3
+{
+font-family: 'Josefin Sans', sans-serif;
+color: #ffffff;
+font-size: 1em;
+}
+
+h4
+{
+font-family: 'Josefin Sans', sans-serif;
+color: #ffffff;
+font-size: .8em;
+}
+
+img
+{
+    border: 2px outset rgba(0, 204, 170, 0.2);
+}
+	
+}

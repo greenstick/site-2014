@@ -1,0 +1,38 @@
+{
+  "name": "site-2014",
+  "version": "0.0.1",
+  "description": "Benjamin Cordier Portfolio Site 2014",
+  "main": "app.js",
+  "private": true,
+  "scripts": {
+    "start": "app.js"
+  },
+  "author": "Ben Cordier",
+  "license": "MIT",
+  "respository": {
+    "type": "git",
+    "url": ""
+  },
+  "dependencies": {
+    "express": "~3.3.4",
+    "jade": "~0.34.0",
+    "mongoose": "~3.6.14",
+    "passport": "~0.2.0",
+    "passport-http": "~0.2.2",
+    "knox": "~0.8.9",
+    "grunt-bower-task": "~0.3.4"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-develop": "~0.2.2",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-contrib-compass": "~0.6.0",
+    "request": "~2.27.0",
+    "time-grunt": "~0.1.1",
+    "load-grunt-tasks": "~0.2.0",
+    "grunt-bower-task": "~0.3.4"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
+}
