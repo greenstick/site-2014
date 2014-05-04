@@ -26,18 +26,9 @@ var config = {
     app: {
       name: 'site-2014'
     },
-    port: 3000,
-    db: 'mongodb://localhost/site-2014-production'
+    port: 5000,
+    db: 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@' + process.env.MONGO_DATABASE
   }
-
-  //   production: {
-  //   root: rootPath,
-  //   app: {
-  //     name: 'site-2014'
-  //   },
-  //   port: 5000,
-  //   db: 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@ds033429.mongolab.com:33429/heroku_app22368295'
-  // }
 };
 
 module.exports = config[env];
