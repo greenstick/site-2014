@@ -11,7 +11,7 @@
   "license": "MIT",
   "respository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/greenstick/site-2014.git"
   },
   "dependencies": {
     "express": "~3.3.4",
@@ -19,7 +19,8 @@
     "mongoose": "~3.6.14",
     "passport": "~0.2.0",
     "passport-http": "~0.2.2",
-    "knox": "~0.8.9"
+    "knox": "~0.8.9",
+    "newrelic": "~1.4.0"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
