@@ -7,6 +7,9 @@ module.exports = function(app){
 	//Index
 	app.get('/', portfolio.index);
 
+	//Explore
+	app.get('/explore', portfolio.explore);
+
 	//Portfolio
 	app.get('/portfolio', portfolio.portfolio);
 

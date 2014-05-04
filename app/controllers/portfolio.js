@@ -2,8 +2,14 @@ var mongoose = require('mongoose');
 
 //Site Index
 exports.index = function (req, res) {
-		res.render('', {
+	res.render('', {
 		title: 'Welcome'
+	});
+};
+//Explore
+exports.explore = function (req, res) {
+	res.render('explore', {
+		title: 'Explore'
 	});
 };
 //Portfolio Index

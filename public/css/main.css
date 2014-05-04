@@ -31,12 +31,13 @@ Color Palette
 }
 /* white */
 .w {
-/*	color: rgba(232, 227, 241, 1);*/
-	color: rgba(11, 14, 23, .6);
+	color: rgba(232, 227, 241, 1);
 }
 .w-bg {
-	/*background-color: rgba(232, 227, 241, 1);*/
-	background-color: rgba(11, 14, 23, .6);
+	background-color: rgba(232, 227, 241, 1);
+}
+.transparent {
+	color: transparent;
 }
 
 /*
@@ -44,7 +45,6 @@ Core Styles
 */
 
 a {
-	color: rgba(11, 14, 23, .6);
 	text-decoration: none;
 }
 a:hover {
@@ -95,6 +95,7 @@ a:hover {
 /*
 Index - Specific Styles
 */
+
 #index .content {
 	top: 0px;
 	height: 2000px;
@@ -114,6 +115,7 @@ Index - Specific Styles
 	font-size: 32px;
 	letter-spacing: 6px;
 	text-align: center;
+	color: rgba(232, 227, 241, 1);
 }
 #index .arc {
 
