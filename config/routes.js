@@ -1,8 +1,8 @@
 module.exports = function(app){
 
 	//Require Portfolio Controller
-	var portfolio = require('../app/controllers/portfolio'),
-		passport = require('passport');
+	var portfolio 	= require('../app/controllers/portfolio'),
+		passport 	= require('passport');
 
 	//Index
 	app.get('/', portfolio.index);
