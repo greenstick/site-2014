@@ -4,10 +4,25 @@ var mongoose = require('mongoose'),
 
 //Portfolio Piece Schema
 var Piece = new Schema({
-	title: String,
-	url: String,
-	text: String,
-	updatedAt: Date
+	id: 			Number,
+	location: {
+		x: 			Number,
+		y: 			Number
+	},
+	approved: 		Boolean,
+	featured: 		Boolean,
+	title: 			String,
+	url: 			String,
+	content: 		Object,
+	description: 	String,
+	popularity: 	Number,
+	social: {
+		twitter: 		String,
+		facebook: 		String
+	},
+	tags: 			String,
+	createdAt: 		Date,
+	updatedAt: 		Date
 });
 
 mongoose.model('Piece', Piece);

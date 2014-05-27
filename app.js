@@ -1,10 +1,10 @@
-var express       = require('express'),
-    mongoose      = require('mongoose'),
-    fs            = require('fs'),
-    config        = require('./config/config'),
-    passport      = require('passport'),
-    BasicStrategy = require('passport-http').BasicStrategy,
-    knox          = require('knox');
+var express         = require('express'),
+    mongoose        = require('mongoose'),
+    fs              = require('fs'),
+    config          = require('./config/config'),
+    passport        = require('passport'),
+    BasicStrategy   = require('passport-http').BasicStrategy,
+    knox            = require('knox');
 
     mongoose.connect(config.db);
 
@@ -23,7 +23,7 @@ var modelsPath = __dirname + '/app/models';
     });
 
 //Remove Development User/Pass on Deployment
-passport.use(new BasicStrategy(
+passport.use(new BasicStrategy (
 	function (username, password, done) {
 		if (username.valueOf() === process.env.OWNER_USERNAME && password.valueOf() === process.env.OWNER_PASSWORD)
 			return done(null, true);

@@ -14,6 +14,8 @@ Dependencies
 		- D3.js
 */
 
+(function () {
+
 	var Tile = function (args) {
 		var tile 			= 		this;
 			tile.parent		=		args.parent,
@@ -56,3 +58,5 @@ Macro Methods
 	Tile.prototype.update 	= 		function (args) {
 		this.scale(args.scale)
 	};
+
+}(d3))

@@ -1,6 +1,5 @@
 var Iris = function (args) {
-	var iris 				= 		this,
-		pi 					= 		Math.PI;
+	var iris 				= 		this;
 		iris.inner 			= 		args.inner,
 		iris.outer 			= 		args.outer,
 		iris.element 		= 		args.element,
@@ -10,16 +9,17 @@ var Iris = function (args) {
 		iris.rings 			= 		args.rings,
 		iris.segments 		=		args.segments,
 		iris.dimensions 	= 		{},
-		iris.colors 		= 		["#24404F", "#263B45", "#353332", "#41312A", "#4F2F22"]; //http://www.colourlovers.com/palette/96035/Son_of_Rothko
+		iris.colors 		= 		["#24404F", "#263B45", "#353332", "#41312A", "#4F2F22"], //http://www.colourlovers.com/palette/96035/Son_of_Rothko
 		iris.svg,
-		iris.interval;
+		iris.interval
+};
 
 /*
 'Private' Methods
 */
 
 		// Sets Inner Circle Dimension to Smallest & Outer Circle Dimension to Largest
-		iris.setDimensions = function () {
+		Iris.prototype.setDimensions = function () {
 			var outer, dimensions;
 				this.inner > this.outer ? (
 					outer 				= 	this.inner, 
@@ -29,16 +29,16 @@ var Iris = function (args) {
 					this.dimensions 	= 	{inner: this.inner, outer: this.outer};
 			return  this.dimensions;
 		};
+
 		// Sets Iris Element Dimensions and Creates SVG Container
-		iris.styleElement = function () {
+		Iris.prototype.styleElement = function () {
 			var element = $(this.element);
 				element.width(iris.width).height(iris.height).css("left", - 400).css("top", 0);
-				this.svg 	= 	d3.selectAll(iris.element).append("svg")
-									.attr("width", iris.width)
-									.attr("height", iris.height);
+				this.svg 	= 	d3.selectAll(iris.element).append("svg").attr("width", iris.width).attr("height", iris.height);
 		};
+
 		// Draws Iris
-		iris.draw = function () {
+		Iris.prototype.draw = function () {
 			var outer 		= 	this.dimensions.outer,
 				inner 		= 	this.dimensions.inner,
 				rings 		= 	this.rings,
@@ -49,8 +49,8 @@ var Iris = function (args) {
 					for (var j = 1; j < rings; j++) {
 						var innerRadius = 	inner + (ringWidth * i * j),
 							outerRadius = 	outer + (ringWidth * i * (j + 1)),
-							startAngle	= 	(((360 / segments) * (i * j) / (j / i * pi)) + pi) * (pi / 180),
-							endAngle 	= 	(((360 / segments) * (i * j) / (j / i * pi)) + (pi * 2)) * (pi / 180),
+							startAngle	= 	(((360 / segments) * (i * j) / (j / i * Math.PI)) + Math.PI) * (Math.PI / 180),
+							endAngle 	= 	(((360 / segments) * (i * j) / (j / i * Math.PI)) + (Math.PI * 2)) * (Math.PI / 180),
 							arc 		= 	d3.svg.arc()
 												.innerRadius(innerRadius)
 												.outerRadius(outerRadius)
@@ -67,8 +67,9 @@ var Iris = function (args) {
 					};
 				};
 		};
+
 		//Animates Iris
-		iris.animate = function () {
+		Iris.prototype.animate = function () {
 			d3.selectAll('.arc').each(function () {
 				d3.select(this)
 					.transition()
@@ -78,24 +79,22 @@ var Iris = function (args) {
 					// "#" + Math.floor(Math.random() * 16777215).toString(16)  Random Color Generator
 			});
 		};
+
 		//Change Color
-		iris.animateInterval = function () {
-			iris.animate();
-			iris.interval = setInterval(function () {
-				iris.animate();
+		Iris.prototype.animateInterval = function () {
+			this.animate();
+			this.interval = setInterval(function () {
+				this.animate();
 			}, 500);
 		};
+
 		//Reset Color
-		iris.resetColor = function (callback) {
+		Iris.prototype.resetColor = function (callback) {
 			d3.selectAll('.arc').each(function () {
-				d3.select(this)
-					.transition()
-					.duration(0)
-					.style("stroke", "rgba(33, 43, 67, 1)");
+				d3.select(this).style("stroke", "rgba(33, 43, 67, 1)");
 			});
-			typeof callback == 'function' ? callback() : void (0)
+			// if (typeof callback == 'function') callback();
 		};
-};
 
 /*
 Public Methods
@@ -134,7 +133,5 @@ $('.enter').on("mouseover", function () {
 });
 //Enter Hover Off
 $('.enter').on("mouseout", function () {
-	iris.resetColor(function () {
-		clearInterval(iris.interval);
-	});
+	iris.resetColor();
 });
