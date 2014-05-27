@@ -25,4 +25,4 @@ var Piece = new Schema({
 	updatedAt: 		Date
 });
 
-mongoose.model('Piece', Piece);
+mongoose.model('piece', Piece);

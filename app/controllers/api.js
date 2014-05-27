@@ -2,7 +2,7 @@
 Require Dependencies
 */
 
-var Piece 	= require('../models/piece.js')
+var Piece 	= require('../models/piece.js'),
 	knox 	= require('knox'),
 	fs 		= require('fs');
 
@@ -53,9 +53,9 @@ exports.submit 			= function (req, res) {
 	});
 };
 
-//Retrieve Pieces
-exports.retrieve 		= function (req, res) {
-	var query 			= Piece.find({approved: true}, '*', {sort: {updatedAt: -1}});
+//Retrieve Stories
+exports.retrieve = function (req, res) {
+	var query = Piece.find({approved: true}, '*', {limit: 16, sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.trace(error);
 			res.json(pieces);

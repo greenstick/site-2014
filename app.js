@@ -25,7 +25,7 @@ var modelsPath = __dirname + '/app/models';
 //Remove Development User/Pass on Deployment
 passport.use(new BasicStrategy (
 	function (username, password, done) {
-		if (username.valueOf() === process.env.OWNER_USERNAME && password.valueOf() === process.env.OWNER_PASSWORD)
+		if (username.valueOf() === process.env.OWNER_USERNAME || 'test' && password.valueOf() === process.env.OWNER_PASSWORD || 'pass')
 			return done(null, true);
 		else
 			return done(null, false);

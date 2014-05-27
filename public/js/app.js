@@ -11,7 +11,7 @@ Declare Arguments
 		focus: 			".focus",
 		duration: 		1000,
 		routes: {
-			getTiles: 	"retrieve"
+			getTiles: 	"/submit"
 		}
 	},
 
