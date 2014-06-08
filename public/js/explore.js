@@ -16,15 +16,17 @@ Explorer Prototype
 
 	var Explorer = function (args) {
 		var explr = this;
-			explr.parent 		= args.parent 		|| explr.parent 		|| "#wrapper",
-			explr.element 		= args.element 		|| explr.element 		|| "#explorer",
-			explr.tile 			= args.tile 		|| explr.tile 			|| ".tile",
-			explr.filter 		= args.filter 		|| explr.filter 		|| ".filter",
-			explr.loader 		= args.loader 		|| explr.loader 		|| ".loader",
-			explr.focus 		= args.focus 		|| explr.focus 			|| ".focus",
-			explr.duration 		= args.duration 	|| explr.duration 		|| 600,
+			explr.parent 		= args.parent 			|| explr.parent 		|| "#wrapper",
+			explr.element 		= args.element 			|| explr.element 		|| "#explorer",
+			explr.tile 			= args.tile 			|| explr.tile 			|| ".tile",
+			explr.filter 		= args.filter 			|| explr.filter 		|| ".filter",
+			explr.loader 		= args.loader 			|| explr.loader 		|| ".loader",
+			explr.focus 		= args.focus 			|| explr.focus 			|| ".focus",
+			explr.duration 		= args.duration 		|| explr.duration 		|| 600,
 			explr.routes 		= {
-				getTiles: 		args.routes.getTiles 	|| "getTiles"
+				retrieve 		: 						args.routes.retrieve 	|| "retrieve",
+				getTiles 		:  						args.routes.getTiles 	|| "getTiles",
+				getByTag		: 						args.routes.getByTag 	|| "getByTag"
 			},
 			explr.settings 		= {
 				parent: 		explr.parent,
@@ -44,13 +46,13 @@ Utility Methods
 */
 
 	Explorer.prototype.reset 			= function (args) {
-		this.parent 			= args.parent 		|| this.settings.parent,
-		this.element 			= args.element 		|| this.settings.element,
-		this.tile 				= args.tile 		|| this.settings.tile,
-		this.filter 			= args.filter 		|| this.settings.filter,
-		this.loader 			= args.loader 		|| this.settings.loader,
-		this.focus 				= args.focus 		|| this.settings.focus,
-		this.duration 			= args.duration 	|| this.settings.duration;
+		this.parent 			= args.parent 			|| this.settings.parent,
+		this.element 			= args.element 			|| this.settings.element,
+		this.tile 				= args.tile 			|| this.settings.tile,
+		this.filter 			= args.filter 			|| this.settings.filter,
+		this.loader 			= args.loader 			|| this.settings.loader,
+		this.focus 				= args.focus 			|| this.settings.focus,
+		this.duration 			= args.duration 		|| this.settings.duration;
 	};
 
 /*
@@ -58,28 +60,28 @@ Basic UI Methods
 */
 	Explorer.prototype.toggleLoader 	= function () {
 		var explr = this;
-		console.log(explr.loader);
-		console.log(explr.duration);
-		$(explr.loader).toggleFade(explr.duration);
+		// $(explr.loader).toggleFade(explr.duration);
 	};
 
 /*
 API Request Methods
 */
 
-	
-	Explorer.prototype.getData 			= function () {
+	//Basic Get Requests
+	Explorer.prototype.retrieve 		= function (route, request, callback) {
 		var explr = this, data;
-		// explr.toggleLoader();
+		explr.toggleLoader();
 		$.ajax({
 			type: "GET",
-			url: explr.routes.getTiles
+			url: route,
+			data: request,
 		}).done(function (res) {
 			explr.data = res;
 		}).fail(function () {
 			console.debug("XHR Status: Failed");
 		}).always(function () {
-			// explr.toggleLoader();
+			explr.toggleLoader();
+			if (typeof callback === 'function') callback();
 		});
 	};
 
@@ -97,6 +99,7 @@ Tile Manipulation Methods
 			ratio: 			explr.ratio,
 			content: 		data
 		});
+		tile.init();
 		explr.tiles.push(tile);
 	};
 
@@ -111,7 +114,7 @@ Tile Manipulation Methods
 	Explorer.prototype.filterTiles 		= function (filter) {
 		var explr = this;
 		$(explr.tile).removeClass(explr.focus);
-		$(filter).addClass(exprl.focus);
+		$(filter).addClass(explr.focus);
 	};
 
 /*
@@ -119,12 +122,30 @@ Macro Methods
 */
 
 	Explorer.prototype.init 			= function () {
-		this.getData();
-		this.generateTiles();
-		//ajax for data
-		//foreach data object create tile
+		var explr = this;
+		this.retrieve(explr.routes.retrieve, {}, function () {
+			explr.generateTiles();
+		});
 	};
 
-	Explorer.prototype.update 			= function () {
-
+	Explorer.prototype.getByTag 		= function (tags) {
+		var explr = this;
+		this.retrieve(explr.routes.retrieve, {tags: tags}, function () {
+			explr.generateTiles();
+		});
 	};
+
+/*
+Create Explorer Instance
+*/
+	
+	//Arguments
+	var args 		= {
+			routes 		: 	{}
+		},
+	//Instance
+		explorer 	= new Explorer(args);
+	//Instatiate
+		explorer.init();
+
+

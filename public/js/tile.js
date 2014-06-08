@@ -18,10 +18,10 @@ Dependencies
 		var tile 			= 		this;
 			tile.parent		=		args.parent,
 			tile.element	=		args.element,
-			tile.width		=		args.width,
 			tile.ratio		=		args.ratio,
-			tile.content	=		args.content,
-			tile.height 	=		args.width * args.ratio		
+			tile.width		=		args.width,
+			tile.height 	=		args.width * args.ratio	
+			tile.data 		= 		args.data
 	};
 
 	/*
@@ -34,7 +34,8 @@ Dependencies
 			.attr("id", 	this.id)
 			.attr("class",  this.element)
 			.attr("width",  this.width)
-			.attr("height", this.height);
+			.attr("height", this.height)
+			.attr("data-content", this.data);
 	};
 
 	//Scale Element
