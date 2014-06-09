@@ -18,13 +18,12 @@ Explorer Prototype
 		var explr = this;
 			explr.parent 		= args.parent 			|| explr.parent 		|| "#wrapper",
 			explr.element 		= args.element 			|| explr.element 		|| "#explorer",
-			explr.tile 			= args.tile 			|| explr.tile 			|| ".tile",
-			explr.filter 		= args.filter 			|| explr.filter 		|| ".filter",
-			explr.loader 		= args.loader 			|| explr.loader 		|| ".loader",
-			explr.focus 		= args.focus 			|| explr.focus 			|| ".focus",
+			explr.tile 			= args.tile 			|| explr.tile 			|| "tile",
+			explr.filter 		= args.filter 			|| explr.filter 		|| "filter",
+			explr.loader 		= args.loader 			|| explr.loader 		|| "loader",
+			explr.focus 		= args.focus 			|| explr.focus 			|| "focus",
 			explr.duration 		= args.duration 		|| explr.duration 		|| 600,
 			explr.routes 		= {
-				retrieve 		: 						args.routes.retrieve 	|| "retrieve",
 				getTiles 		:  						args.routes.getTiles 	|| "getTiles",
 				getByTag		: 						args.routes.getByTag 	|| "getByTag"
 			},
@@ -68,14 +67,15 @@ API Request Methods
 */
 
 	//Basic Get Requests
-	Explorer.prototype.retrieve 		= function (route, request, callback) {
-		var explr = this, data;
+	Explorer.prototype.xhr 		= function (type, route, data, callback) {
+		var explr = this;
 		explr.toggleLoader();
 		$.ajax({
 			type: "GET",
 			url: route,
-			data: request,
+			data: data,
 		}).done(function (res) {
+			console.log("Response: " + res);
 			explr.data = res;
 		}).fail(function () {
 			console.debug("XHR Status: Failed");
@@ -86,7 +86,7 @@ API Request Methods
 	};
 
 /*
-Tile Manipulation Methods
+Tile Generation & Collection Methods
 */
 
 	//Create a Tile
@@ -105,9 +105,22 @@ Tile Manipulation Methods
 
 	//Generate Tiles From Data Array
 	Explorer.prototype.generateTiles 	= function () {
-		for (var i = 0; i < this.data.length; i++) {
-			this.createTile(this.data[i]);
+		var explr = this;
+		for (var i = 0; i < explr.data.length; i++) {
+			explr.createTile(explr.data[i]);
 		};
+	};
+
+/*
+Public / Access Methods
+*/
+
+	//Initialization Macro
+	Explorer.prototype.init 			= function () {
+		var explr = this;
+		explr.xhr("GET", explr.routes.retrieve, {}, function () {
+			explr.generateTiles();
+		});
 	};
 
 	//Filter Tiles
@@ -117,35 +130,10 @@ Tile Manipulation Methods
 		$(filter).addClass(explr.focus);
 	};
 
-/*
-Macro Methods
-*/
-
-	Explorer.prototype.init 			= function () {
-		var explr = this;
-		this.retrieve(explr.routes.retrieve, {}, function () {
-			explr.generateTiles();
-		});
-	};
-
+	//Get TIles by Tags
 	Explorer.prototype.getByTag 		= function (tags) {
 		var explr = this;
-		this.retrieve(explr.routes.retrieve, {tags: tags}, function () {
+		explr.xhr("POST", explr.routes.getByTag, {tags: tags}, function () {
 			explr.generateTiles();
 		});
 	};
-
-/*
-Create Explorer Instance
-*/
-	
-	//Arguments
-	var args 		= {
-			routes 		: 	{}
-		},
-	//Instance
-		explorer 	= new Explorer(args);
-	//Instatiate
-		explorer.init();
-
-

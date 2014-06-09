@@ -2,7 +2,7 @@ module.exports = function(app){
 
 	//Require Portfolio Controller
 	var portfolio 	= require('../app/controllers/portfolio.js'),
-		api 		= require('../app/controllers/api.js'),
+		cms 		= require('../app/controllers/cms.js'),
 		passport 	= require('passport');
 
 /*
@@ -44,37 +44,33 @@ Private Routes
 	app.get('/admin', passport.authenticate('basic', {session: false}), portfolio.admin);
 
 /*
-API Public Routes
+CMS Routes
 */
 	//Basic Retrieval
-	app.get('/retrieve', api.retrieve);
+	app.get('/retrieve', cms.retrieve);
 
 	//Show Featured
-	app.get('/showFeatured', api.showFeatured);
-
-/*
-API Private Routes
-*/
+	app.get('/showFeatured', cms.showFeatured);
 
 	//New
-	app.get('/new', passport.authenticate('basic', {session: false}), api.new);
+	app.get('/new', passport.authenticate('basic', {session: false}), cms.new);
 
 	//Approve
-	app.post('/approve', passport.authenticate('basic', {session: false}), api.approve);
+	app.post('/curate', passport.authenticate('basic', {session: false}), cms.curate);
 
 	//Hide
-	app.post('/hide', passport.authenticate('basic', {session: false}), api.hide);
+	app.post('/hide', passport.authenticate('basic', {session: false}), cms.hide);
 
 	//Feature
-	app.post('/feature', passport.authenticate('basic', {session: false}), api.feature);
+	app.post('/feature', passport.authenticate('basic', {session: false}), cms.feature);
 
 	//Delete
-	app.post('/delete', passport.authenticate('basic', {session: false}), api.delete);
+	app.post('/delete', passport.authenticate('basic', {session: false}), cms.delete);
 	
 	//Show Approved
-	app.get('/showApproved', passport.authenticate('basic', {session: false}), api.showApproved);
+	app.get('/showCurated', passport.authenticate('basic', {session: false}), cms.showCurated);
 
 	//Show Hidden
-	app.get('/showHidden', passport.authenticate('basic', {session: false}), api.showHidden);
+	app.get('/showHidden', passport.authenticate('basic', {session: false}), cms.showHidden);
 
 };

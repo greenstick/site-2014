@@ -9,7 +9,7 @@ var Piece = new Schema({
 		x: 			Number,
 		y: 			Number
 	},
-	approved: 		Boolean,
+	curated: 		Boolean,
 	featured: 		Boolean,
 	title: 			String,
 	url: 			String,
@@ -25,4 +25,4 @@ var Piece = new Schema({
 	updatedAt: 		Date
 });
 
-mongoose.model('piece', Piece);
+module.exports = mongoose.model('piece', Piece);
