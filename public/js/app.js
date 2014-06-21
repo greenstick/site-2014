@@ -7,7 +7,8 @@ Declare Arguments
 			app.element 	= args.element 		|| 		'#wrapper',
 			app.navigation 	= args.navigation 	|| 		'#navigation',
 			app.menu 		= args.menu 		|| 		'.menu',
-			app.search 		= args.search 		|| 		'#search',
+			app.searchBar 	= args.search 		|| 		'.search .bar',
+			app.searchGo	= args.searchGo		|| 		'.search .submit'
 			app.explorer 	= args.explorer
 	};
 
@@ -27,6 +28,10 @@ Macros
 			app.explore.init();
 	};
 
+/*
+Declare Args, Instantiation, & Initialization
+*/
+
 	var args = {
 		element		: 		"#wrapper",
 		navigation 	: 		"#navigation",
@@ -42,13 +47,8 @@ Macros
 			routes 			:		{}
 		}
 	},
-
-/*
-Instantiation & Initialization
-*/
-
-		app 		= new App (args);
-		app.init();
+	app = new App (args);
+	app.init();
 
 /*
 Event Bindings
@@ -63,5 +63,9 @@ Event Bindings
 	$('.' + app.explore.filter).on("click", function (e) {
 		var filter = $(this).data().filter;
 		app.explore.filterTiles(filter);
+	});
+
+	$(app.searchGo).on("click", function (e) {
+		console.log(e);
 	});
 

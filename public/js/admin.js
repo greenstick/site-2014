@@ -9,7 +9,8 @@ Declare Arguments
 			admin.menu 			= args.menu 		|| 		'.menu',
 			admin.adminGet 		= args.adminGet 	|| 		'.get',
 			admin.adminPost 	= args.adminPost 	|| 		'.post',
-			admin.search 		= args.search 		|| 		'#search',
+			admin.searchBar 	= args.searchBar 	|| 		'.search .bar',
+			admin.searchGo 		= args.searchGo 	|| 		'.search .submit',
 			admin.explorer 		= args.explorer
 	};
 
@@ -25,9 +26,13 @@ Macros
 	Admin.prototype.init 			= function () {
 		var admin = this;
 			//Instatiate & Initialize Explorer
-			admin.explore 		= new Explorer (admin.explorer);
-			admin.explore.init();
+			admin.explore = new Explorer (admin.explorer);
+			admin.explore.init('/cms-new');
 	};
+
+/*
+Declare Args, Instantiation, & Initialization
+*/
 
 	var args = {
 		element		: 		"#wrapper",
@@ -35,7 +40,6 @@ Macros
 		menu 		: 		".menu-open",
 		adminGet 	: 		".admin.get",
 		adminPost 	: 		".admin.post",
-		search 		: 		"#search",
 		explorer 	: 		{
 			parent			: 		"#wrapper",
 			element			: 		"#explorer",
@@ -47,13 +51,8 @@ Macros
 			routes 			:		{}
 		}
 	},
-
-/*
-Instantiation & Initialization
-*/
-
-		admin 		= new Admin (args);
-		admin.init();
+	admin = new Admin (args);
+	admin.init();
 
 /*
 Event Bindings
@@ -71,15 +70,27 @@ Event Bindings
 	});
 	//Get Request
 	$(admin.adminGet).on("click", function (e) {
-		var call = $(this).data().api;
+		var call = $(this).data().call;
 		admin.explore.xhr("GET", call, {}, function () {
 			console.log("GET done");
 		});
 	});
 	//Post Request
 	$(admin.adminPost).on("click", function (e) {
-		var call = $(this).data().api;
-		admin.explore.xhr("POST", call, {}, function () {
+		var call = $(this).data().call;
+		admin.explore.xhr("GET", call, {}, function () {
 			console.log("POST done");
 		});
+	});
+	//Search Bar Enter
+	$(admin.searchBar).on("keydown", function (e) {
+		if (e.keyCode === 13) {
+			e.preventDefault();
+			var query = $(this).text();
+		};
+	});
+	//Search Bar Go
+	$(admin.searchGo).on("click", function (e) {
+		var query = $(admin.searchBar).text();
+
 	});

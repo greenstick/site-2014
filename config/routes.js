@@ -3,10 +3,11 @@ module.exports = function(app){
 	//Require Portfolio Controller
 	var portfolio 	= require('../app/controllers/portfolio.js'),
 		cms 		= require('../app/controllers/cms.js'),
+		api 		= require('../app/controllers/api.js'),
 		passport 	= require('passport');
 
 /*
-Public Routes
+Public Locations
 */
 
 	//Index
@@ -15,62 +16,59 @@ Public Routes
 	//Explore
 	app.get('/explore', portfolio.explore);
 
-	//Portfolio
-	app.get('/portfolio', portfolio.portfolio);
-
-	//Interactives
-	app.get('/interactives', portfolio.interactives);
-
-	//Websites
-	app.get('/websites', portfolio.websites);
-
-	//Music
-	app.get('/music', portfolio.music);
-
-	//Sound Design
-	app.get('/sounddesign', portfolio.sounddesign);
-
-	//Photography
-	app.get('/photography', portfolio.photography);
-
-	//Graphic Design
-	app.get('/technologies', portfolio.technologies);
-
 /*
-Private Routes
+Private Locations
 */
 
 	//Admin
 	app.get('/admin', passport.authenticate('basic', {session: false}), portfolio.admin);
 
 /*
-CMS Routes
+API Routes
 */
-	//Basic Retrieval
-	app.get('/retrieve', cms.retrieve);
+
+	//getTiles
+	app.get('/retrieve', api.retrieve);
 
 	//Show Featured
-	app.get('/showFeatured', cms.showFeatured);
+	app.get('/showFeatured', api.showFeatured);
+
+	//Search
+	app.get('/search', api.search);
+
+/*
+CMS Routes
+*/
+	app.get('/cms-submit', passport.authenticate('basic', {session: false}), cms.submit)
+
+	//Basic Retrieval
+	app.get('/cms-retrieve', passport.authenticate('basic', {session: false}), cms.retrieve);
 
 	//New
-	app.get('/new', passport.authenticate('basic', {session: false}), cms.new);
+	app.get('/cms-new', passport.authenticate('basic', {session: false}), cms.new);
 
 	//Approve
-	app.post('/curate', passport.authenticate('basic', {session: false}), cms.curate);
+	app.get('/cms-curate', passport.authenticate('basic', {session: false}), cms.curate);
 
 	//Hide
-	app.post('/hide', passport.authenticate('basic', {session: false}), cms.hide);
+	app.get('/cms-hide', passport.authenticate('basic', {session: false}), cms.hide);
 
 	//Feature
-	app.post('/feature', passport.authenticate('basic', {session: false}), cms.feature);
+	app.get('/cms-feature', passport.authenticate('basic', {session: false}), cms.feature);
 
-	//Delete
-	app.post('/delete', passport.authenticate('basic', {session: false}), cms.delete);
-	
 	//Show Approved
-	app.get('/showCurated', passport.authenticate('basic', {session: false}), cms.showCurated);
+	app.get('/cms-showCurated', passport.authenticate('basic', {session: false}), cms.showCurated);
 
 	//Show Hidden
-	app.get('/showHidden', passport.authenticate('basic', {session: false}), cms.showHidden);
+	app.get('/cms-showHidden', passport.authenticate('basic', {session: false}), cms.showHidden);
+
+	//Show Featured
+	app.get('/cms-showFeatured', passport.authenticate('basic', {session: false}), cms.showFeatured);
+	
+	//Delete
+	app.get('/cms-delete', passport.authenticate('basic', {session: false}), cms.delete);
+
+	//Search
+	app.get('/cms-search', passport.authenticate('basic', {session: false}), cms.search);
 
 };

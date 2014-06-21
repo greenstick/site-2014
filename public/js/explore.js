@@ -24,8 +24,9 @@ Explorer Prototype
 			explr.focus 		= args.focus 			|| explr.focus 			|| "focus",
 			explr.duration 		= args.duration 		|| explr.duration 		|| 600,
 			explr.routes 		= {
-				getTiles 		:  						args.routes.getTiles 	|| "getTiles",
-				getByTag		: 						args.routes.getByTag 	|| "getByTag"
+				retrieve 		: 						args.routes.retrieve 	|| "/retrieve",
+				getTiles 		:  						args.routes.getTiles 	|| "/getTiles",
+				getByTag		: 						args.routes.getByTag 	|| "/getByTag"
 			},
 			explr.settings 		= {
 				parent: 		explr.parent,
@@ -71,16 +72,17 @@ API Request Methods
 		var explr = this;
 		explr.toggleLoader();
 		$.ajax({
-			type: "GET",
+			type: type,
 			url: route,
 			data: data,
 		}).done(function (res) {
 			console.log("Response: " + res);
 			explr.data = res;
 		}).fail(function () {
-			console.debug("XHR Status: Failed");
+			console.debug("XHR Alert: Request Failed");
 		}).always(function () {
 			explr.toggleLoader();
+			console.debug("XHR Notification: Request Complete");
 			if (typeof callback === 'function') callback();
 		});
 	};
@@ -116,9 +118,9 @@ Public / Access Methods
 */
 
 	//Initialization Macro
-	Explorer.prototype.init 			= function () {
+	Explorer.prototype.init 			= function (route) {
 		var explr = this;
-		explr.xhr("GET", explr.routes.retrieve, {}, function () {
+		explr.xhr("GET", (route || explr.routes.retrieve), {}, function () {
 			explr.generateTiles();
 		});
 	};
@@ -128,6 +130,14 @@ Public / Access Methods
 		var explr = this;
 		$(explr.tile).removeClass(explr.focus);
 		$(filter).addClass(explr.focus);
+	};
+
+	//Search For Tiles by String
+	Explorer.prototype.search 			= function (query) {
+		var explr = this;
+		explr.xhr("GET", explr.routes.search, {query: query}, function () {
+			explr.generateTiles();
+		});
 	};
 
 	//Get TIles by Tags
