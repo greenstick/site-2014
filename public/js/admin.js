@@ -7,6 +7,10 @@ Declare Arguments
 			admin.element 		= args.element 		|| 		'#wradminer',
 			admin.navigation 	= args.navigation 	|| 		'#navigation',
 			admin.menu 			= args.menu 		|| 		'.menu',
+			admin.sub 			= args.sub 			|| 		'#submission-pane',
+			admin.openSub		= args.openSub 		|| 		'#open-submission',
+			admin.createSub 	= args.create 		|| 		'#create-submission',
+			admin.closeSub 		= args.closeSub 	|| 		'#close-submission',
 			admin.adminGet 		= args.adminGet 	|| 		'.get',
 			admin.adminPost 	= args.adminPost 	|| 		'.post',
 			admin.searchBar 	= args.searchBar 	|| 		'.search .bar',
@@ -67,6 +71,14 @@ Event Bindings
 	$('.' + admin.explore.filter).on("click", function (e) {
 		var filter = $(this).data().filter;
 		admin.explore.filterTiles(filter);
+	});
+	//Open Submission Pane
+	$(admin.openSub).on("click", function (e) {
+		$(admin.sub).addClass('active');
+	});
+	//Close Submission Pane
+	$(admin.closeSub).on("click", function (e) {
+		$(admin.sub).removeClass('active');
 	});
 	//Get Request
 	$(admin.adminGet).on("click", function (e) {

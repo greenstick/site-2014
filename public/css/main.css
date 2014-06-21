@@ -69,6 +69,7 @@ UI Elements
     left: -320px;
     height: 100%;
     width: 320px;
+    min-width: 320px;
     background-color: rgba(11, 14, 23, 0);
     color: rgba(255,255,255,1);
     -webkit-transition: all 550ms;
@@ -271,6 +272,10 @@ UI Elements
 	right: 10px;
 	color: rgba(255,255,255,1);
 }
+
+/*
+
+*/
 
 /*
 Footer

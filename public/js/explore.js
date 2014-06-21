@@ -81,8 +81,8 @@ API Request Methods
 		}).fail(function () {
 			console.debug("XHR Alert: Request Failed");
 		}).always(function () {
-			explr.toggleLoader();
 			console.debug("XHR Notification: Request Complete");
+			explr.toggleLoader();
 			if (typeof callback === 'function') callback();
 		});
 	};

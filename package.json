@@ -20,7 +20,8 @@
     "passport": "~0.2.0",
     "passport-http": "~0.2.2",
     "knox": "~0.8.9",
-    "newrelic": "~1.4.0"
+    "newrelic": "~1.4.0",
+    "instagram-node": "~0.4.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
