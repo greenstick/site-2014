@@ -179,7 +179,9 @@ UI Elements
     opacity: 0
 }
 
-/* Filters */
+/* 
+Filters 
+*/
 
 #navigation .filters-expanded {
 	position: absolute;
@@ -199,7 +201,10 @@ UI Elements
 }
 #navigation .filters-expanded .filter-items {
     width: 100%;
-    height: auto;
+    height: 60%;
+    max-height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
     margin: 20px 0 0 0;
 }
 #navigation .filters-expanded .filter-items .filter {
@@ -239,6 +244,7 @@ UI Elements
 	text-align: right;
 	letter-spacing: 2px;
 	color: rgba(255,255,255,.4);
+    background-color: rgba(11, 14, 23, 1);
 }
 #navigation.search:focus {
 	border-bottom: 1px solid rgba(255,255,255,.4);
@@ -250,6 +256,7 @@ UI Elements
 	padding: 12px 20px 0 0;
 	overflow: hidden;
 	white-space: nowrap;
+    color: rgba(255,255,255,1)
 }
 #navigation .search .bar:focus {
 	border: none;
