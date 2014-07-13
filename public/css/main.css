@@ -71,7 +71,7 @@ UI Elements
     width: 320px;
     min-width: 320px;
     background-color: rgba(11, 14, 23, 0);
-    color: rgba(255,255,255,1);
+    color: rgba(232, 227, 241, 1);
     -webkit-transition: all 550ms;
     -moz-transition: all 550ms;
     -ms-transition: all 550ms;
@@ -121,7 +121,7 @@ UI Elements
     -ms-transition: -ms-transform 200ms cubic-bezier(0.63,.62,.48,1.64);
     -o-transition: -o-transform 200ms cubic-bezier(0.63,.62,.48,1.64);
     transition: transform 200ms cubic-bezier(0.63,.62,.48,1.64);
-    background: rgba(255,255,255,1);
+    background: rgba(232, 227, 241, 1);
     display: block;
     width: 30px;
     height: 3px;
@@ -209,11 +209,11 @@ Filters
 }
 #navigation .filters-expanded .filter-items .filter {
     width: 300px;
-    height: 28px;
-    padding: 12px 0 0;
+    height: 40px;
     letter-spacing: 2px;
-    color: rgba(255,255,255,.4);
-    border-bottom: 1px solid rgba(255,255,255,.4);
+    line-height: 40px;
+    color: rgba(232, 227, 241, .4);
+    border-bottom: 1px solid rgba(232, 227, 241, .4);
     text-align: right;
     cursor: pointer;
     -webkit-transition: all .2s;
@@ -224,12 +224,12 @@ Filters
 }
 #navigation .filters-expanded .filter-items .filter.hover, #navigation .filters-expanded .filter-items .filter:hover {
     width: 310px;
-    color: rgba(255,255,255,1);
-    border-color: rgba(255,255,255,1)
+    color: rgba(232, 227, 241, 1);
+    border-color: rgba(232, 227, 241, 1);
 }
 #navigation .filters-expanded .filter-items .filter.selected {
-    color: rgba(255,248,217,1);
-    border-color: rgba(255,255,255,1)
+    color: rgba(232, 227, 241, 1);
+    border-color: rgba(232, 227, 241, 1);
 }
 
 /* Search Bar */
@@ -243,11 +243,11 @@ Filters
 	font-size: 16px;
 	text-align: right;
 	letter-spacing: 2px;
-	color: rgba(255,255,255,.4);
+	color: rgba(232, 227, 241, .4);
     background-color: rgba(11, 14, 23, 1);
 }
-#navigation.search:focus {
-	border-bottom: 1px solid rgba(255,255,255,.4);
+#navigation .search:focus {
+	border-bottom: 1px solid rgba(232, 227, 241, .4);
 }
 #navigation .search .bar {
 	position: absolute;
@@ -256,7 +256,7 @@ Filters
 	padding: 12px 20px 0 0;
 	overflow: hidden;
 	white-space: nowrap;
-    color: rgba(255,255,255,1)
+    color: rgba(232, 227, 241, 1);
 }
 #navigation .search .bar:focus {
 	border: none;
@@ -277,12 +277,26 @@ Filters
 }
 #navigation .search .submit:hover {
 	right: 10px;
-	color: rgba(255,255,255,1);
+	color: rgba(232, 227, 241, 1);
 }
 
 /*
-
+Explorer
 */
+
+#explorer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}
+#explorer .tile {
+    position: relative;
+    margin: 10px;
+    float: left;
+    background-color: rgba(11, 14, 23, .7);
+}
 
 /*
 Footer
@@ -332,4 +346,66 @@ Portfolio Styles
 #portfolio .content {
 	top: 128px;
 	height: 1872px;
+}
+
+/*
+Scrollbar Styles
+*/
+
+.ps-container .ps-scrollbar-y-rail {
+    position: absolute; /* please don't change 'position' */
+    right: 3px; /* there must be 'right' for ps-scrollbar-y-rail */
+    width: 8px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    opacity: 0;
+    filter: alpha(opacity = 0);
+    -o-transition: background-color .2s linear, opacity .2s linear;
+    -webkit-transition: background-color .2s linear, opacity .2s linear;
+    -moz-transition: background-color .2s linear, opacity .2s linear;
+    transition: background-color .2s linear, opacity .2s linear;
+}
+.ps-container:hover .ps-scrollbar-y-rail,
+.ps-container.hover .ps-scrollbar-y-rail {
+    opacity: 0.6;
+    filter: alpha(opacity = 60);
+}
+.ps-container .ps-scrollbar-y-rail:hover,
+.ps-container .ps-scrollbar-y-rail.hover {
+    background-color: rgba(232, 227, 241, .4)
+    opacity: 0.9;
+    filter: alpha(opacity = 90);
+}
+.ps-container .ps-scrollbar-y-rail.in-scrolling {
+    background-color: rgba(232, 227, 241, .4);
+    opacity: 0.9;
+    filter: alpha(opacity = 90);
+}
+.ps-container .ps-scrollbar-y {
+    position: absolute; /* please don't change 'position' */
+    right: 0; /* there must be 'right' for ps-scrollbar-y */
+    width: 8px;
+    background-color: rgba(11, 14, 23, .6);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    -o-transition: background-color .2s linear;
+    -webkit-transition: background-color.2s linear;
+    -moz-transition: background-color .2s linear;
+    transition: background-color .2s linear;
+}
+.ps-container.ie6 .ps-scrollbar-y {
+    font-size: 0; /* fixed scrollbar height in xp sp3 ie6 */
+}
+.ps-container .ps-scrollbar-y-rail:hover .ps-scrollbar-y,
+.ps-container .ps-scrollbar-y-rail.hover .ps-scrollbar-y {
+    background-color: rgba(11, 14, 23, .6);
+}
+.ps-container.ie .ps-scrollbar-y {
+    visibility: hidden;
+}
+.ps-container.ie:hover .ps-scrollbar-y,
+.ps-container.ie.hover .ps-scrollbar-y {
+    visibility: visible;
 }

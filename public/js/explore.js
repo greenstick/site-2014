@@ -18,7 +18,7 @@ Explorer Prototype
 		var explr = this;
 			explr.parent 		= args.parent 			|| explr.parent 		|| "#wrapper",
 			explr.element 		= args.element 			|| explr.element 		|| "#explorer",
-			explr.tile 			= args.tile 			|| explr.tile 			|| "tile",
+			explr.tile 			= args.tile 			|| explr.tile,
 			explr.filter 		= args.filter 			|| explr.filter 		|| "filter",
 			explr.loader 		= args.loader 			|| explr.loader 		|| "loader",
 			explr.focus 		= args.focus 			|| explr.focus 			|| "focus",
@@ -68,7 +68,7 @@ API Request Methods
 */
 
 	//Basic Get Requests
-	Explorer.prototype.xhr 		= function (type, route, data, callback) {
+	Explorer.prototype.request 		= function (type, route, data, callback) {
 		var explr = this;
 		explr.toggleLoader();
 		$.ajax({
@@ -76,7 +76,8 @@ API Request Methods
 			url: route,
 			data: data,
 		}).done(function (res) {
-			console.log("Response: " + res);
+			console.log("Response: ");
+			console.log(res);
 			explr.data = res;
 		}).fail(function () {
 			console.debug("XHR Alert: Request Failed");
@@ -95,14 +96,16 @@ Tile Generation & Collection Methods
 	Explorer.prototype.createTile 		= function (data) {
 		var explr = this,
 		tile = new Tile ({
-			parent: 		explr.element,
-			element: 		explr.tile,
-			width: 			explr.width,
-			ratio: 			explr.ratio,
+			parent 		: 	explr.tile.parent,
+			element 	: 	explr.tile.element,
+			width 		: 	explr.tile.width,
+			ratio 		: 	explr.tile.ratio,
+			id 			: 	data.pID,
 			content: 		data
 		});
 		tile.init();
 		explr.tiles.push(tile);
+		console.log(explr.tiles);
 	};
 
 	//Generate Tiles From Data Array
@@ -118,10 +121,11 @@ Public / Access Methods
 */
 
 	//Initialization Macro
-	Explorer.prototype.init 			= function (route) {
+	Explorer.prototype.init 			= function (route, callback) {
 		var explr = this;
-		explr.xhr("GET", (route || explr.routes.retrieve), {}, function () {
+		explr.request("GET", (route || explr.routes.retrieve), {}, function () {
 			explr.generateTiles();
+			if (typeof callback === 'function') callback();
 		});
 	};
 
@@ -135,7 +139,7 @@ Public / Access Methods
 	//Search For Tiles by String
 	Explorer.prototype.search 			= function (query) {
 		var explr = this;
-		explr.xhr("GET", explr.routes.search, {query: query}, function () {
+		explr.request("GET", explr.routes.search, {query: query}, function () {
 			explr.generateTiles();
 		});
 	};
@@ -143,7 +147,7 @@ Public / Access Methods
 	//Get TIles by Tags
 	Explorer.prototype.getByTag 		= function (tags) {
 		var explr = this;
-		explr.xhr("POST", explr.routes.getByTag, {tags: tags}, function () {
+		explr.request("POST", explr.routes.getByTag, {tags: tags}, function () {
 			explr.generateTiles();
 		});
 	};

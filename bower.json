@@ -10,6 +10,7 @@
     "jQuery": "~2.1.0",
     "knockout.js": "~3.0.0",
     "isotope": "~1.5.26",
-    "jquery-ui": "~1.10.4"
+    "jquery-ui": "~1.10.4",
+    "knockout": "~3.1.0"
   }
 }

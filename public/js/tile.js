@@ -20,7 +20,8 @@ Dependencies
 			tile.element	=		args.element,
 			tile.ratio		=		args.ratio,
 			tile.width		=		args.width,
-			tile.height 	=		args.width * args.ratio	
+			tile.height 	=		args.width * args.ratio,
+			tile.id 		= 		args.id,
 			tile.data 		= 		args.data
 	};
 
@@ -30,19 +31,19 @@ Dependencies
 
 	//Create Tile Element
 	Tile.prototype.create 	=		function () {
-		d3.select(this.parent).append("div")
-			.attr("id", 	this.id)
-			.attr("class",  this.element)
-			.attr("width",  this.width)
-			.attr("height", this.height)
-			.attr("data-content", this.data);
+		var tile = this;
+		$(tile.parent)
+			.append("<div></div>")
+			.children().attr("id", tile.id)
+			.addClass(tile.element)
+			.css({"width": tile.width, "height": tile.height})
+			.data(tile.data);
 	};
 
 	//Scale Element
 	Tile.prototype.scale	=		function (scale) {
-		d3.select(this.element)
-			.attr("width",  this.width * scale)
-			.attr("height", this.height * scale);
+		var tile = this;
+		$(tile.element).width(tile.width * scale).height(tile.height * scale);
 	};
 
 /*

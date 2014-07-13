@@ -15,12 +15,59 @@ Declare Arguments
 			admin.adminPost 	= args.adminPost 	|| 		'.post',
 			admin.searchBar 	= args.searchBar 	|| 		'.search .bar',
 			admin.searchGo 		= args.searchGo 	|| 		'.search .submit',
-			admin.explorer 		= args.explorer
+			admin.scrollable 	= args.scrollable 	|| 		'.scrollable',
+			admin.submit 		= args.submit 		|| 		'#create-submission',
+			admin.explorer 		= args.explorer,
+			admin.selectedTiles = [];
 	};
 
-	Admin.prototype.toggleMenu 	= function () {
+	Admin.prototype.toggleMenu 		= function () {
 		$(admin.menu).toggleClass('close');
 		$(admin.navigation).toggleClass('active');
+	};
+
+	Admin.prototype.scrollBar 		= function () {
+		var admin = this;
+		$(admin.scrollable).perfectScrollbar();
+		$(admin.scrollable).perfectScrollbar('update');
+	};
+	//Base Request Method
+	Admin.prototype.request 			= function (type, data, route) {
+		var admin = this;
+		$.ajax({
+			type: type,
+			data: data,
+			url: route,
+		}).done(function (res) {
+			console.log("Response: ");
+			console.log(res);
+			admin.data = res;
+		}).fail(function () {
+			console.debug("XHR Alert: Request Failed");
+		}).always(function () {
+			console.debug("XHR Notification: Request Complete");
+			if (typeof callback === 'function') callback();
+		});
+	};
+
+	//Binds Events Once Tiles Have Been Rendered
+	Admin.prototype.bindEvents 		= function () {
+		//Select Tile
+		$('.' + admin.explorer.tile.element).on("click", function (e) {
+			admin.toggleTile(e);
+		});
+	};
+	//Toggles Selection Class of Tiles
+	Admin.prototype.toggleTile 		= function (e) {
+		$(e.currentTarget).toggleClass('selected');
+	};
+	//Collects IDs of Selected Tiles
+	Admin.prototype.collectTiles 	= function () {
+		var admin = this,
+			tiles = $('.selected');
+		$.each(tiles, function (k, v) {
+			admin.selectedTiles.push(v.id);
+		});
 	};
 
 /*
@@ -30,8 +77,33 @@ Macros
 	Admin.prototype.init 			= function () {
 		var admin = this;
 			//Instatiate & Initialize Explorer
+			admin.scrollBar();
 			admin.explore = new Explorer (admin.explorer);
-			admin.explore.init('/cms-new');
+			admin.explore.init('/cms-new', function () {
+				// ko.applyBindings(admin.explore, document.getElementById(admin.explorer.element.split('#', 1)));
+				admin.bindEvents();
+			});
+	};
+
+	Admin.prototype.submitForm 			= function () {
+		var data = {
+			title 		: $('#title-input').val(),
+			client 		: $('#client-input').val(),
+			url 		: $('#url-input').val(),
+			content 	: $('#content-input').val(),
+			description : $('#description-input').val(),
+			tags 		: $('#tags-input').val()
+		};
+		this.request('GET', data, '/cms-submit');
+	};
+
+	Admin.prototype.resetForm 			= function () {
+		$('#title-input').val('');
+		$('#client-input').val('');
+		$('#url-input').val('');
+		$('#content-input').val('');
+		$('#description-input').val('');
+		$('#tags-input').val('');
 	};
 
 /*
@@ -47,7 +119,12 @@ Declare Args, Instantiation, & Initialization
 		explorer 	: 		{
 			parent			: 		"#wrapper",
 			element			: 		"#explorer",
-			tile 			: 		"tile",
+			tile 			: 		{
+					parent 			:  		"#explorer",
+					element 		: 		"tile",
+					width 			: 		600,
+					ratio 			: 		1,
+			},
 			filter 			: 		"filter",
 			loader 			: 		".loader",
 			focus 			: 		".focus",
@@ -83,14 +160,14 @@ Event Bindings
 	//Get Request
 	$(admin.adminGet).on("click", function (e) {
 		var call = $(this).data().call;
-		admin.explore.xhr("GET", call, {}, function () {
+		admin.explore.request("GET", call, {}, function () {
 			console.log("GET done");
 		});
 	});
 	//Post Request
 	$(admin.adminPost).on("click", function (e) {
 		var call = $(this).data().call;
-		admin.explore.xhr("GET", call, {}, function () {
+		admin.explore.request("GET", call, {}, function () {
 			console.log("POST done");
 		});
 	});
@@ -105,4 +182,10 @@ Event Bindings
 	$(admin.searchGo).on("click", function (e) {
 		var query = $(admin.searchBar).text();
 
+	});
+	//Submit Piece Form
+	$(admin.submit).on("click", function (e) {
+		admin.submitForm();
+		admin.resetForm();
+		$(admin.sub).removeClass('active');
 	});

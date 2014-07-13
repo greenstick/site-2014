@@ -6,7 +6,7 @@
 			<span class="menu-line outer bottom"></span>
 		</div>
 		<div class="filters-expanded">
-			<div class="filter-items">
+			<div class="filter-items scrollable">
 				<div id="open-submission" class="button admin">
 					ADD PIECE
 				</div>
@@ -66,19 +66,23 @@
 				<span class="close-line bottom"></span>
 			</div>
 		</div>
+		<div class="header">
+			Post That Shit
+		</div>
 		<form id="piece">
-			<input type="text" class="title" />
-			<input type="text" class="url" />
-			<input type="text" class="content" />
-			<textarea type="text" class="description"></textarea>
-			<input type="text" class="tags" />
+			<input id="title-input" type="text" class="input-field" placeholder="TITLE" />
+			<input id="client-input" type="text" class="input-field" placeholder="CLIENT" />
+			<input id="url-input" type="text" class="input-field" placeholder="URL" />
+			<input id="content-input" type="text" class="input-field" placeholder="CONTENT" />
+			<textarea id="description-input" type="text" class="input-field" placeholder="DESCRIPTION"></textarea>
+			<input id="tags-input" type="text" class="input-field" placeholder="TAGS" />
 		</form>
-		<div id="create-submission">
+		<div id="create-submission">DONE</div>
+	</div>
+	<div id="explorer" class="content w d-bg" data-bind="foreach: tile">
+		<div data-bind="attr: {class: element, id: id}">
 
 		</div>
-	</div>
-	<div id="explorer" class="content w d-bg">
-		<div class="tile"></div>
 	</div>
 	<div id="footer">
 		FOOTER

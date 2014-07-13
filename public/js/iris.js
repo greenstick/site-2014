@@ -81,19 +81,20 @@ var Iris = function (args) {
 		};
 
 		//Change Color
-		Iris.prototype.animateInterval = function () {
-			this.animate();
-			this.interval = setInterval(function () {
-				this.animate();
-			}, 500);
-		};
-
-		//Reset Color
-		Iris.prototype.resetColor = function (callback) {
-			d3.selectAll('.arc').each(function () {
-				d3.select(this).style("stroke", "rgba(33, 43, 67, 1)");
-			});
-			// if (typeof callback == 'function') callback();
+		Iris.prototype.animateInterval = function (flag) {
+			var iris = this;
+			if (flag === true) {
+				iris.interval = setInterval(function () {
+					iris.animate();
+				}, 500);
+			} else {
+				clearInterval(iris.interval);
+				setTimeout(function () {
+					d3.selectAll('.arc').each(function () {
+						d3.select(this).style("stroke", "rgba(33, 43, 67, 1)");
+					});
+				}, 1000);
+			};
 		};
 
 /*
@@ -129,9 +130,9 @@ Event Bindings
 
 //Enter Hover On
 $('.enter').on("mouseover", function () {
-	iris.animateInterval();
+	iris.animateInterval(true);
 });
 //Enter Hover Off
 $('.enter').on("mouseout", function () {
-	iris.resetColor();
+	iris.animateInterval(false);
 });

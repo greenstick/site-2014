@@ -14,48 +14,52 @@ CMS API Methods
 exports.submit 			= function (req, res) {
 	//Setup Client Sent Data
 	var date 			= new Date(),
-		data 			= req.param("data"),
-		locationX 		= data.location.x,
-		locationY 		= data.location.y,
+		pID 			= ((Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4)),
+		data 			= req.query,
+		locationX 		= null,
+		locationY 		= null,
 		title 			= data.title,
+		client 			= data.client,
 		url 			= data.url,
 		content 		= data.content,
 		description 	= data.description,
-		twitter 		= data.twitter,
-		facebook 		= data.facebook,
+		twitter 		= null,
+		facebook 		= null,
 		tags 			= data.tags,
 		createdAt 		= date;
 
 	//Set Data to Schema
-	var piece 			= new Piece({
-		location: {
-			x: locationX,
-			y: locationY,
+	var piece 				= new Piece({
+		pID 				: 	pID,
+		location 		: 	{
+			x 					: locationX,
+			y 					: locationY,
 		},
-		curated: 			false,
-		featured: 			false,
-		title: 				title,
-		url: 				url,
-		content: 			content, 
-		description: 		description,
-		popularity: 		null,
-		social: {
-			twitter: 		twitter,
-			facebook: 		facebook
+		curated 			: 	false,
+		featured 			: 	false,
+		title 				: 	title,
+		client 				: 	client,
+		url 				: 	url,
+		content 			: 	content, 
+		description 	: 		description,
+		popularity 		: 		null,
+		social 			: 	{
+			twitter 			: twitter,
+			facebook 			: facebook
 		},
-		tags: 				tags,
-		createdAt: 			date,
-		updatedAt: 			null
+		tags 				: 	tags,
+		createdAt 			: 	date,
+		updatedAt 			: 	null
 	});
 	//Save Piece
-	Piece.save(function (error, piece, count) {
+	piece.save(function (error, piece, count) {
 		if (error) return console.trace(error);
 	});
 };
 
 //Retrieve Pieces
 exports.retrieve 		= function (req, res) {
-	var query 			= Piece.find({curated: true}, 'location curated featured title url content description popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: true}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.trace(error);
 			res.json(pieces);
@@ -63,7 +67,7 @@ exports.retrieve 		= function (req, res) {
 };
 //Show New Pieces
 exports.new 			= function (req, res) {
-	var query 			= Piece.find({updated: null}, '*');
+	var query 			= Piece.find({updated: null}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.trace(error);
 			res.json(pieces)
@@ -101,7 +105,7 @@ exports.feature 		= function (req, res) {
 };
 //Show curated Pieces
 exports.showCurated 	= function (req, res) {
-	var query 			= Piece.find({curated: true}, '*');
+	var query 			= Piece.find({curated: true}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.trace(error);
 			res.json(pieces)
@@ -109,7 +113,7 @@ exports.showCurated 	= function (req, res) {
 };
 //Show Hidden Pieces
 exports.showHidden 		= function (req, res) {
-	var query 			= Piece.find({curated: true}, '*', {sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: true}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.trace(error);
 			res.json(pieces);
@@ -117,7 +121,7 @@ exports.showHidden 		= function (req, res) {
 };
 //Show Featured
 exports.showFeatured 	= function (req, res) {
-	var query 			= Piece.find({featured: true}, '*');
+	var query 			= Piece.find({featured: true}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			res.json(pieces);
