@@ -78,7 +78,7 @@ Macros
 		var admin = this;
 			//Instatiate & Initialize Explorer
 			admin.scrollBar();
-			admin.explorer.init('/cms-new', function () {
+			admin.explorer.init(function () {
 				// ko.applyBindings(admin.explorer, document.getElementById(admin.explorer.element.split('#', 1)));
 				admin.bindEvents();
 			});
@@ -128,7 +128,11 @@ Declare Args, Instantiation, & Initialization
 			loader 			: 		".loader",
 			focus 			: 		".focus",
 			duration 		: 		1000,
-			routes 			:		{}
+			routes 			:		{
+					retrieve 		: 		"/cms-retrieve",
+					getByTag 		: 		"/cms-getByTag",
+					search 			: 		"/cms-search"
+			}
 		}
 	},
 	admin = new Admin (args);
@@ -174,15 +178,19 @@ Event Bindings
 	$(admin.searchBar).on("keydown", function (e) {
 		if (e.keyCode === 13) {
 			e.preventDefault();
-			var query = $(this).text();
+			var query = $(admin.searchBar).text();
+			admin.explorer.search(query, function () {
+				$(admin.searchBar).text("");
+			});
 		};
 	});
 	//Search Bar Go
 	$(admin.searchGo).on("click", function (e) {
 		var query = $(admin.searchBar).text();
 		console.log(query);
-		admin.explorer.search(query);
-
+		admin.explorer.search(query, function () {
+			$(admin.searchBar).text("");
+		});
 	});
 	//Submit Piece Form
 	$(admin.submit).on("click", function (e) {

@@ -26,7 +26,7 @@ exports.submit 			= function (req, res) {
 		description 	= validate.str(data.description),
 		twitter 		= null,
 		facebook 		= null,
-		tags 			= validate.tags(data.tags),
+		tags 			= validate.tags(data.tags).toLowerCase(),
 		createdAt 		= date;
 
 		console.log(tags);
@@ -142,5 +142,9 @@ exports.delete 			= function (req, res) {
 };
 //Retrieve by Search Query
 exports.search 	= function (req, res) {
-	res.json({"Search Query Executed": true});
+	var searchQuery = validate.str(req.param("query"));
+	res.json({
+		"Search Query Executed" : true,
+		"Query String" 			: searchQuery
+	});
 };

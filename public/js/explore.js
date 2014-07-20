@@ -26,7 +26,8 @@ Explorer Prototype
 			explr.routes 		= {
 				retrieve 		: 						args.routes.retrieve 	|| "/retrieve",
 				getTiles 		:  						args.routes.getTiles 	|| "/getTiles",
-				getByTag		: 						args.routes.getByTag 	|| "/getByTag"
+				getByTag		: 						args.routes.getByTag 	|| "/getByTag",
+				search 			: 						args.routes.search 		|| "/search"
 			},
 			explr.settings 		= {
 				parent: 		explr.parent,
@@ -121,33 +122,36 @@ Public / Access Methods
 */
 
 	//Initialization Macro
-	Explorer.prototype.init 			= function (route, callback) {
+	Explorer.prototype.init 			= function (callback) {
 		var explr = this;
-		explr.request("GET", (route || explr.routes.retrieve), {}, function () {
+		explr.request("GET", explr.routes.retrieve, {}, function () {
 			explr.generateTiles();
 			if (typeof callback === 'function') callback();
 		});
 	};
 
 	//Filter Tiles
-	Explorer.prototype.filterTiles 		= function (filter) {
+	Explorer.prototype.filterTiles 		= function (filter, callback) {
 		var explr = this;
 		$(explr.tile).removeClass(explr.focus);
 		$(filter).addClass(explr.focus);
 	};
 
 	//Search For Tiles by String
-	Explorer.prototype.search 			= function (query) {
+	Explorer.prototype.search 			= function (query, callback) {
 		var explr = this;
-		explr.request("GET", explr.routes.search, {query: query}, function () {
+		explr.request("GET", explr.routes.search, {query: query}, function (res) {
+			console.log(res);
 			explr.generateTiles();
+			if (typeof callback === 'function') callback();
 		});
 	};
 
 	//Get TIles by Tags
-	Explorer.prototype.getByTag 		= function (tags) {
+	Explorer.prototype.getByTag 		= function (tags, callback) {
 		var explr = this;
-		explr.request("POST", explr.routes.getByTag, {tags: tags}, function () {
+		explr.request("GET", explr.routes.getByTag, {tags: tags}, function () {
 			explr.generateTiles();
+			if (typeof callback === 'function') callback();
 		});
 	};
