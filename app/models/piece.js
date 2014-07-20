@@ -21,7 +21,7 @@ var Piece = new Schema({
 		twitter: 		String,
 		facebook: 		String
 	},
-	tags: 			String,
+	tags: 			Array,
 	createdAt: 		Date,
 	updatedAt: 		Date
 });

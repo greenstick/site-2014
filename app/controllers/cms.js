@@ -2,9 +2,10 @@
 Require Dependencies
 */
 
-var Piece 	= require('../models/piece.js'),
-	knox 	= require('knox'),
-	fs 		= require('fs');
+var Piece 		= require('../models/piece.js'),
+	knox 		= require('knox'),
+	fs 			= require('fs'),
+	validate 	= require('../utility/validation.js');
 
 /*
 CMS API Methods
@@ -18,15 +19,17 @@ exports.submit 			= function (req, res) {
 		data 			= req.query,
 		locationX 		= null,
 		locationY 		= null,
-		title 			= data.title,
-		client 			= data.client,
-		url 			= data.url,
-		content 		= data.content,
-		description 	= data.description,
+		title 			= validate.str(data.title),
+		client 			= validate.str(data.client),
+		url 			= validate.url(data.url),
+		content 		= validate.str(data.content),
+		description 	= validate.str(data.description),
 		twitter 		= null,
 		facebook 		= null,
-		tags 			= data.tags,
+		tags 			= validate.tags(data.tags),
 		createdAt 		= date;
+
+		console.log(tags);
 
 	//Set Data to Schema
 	var piece 				= new Piece({

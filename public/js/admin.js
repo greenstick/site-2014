@@ -17,7 +17,7 @@ Declare Arguments
 			admin.searchGo 		= args.searchGo 	|| 		'.search .submit',
 			admin.scrollable 	= args.scrollable 	|| 		'.scrollable',
 			admin.submit 		= args.submit 		|| 		'#create-submission',
-			admin.explorer 		= args.explorer,
+			admin.explorer 		= new Explorer (args.explorer),
 			admin.selectedTiles = [];
 	};
 
@@ -39,9 +39,9 @@ Declare Arguments
 			data: data,
 			url: route,
 		}).done(function (res) {
+			admin.data = res;
 			console.log("Response: ");
 			console.log(res);
-			admin.data = res;
 		}).fail(function () {
 			console.debug("XHR Alert: Request Failed");
 		}).always(function () {
@@ -78,9 +78,8 @@ Macros
 		var admin = this;
 			//Instatiate & Initialize Explorer
 			admin.scrollBar();
-			admin.explore = new Explorer (admin.explorer);
-			admin.explore.init('/cms-new', function () {
-				// ko.applyBindings(admin.explore, document.getElementById(admin.explorer.element.split('#', 1)));
+			admin.explorer.init('/cms-new', function () {
+				// ko.applyBindings(admin.explorer, document.getElementById(admin.explorer.element.split('#', 1)));
 				admin.bindEvents();
 			});
 	};
@@ -145,9 +144,9 @@ Event Bindings
 	});
 
 	//Filter Explorer
-	$('.' + admin.explore.filter).on("click", function (e) {
+	$('.' + admin.explorer.filter).on("click", function (e) {
 		var filter = $(this).data().filter;
-		admin.explore.filterTiles(filter);
+		admin.explorer.filterTiles(filter);
 	});
 	//Open Submission Pane
 	$(admin.openSub).on("click", function (e) {
@@ -160,14 +159,14 @@ Event Bindings
 	//Get Request
 	$(admin.adminGet).on("click", function (e) {
 		var call = $(this).data().call;
-		admin.explore.request("GET", call, {}, function () {
+		admin.explorer.request("GET", call, {}, function () {
 			console.log("GET done");
 		});
 	});
 	//Post Request
 	$(admin.adminPost).on("click", function (e) {
 		var call = $(this).data().call;
-		admin.explore.request("GET", call, {}, function () {
+		admin.explorer.request("GET", call, {}, function () {
 			console.log("POST done");
 		});
 	});
@@ -181,6 +180,8 @@ Event Bindings
 	//Search Bar Go
 	$(admin.searchGo).on("click", function (e) {
 		var query = $(admin.searchBar).text();
+		console.log(query);
+		admin.explorer.search(query);
 
 	});
 	//Submit Piece Form

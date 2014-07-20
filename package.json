@@ -21,7 +21,8 @@
     "passport-http": "~0.2.2",
     "knox": "~0.8.9",
     "newrelic": "~1.4.0",
-    "instagram-node": "~0.4.1"
+    "instagram-node": "~0.4.1",
+    "validator": "~3.16.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

@@ -8,8 +8,8 @@ Declare Arguments
 			app.navigation 	= args.navigation 	|| 		'#navigation',
 			app.menu 		= args.menu 		|| 		'.menu',
 			app.searchBar 	= args.search 		|| 		'.search .bar',
-			app.searchGo	= args.searchGo		|| 		'.search .submit'
-			app.explorer 	= args.explorer
+			app.searchGo	= args.searchGo		|| 		'.search .submit',
+			app.explorer 	= new Explorer (args.explorer);
 	};
 
 	App.prototype.toggleMenu 	= function () {
@@ -23,9 +23,8 @@ Macros
 
 	App.prototype.init 			= function () {
 		var app = this;
-			//Instatiate & Initialize Explorer
-			app.explore 		= new Explorer (app.explorer);
-			app.explore.init();
+			//Initialize Explorer
+			app.explorer.init();
 	};
 
 /*
@@ -61,11 +60,14 @@ Event Bindings
 
 	//Filter Explorer
 	$('.' + app.explore.filter).on("click", function (e) {
+		console.log(e);
 		var filter = $(this).data().filter;
-		app.explore.filterTiles(filter);
+		app.explorer.filterTiles(filter);
 	});
 
 	$(app.searchGo).on("click", function (e) {
 		console.log(e);
+		var query = e;
+		app.explorer.search(query);
 	});
 
