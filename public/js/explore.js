@@ -24,6 +24,7 @@ Explorer Prototype
 			explr.focus 		= args.focus 			|| explr.focus 			|| "focus",
 			explr.duration 		= args.duration 		|| explr.duration 		|| 600,
 			explr.routes 		= {
+				new 			: 						args.routes.new 		|| "/new",
 				retrieve 		: 						args.routes.retrieve 	|| "/retrieve",
 				getTiles 		:  						args.routes.getTiles 	|| "/getTiles",
 				getByTag		: 						args.routes.getByTag 	|| "/getByTag",
@@ -38,7 +39,7 @@ Explorer Prototype
 				duration: 		explr.duration,
 				data: 			explr.data
 			},
-			explr.tiles 		= [],
+			explr.tiles 		= ko.observableArray([]),
 			explr.data;
 	};
 
@@ -96,17 +97,15 @@ Tile Generation & Collection Methods
 	//Create a Tile
 	Explorer.prototype.createTile 		= function (data) {
 		var explr = this,
-		tile = new Tile ({
-			parent 		: 	explr.tile.parent,
-			element 	: 	explr.tile.element,
-			width 		: 	explr.tile.width,
-			ratio 		: 	explr.tile.ratio,
-			id 			: 	data.pID,
-			content: 		data
-		});
+			tile = new Tile ({
+				parent 		: 	explr.tile.parent,
+				element 	: 	explr.tile.element,
+				width 		: 	explr.tile.width,
+				ratio 		: 	explr.tile.ratio,
+				data		: 	ko.observable(data)
+			});
 		tile.init();
 		explr.tiles.push(tile);
-		console.log(explr.tiles);
 	};
 
 	//Generate Tiles From Data Array
@@ -115,6 +114,7 @@ Tile Generation & Collection Methods
 		for (var i = 0; i < explr.data.length; i++) {
 			explr.createTile(explr.data[i]);
 		};
+		console.log("Status: Tiles Generated");
 	};
 
 /*
@@ -124,10 +124,12 @@ Public / Access Methods
 	//Initialization Macro
 	Explorer.prototype.init 			= function (callback) {
 		var explr = this;
-		explr.request("GET", explr.routes.retrieve, {}, function () {
+		explr.request("GET", explr.routes.new, {}, function () {
 			explr.generateTiles();
+			ko.applyBindings(explr, document.getElementById(explr.element.replace('#', '')));
 			if (typeof callback === 'function') callback();
 		});
+		console.log("Status: Explorer Initialized");
 	};
 
 	//Filter Tiles

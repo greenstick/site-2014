@@ -297,6 +297,46 @@ Explorer
     float: left;
     background-color: rgba(11, 14, 23, .7);
 }
+#explorer .tile .title {
+    float: left;
+    margin: 40px;
+    width: 520px;
+    height: 32px;
+    font-size: 24px;
+}
+#explorer .tile .client {
+    float: left;
+    margin: 40px 20px 40px 40px;
+    width: 230px;
+    height: 32px;  
+    font-size: 24px;
+}
+#explorer .tile .content {
+    float: left;
+    margin: 40px 40px 40px 20px;
+    width: 230px;
+    height: 32px;
+    font-size: 24px;
+}
+#explorer .tile .description {
+    float: left;
+    margin: 20px 40px 40px 40px;
+    width: 520px;
+    height: 316px;
+    font-size: 20px;
+    line-height: 24px;
+}
+#explorer .tile .image {
+    position: absolute;
+    width: 560px;
+    height: 560px;
+    margin: 20px;
+    background-color: rgba(255, 255, 255, .1);
+}
+#explorer .tile .url {
+    
+}
+
 
 /*
 Footer

@@ -79,9 +79,15 @@
 		</form>
 		<div id="create-submission">DONE</div>
 	</div>
-	<div id="explorer" class="content w d-bg" data-bind="foreach: tile">
-		<div data-bind="attr: {class: element, id: id}">
-
+	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
+		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, style: {width: width() + 'px', height: height() + 'px'}">
+			<div class="image" data-bind="html: data().image"></div>
+			<a data-bind="attr{href: data().url}" target="_blank">
+				<div class="title" data-bind="html: data().title"></div>
+			</as>
+			<div class="client" data-bind="html: data().client"></div>
+			<div class="content" data-bind="html: data().content"></div>
+			<div class="description" data-bind="html: data().description"></div>
 		</div>
 	</div>
 	<div id="footer">

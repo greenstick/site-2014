@@ -56,6 +56,7 @@ Declare Arguments
 		$('.' + admin.explorer.tile.element).on("click", function (e) {
 			admin.toggleTile(e);
 		});
+		console.log("Status: Events Bound");
 	};
 	//Toggles Selection Class of Tiles
 	Admin.prototype.toggleTile 		= function (e) {
@@ -79,8 +80,8 @@ Macros
 			//Instatiate & Initialize Explorer
 			admin.scrollBar();
 			admin.explorer.init(function () {
-				// ko.applyBindings(admin.explorer, document.getElementById(admin.explorer.element.split('#', 1)));
 				admin.bindEvents();
+				console.log("Status: Explorer Data Bindings Applied")
 			});
 	};
 
@@ -129,6 +130,7 @@ Declare Args, Instantiation, & Initialization
 			focus 			: 		".focus",
 			duration 		: 		1000,
 			routes 			:		{
+					new 			: 		"/cms-new",
 					retrieve 		: 		"/cms-retrieve",
 					getByTag 		: 		"/cms-getByTag",
 					search 			: 		"/cms-search"
