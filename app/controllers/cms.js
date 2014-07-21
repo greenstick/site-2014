@@ -26,7 +26,7 @@ exports.submit 			= function (req, res) {
 		description 	= validate.str(data.description),
 		twitter 		= null,
 		facebook 		= null,
-		tags 			= validate.tags(data.tags).toLowerCase(),
+		tags 			= validate.tags(data.tags),
 		createdAt 		= date;
 
 		console.log(tags);

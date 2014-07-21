@@ -10,7 +10,7 @@ var Validate = {
 	tags 	: 	function (tags) {
 		var temp = validator.escape(validator.toString(validator.trim(tags))).split("#"), arr = [];
 		for (var i = 0; i < temp.length; i++) {
-			var str = (temp[i].toString()).trim();
+			var str = (temp[i].toString()).trim().toLowerCase();
 			if (str.length) arr.push(str);
 		};
 		return arr
