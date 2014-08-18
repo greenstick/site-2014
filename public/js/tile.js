@@ -41,7 +41,7 @@ Basic Methods
 		var tile = this, tagStr = '', tags = tile.tags(), length = tags.length;
 			for (var i = 0; i < length; i++) {
 				var tag = (i + 1 === length) ? (tags[i]).toString().trim().split(",").join("").split("#").join("") : (tags[i]).toString().trim().split(",").join("").split("#").join("") + " ";
-				tagStr = (tag === "" || tag === " ") ? tagStr : tagStr += tag;
+				tagStr = (tag === " ") ? tagStr : tagStr += tag;
 			};
 		return tagStr;
 	};

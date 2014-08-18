@@ -22,7 +22,15 @@
     "knox": "~0.8.9",
     "newrelic": "~1.4.0",
     "instagram-node": "~0.4.1",
-    "validator": "~3.16.1"
+    "validator": "~3.16.1",
+    "formidable": "~1.0.15",
+    "socket.io": "~1.0.6",
+    "bcrypt": "~0.8.0",
+    "natural": "~0.1.28",
+    "aws-sdk": "~2.0.14",
+    "neural": "0.0.0",
+    "brain": "~0.7.0",
+    "memwatch": "~0.2.2"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

@@ -7,10 +7,17 @@ html {
 	font-family: helvetica;
 	zoom: 1;
 }
-a {
+a, a:visited, a:link, a:active {
+    color: inherit;
 	text-decoration: none;
+    transition: color .6s;
+    -webkit-transition: color 6s;
+    -moz-transition: color .6s;
+    -ms-transition: color .6s;
+    -o-transition: color .6s;
 }
 a:hover {
+    text-decoration: none;
 	color: rgba(232, 227, 241, 1);
 }
 .button {
@@ -354,14 +361,37 @@ Footer
 Index - Specific Styles
 */
 
+#index {
+    position: relative;
+    margin: 0 auto;
+    width: 2000px;
+    height: 2000px;
+}
 #index .content {
 	top: 0px;
-	height: 2000px;
+    left: 0px;
+    margin: 0 auto;
+    width: 2000px;
+    height: 2000px;
+}
+#index .content .prompt {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: auto;
+    height: 32px;
+    cursor: pointer;
+}
+#index .content .circle {
+    position: absolute;
 }
 #index .content .iris {
 	position: absolute;
 	top: 0px;
 	left: 0px;
+    width: 2000px;
+    height: 2000px;
+/*    margin: -1000px 0 0 -1000px;*/
 }
 #index .content .enter {
 	position: absolute;
@@ -374,9 +404,6 @@ Index - Specific Styles
 	letter-spacing: 6px;
 	text-align: center;
 	color: rgba(232, 227, 241, 1);
-}
-#index .arc {
-
 }
 
 /*

@@ -11,7 +11,7 @@ var Iris = function (args) {
 		iris.dimensions 	= 		{},
 		iris.colors 		= 		["#24404F", "#263B45", "#353332", "#41312A", "#4F2F22"], //http://www.colourlovers.com/palette/96035/Son_of_Rothko
 		iris.svg,
-		iris.interval
+		iris.interval;
 };
 
 /*
@@ -33,7 +33,7 @@ var Iris = function (args) {
 		// Sets Iris Element Dimensions and Creates SVG Container
 		Iris.prototype.styleElement = function () {
 			var element = $(this.element);
-				element.width(iris.width).height(iris.height).css("left", - 400).css("top", 0);
+				element.width(iris.width).height(iris.height).css("left", 0).css("top", 0);
 				this.svg 	= 	d3.selectAll(iris.element).append("svg").attr("width", iris.width).attr("height", iris.height);
 		};
 
@@ -61,7 +61,7 @@ var Iris = function (args) {
 								.attr("d", arc)
 								.attr("class", "arc")
 								.attr("fill", "transparent")
-								.attr("stroke", "rgba(33, 43, 67, 1)")
+								.attr("stroke", "#212B43")
 								.attr("stroke-width", iris.strokeWidth + "px")
 								.attr("transform", "translate(" + iris.width/2 + ", " + iris.height/2 + ")");
 					};
@@ -73,30 +73,37 @@ var Iris = function (args) {
 			d3.selectAll('.arc').each(function () {
 				d3.select(this)
 					.transition()
-					.duration(1000)
+					.duration(800)
 					.ease("easeOutCirc")
 					.style("stroke", "#" + Math.floor(Math.random() * 16777215).toString(16));
-					// "#" + Math.floor(Math.random() * 16777215).toString(16)  Random Color Generator
 			});
 		};
 
 		//Change Color
-		Iris.prototype.animateInterval = function (flag) {
+		Iris.prototype.animateInterval = function () {
 			var iris = this;
-			if (flag === true) {
-				iris.interval = setInterval(function () {
-					iris.animate();
-				}, 500);
-			} else {
-				clearInterval(iris.interval);
-				setTimeout(function () {
-					d3.selectAll('.arc').each(function () {
-						d3.select(this).style("stroke", "rgba(33, 43, 67, 1)");
-					});
-				}, 1000);
-			};
+			iris.interval = setInterval(function () {
+				iris.animate();
+			}, 800);
 		};
 
+		//Clear Animation
+		Iris.prototype.clearAnimation = function () {
+			var iris = this;
+			clearInterval(iris.interval);
+			d3.selectAll('.arc').each(function () {
+				d3.select(this)
+					.transition()
+					.duration(800)
+					.ease("easeOutCirc")
+					.style("stroke", "#212B43");
+			});
+		};
+
+		//Navigate to Page Center
+		Iris.prototype.toCenter = function () {
+
+		};
 /*
 Public Methods
 */
@@ -128,11 +135,16 @@ var args = {
 Event Bindings
 */
 
+//To Center 
+$('.prompt').on("click", function () {
+	iris.toCenter();
+});
 //Enter Hover On
 $('.enter').on("mouseover", function () {
-	iris.animateInterval(true);
+	iris.animate();
+	iris.animateInterval();
 });
 //Enter Hover Off
 $('.enter').on("mouseout", function () {
-	iris.animateInterval(false);
+	iris.clearAnimation();
 });

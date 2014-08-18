@@ -39,7 +39,7 @@ API Routes
 /*
 CMS Routes
 */
-	app.get('/cms-submit', passport.authenticate('basic', {session: false}), cms.submit)
+	app.post('/cms-submit', passport.authenticate('basic', {session: false}), cms.submit)
 
 	//Basic Retrieval
 	app.get('/cms-retrieve', passport.authenticate('basic', {session: false}), cms.retrieve);

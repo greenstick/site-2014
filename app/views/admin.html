@@ -69,15 +69,17 @@
 		<div class="header">
 			Post That Shit
 		</div>
-		<form id="piece">
-			<input id="title-input" type="text" class="input-field" placeholder="TITLE" />
-			<input id="client-input" type="text" class="input-field" placeholder="CLIENT" />
-			<input id="url-input" type="text" class="input-field" placeholder="URL" />
-			<input id="content-input" type="text" class="input-field" placeholder="CONTENT" />
-			<textarea id="description-input" type="text" class="input-field" placeholder="DESCRIPTION"></textarea>
-			<input id="tags-input" type="text" class="input-field" placeholder="TAGS" />
+		<form id="piece" action="/cms-submit" method="post" enctype="multipart/form-data">
+			<input id="title-input" name="title" type="text" class="input-field" placeholder="TITLE" />
+			<input id="client-input" name="client" type="text" class="input-field" placeholder="CLIENT" />
+			<input id="url-input" name="url" type="text" class="input-field" placeholder="URL" />
+			<input id="content-input" name="content" type="text" class="input-field" placeholder="CONTENT" />
+			<textarea id="description-input" name="description" type="text" class="input-field" placeholder="DESCRIPTION"></textarea>
+			<input id="tags-input" type="text" name="tags" class="input-field" placeholder="TAGS" />
+			<input id="image-input" type="file" name="image" class="input-field" />
+			<input id="create-submission" type="submit" value="DONE">
 		</form>
-		<div id="create-submission">DONE</div>
+		<!-- <div id="create-submission">DONE</div> -->
 	</div>
 	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
 		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, style: {width: width() + 'px', height: height() + 'px'}">

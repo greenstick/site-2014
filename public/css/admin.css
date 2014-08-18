@@ -160,9 +160,14 @@ Piece Submission Pane
 #submission-pane .input-field:nth-child(5) {
     top: 320px;
     left: 20px;
-    height: 320px;
+    height: 260px;
 }
-#submission-pane .input-field:nth-child(6) {
+#submission-pane .input-field:nth-child(5) {
+    top: 600px;
+    left: 20px;
+    height: 40px;
+}
+#submission-pane .input-field:nth-child(7) {
     top: 660px;
     left: 20px;
     height: 40px;

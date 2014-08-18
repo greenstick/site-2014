@@ -94,7 +94,7 @@ Macros
 			description : $('#description-input').val(),
 			tags 		: $('#tags-input').val()
 		};
-		this.request('GET', data, '/cms-submit');
+		// this.request('GET', data, '/cms-submit');
 	};
 
 	Admin.prototype.resetForm 			= function () {

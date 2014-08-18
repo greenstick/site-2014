@@ -3,8 +3,10 @@ Require Dependencies
 */
 
 var Piece 		= require('../models/piece.js'),
-	knox 		= require('knox'),
 	fs 			= require('fs'),
+	util 		= require('util'),
+	formidable 	= require('formidable'),
+	knox 		= require('knox'),
 	validate 	= require('../utility/validation.js');
 
 /*
@@ -13,7 +15,18 @@ CMS API Methods
 
 //Submit Piece
 exports.submit 			= function (req, res) {
-	//Setup Client Sent Data
+	var form = new formidable.IncomingForm(req);
+	console.log(form);
+	console.log(req);
+		// form.parse(req, function (error, fields, files) {
+		// 	// if (error) return console.trace(error);
+		// 	console.log(fields);
+		// 	console.log(files);
+		// 	res.json({"fields": fields, "files": files});
+		// 	res.end(util.inspect({fields: fields, files: files}));
+		// })
+		// form.onPart(part);
+	// Setup Client Sent Data
 	var date 			= new Date(),
 		pID 			= ((Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4)),
 		data 			= req.query,
@@ -29,9 +42,7 @@ exports.submit 			= function (req, res) {
 		tags 			= validate.tags(data.tags),
 		createdAt 		= date;
 
-		console.log(tags);
-
-	//Set Data to Schema
+	// Set Data to Schema
 	var piece 				= new Piece({
 		pID 				: 	pID,
 		location 		: 	{
@@ -54,7 +65,7 @@ exports.submit 			= function (req, res) {
 		createdAt 			: 	date,
 		updatedAt 			: 	null
 	});
-	//Save Piece
+	// Save Piece
 	piece.save(function (error, piece, count) {
 		if (error) return console.trace(error);
 	});

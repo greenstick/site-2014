@@ -31,13 +31,14 @@ Explorer Prototype
 				search 			: 						args.routes.search 		|| "/search"
 			},
 			explr.settings 		= {
-				parent: 		explr.parent,
-				element: 		explr.element,
-				tile: 			explr.tile,
-				filter: 		explr.filter,
-				loader: 		explr.loader,
-				duration: 		explr.duration,
-				data: 			explr.data
+				parent 			: explr.parent,
+				element 		: explr.element,
+				tile 			: explr.tile,
+				filter 			: explr.filter,
+				loader 			: explr.loader,
+				duration 		: explr.duration,
+				routes 			: explr.routes,
+				data 			: explr.data
 			},
 			explr.tiles 		= ko.observableArray([]),
 			explr.data;
