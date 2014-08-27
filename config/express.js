@@ -11,7 +11,7 @@ module.exports = function(app, config) {
         app.set('view engine', 'jade');
         app.use(express.favicon(config.root + '/public/img/favicon.ico'));
         app.use(express.logger('dev'));
-        app.use(express.bodyParser());
+        app.use(express.bodyParser({defer: true}))
         app.use(express.multipart());
         app.use(express.methodOverride());
         app.use(passport.initialize());

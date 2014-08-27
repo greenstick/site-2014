@@ -21,6 +21,7 @@ var modelsPath = __dirname + '/app/models';
             require(modelsPath + '/' + file);
         }
     });
+
 //Remove Development User/Pass on Deployment
 passport.use(new BasicStrategy (
 	function (username, password, done) {

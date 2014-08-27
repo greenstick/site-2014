@@ -14,6 +14,7 @@ var Piece = new Schema({
 	title 		: 	String,
 	client 		: 	String,
 	url 		: 	String,
+	files 		: 	Array,
 	content 	: 	Object,
 	description : 	String,
 	popularity 	: 	Number,

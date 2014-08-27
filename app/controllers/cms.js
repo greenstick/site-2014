@@ -9,7 +9,7 @@ var Piece 		= require('../models/piece.js'),
 	zlib 		= require('zlib'),
 	uploader 	= require('s3-upload-stream').Uploader,
 	validate 	= require('../utility/validation.js'),
-	credentials = require('../utility/credentials.js');
+	credentials = require('../development/credentials.js');
 
 /*
 CMS API Methods
@@ -17,6 +17,7 @@ CMS API Methods
 
 // Submit Piece
 exports.submit 			= function (req, res) {
+	console.log(req);
 	var date 				= new Date(),
 		form 				= new formidable.IncomingForm();
 		form.multiples		= true;
@@ -45,6 +46,55 @@ exports.submit 			= function (req, res) {
 						uploadStream.on('uploaded', function (data) {
 							console.log(data);
 							console.log('Status: Upload complete');
+
+// Save to DB if Upload Stream Successful
+
+							// Setup Client Sent Data
+							var pID 			= ((Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4)),
+								data 			= req.query,
+								locationX 		= null,
+								locationY 		= null,
+								title 			= validate.str(data.title),
+								client 			= validate.str(data.client),
+								url 			= validate.url(data.url),
+								files	 		= files,
+								content 		= validate.str(data.content),
+								description 	= validate.str(data.description),
+								twitter 		= null,
+								facebook 		= null,
+								tags 			= validate.tags(data.tags),
+								createdAt 		= date;
+
+							// Set Data to Schema
+							var piece 				= new Piece({
+								pID 				: 	pID,
+								location 		: 	{
+									x 					: locationX,
+									y 					: locationY,
+								},
+								curated 			: 	false,
+								featured 			: 	false,
+								title 				: 	title,
+								client 				: 	client,
+								url 				: 	url,
+								files 				: 	files,
+								content 			: 	content, 
+								description 	: 		description,
+								popularity 		: 		null,
+								social 			: 	{
+									twitter 			: twitter,
+									facebook 			: facebook
+								},
+								tags 				: 	tags,
+								createdAt 			: 	date,
+								updatedAt 			: 	null
+							});
+
+							// Save Piece
+							// piece.save(function (error, piece, count) {
+							// 	if (error) return console.log(error);
+							// });
+
 						});
 						read.pipe(compress).pipe(uploadStream);
 					});
@@ -52,50 +102,6 @@ exports.submit 			= function (req, res) {
 			});
 		});
 		// form.onPart(part);
-
-	// Setup Client Sent Data
-	var pID 			= ((Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4)),
-		data 			= req.query,
-		locationX 		= null,
-		locationY 		= null,
-		title 			= validate.str(data.title),
-		client 			= validate.str(data.client),
-		url 			= validate.url(data.url),
-		content 		= validate.str(data.content),
-		description 	= validate.str(data.description),
-		twitter 		= null,
-		facebook 		= null,
-		tags 			= validate.tags(data.tags),
-		createdAt 		= date;
-
-	// Set Data to Schema
-	var piece 				= new Piece({
-		pID 				: 	pID,
-		location 		: 	{
-			x 					: locationX,
-			y 					: locationY,
-		},
-		curated 			: 	false,
-		featured 			: 	false,
-		title 				: 	title,
-		client 				: 	client,
-		url 				: 	url,
-		content 			: 	content, 
-		description 	: 		description,
-		popularity 		: 		null,
-		social 			: 	{
-			twitter 			: twitter,
-			facebook 			: facebook
-		},
-		tags 				: 	tags,
-		createdAt 			: 	date,
-		updatedAt 			: 	null
-	});
-
-	// Save Piece
-	// piece.save(function (error, piece, count) {
-	// 	if (error) return console.log(error);
-	// });
 };
 
 // Retrieve Pieces

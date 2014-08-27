@@ -14,14 +14,14 @@
     "url": "https://github.com/greenstick/site-2014.git"
   },
   "dependencies": {
-    "express": "~3.3.4",
-    "jade": "~0.34.0",
-    "mongoose": "~3.6.14",
+    "express": "~3.3.8",
+    "jade": "~0.34.1",
+    "mongoose": "~3.6.20",
     "passport": "~0.2.0",
     "passport-http": "~0.2.2",
-    "knox": "~0.8.9",
+    "knox": "~0.8.10",
     "newrelic": "~1.4.0",
-    "instagram-node": "~0.4.1",
+    "instagram-node": "~0.4.3",
     "validator": "~3.16.1",
     "formidable": "~1.0.15",
     "socket.io": "~1.0.6",
@@ -31,7 +31,14 @@
     "neural": "0.0.0",
     "brain": "~0.7.0",
     "memwatch": "~0.2.2",
-    "s3-upload-stream": "~0.6.1"
+    "s3-upload-stream": "~0.6.1",
+    "grunt-develop": "~0.2.2",
+    "grunt-contrib-compass": "~0.6.0",
+    "time-grunt": "~0.1.2",
+    "request": "~2.27.0",
+    "load-grunt-tasks": "~0.2.1",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-bower-task": "~0.3.4"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
