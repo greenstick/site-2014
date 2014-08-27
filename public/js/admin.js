@@ -21,17 +21,19 @@ Declare Arguments
 			admin.selectedTiles = [];
 	};
 
+	// Toggle Le Menu
 	Admin.prototype.toggleMenu 		= function () {
 		$(admin.menu).toggleClass('close');
 		$(admin.navigation).toggleClass('active');
 	};
 
+	// Instantiate Scroll Bar
 	Admin.prototype.scrollBar 		= function () {
 		var admin = this;
 		$(admin.scrollable).perfectScrollbar();
 		$(admin.scrollable).perfectScrollbar('update');
 	};
-	//Base Request Method
+	// Base Request Method
 	Admin.prototype.request 			= function (type, data, route) {
 		var admin = this;
 		$.ajax({
@@ -44,25 +46,26 @@ Declare Arguments
 			console.log(res);
 		}).fail(function () {
 			console.debug("XHR Alert: Request Failed");
+			console.log(type, data, route);
 		}).always(function () {
 			console.debug("XHR Notification: Request Complete");
 			if (typeof callback === 'function') callback();
 		});
 	};
 
-	//Binds Events Once Tiles Have Been Rendered
+	// Binds Events Once Tiles Have Been Rendered
 	Admin.prototype.bindEvents 		= function () {
 		//Select Tile
 		$('.' + admin.explorer.tile.element).on("click", function (e) {
 			admin.toggleTile(e);
 		});
-		console.log("Status: Events Bound");
+		console.log("Status: Tile Events Bound");
 	};
-	//Toggles Selection Class of Tiles
+	// Toggles Selection Class of Tiles
 	Admin.prototype.toggleTile 		= function (e) {
 		$(e.currentTarget).toggleClass('selected');
 	};
-	//Collects IDs of Selected Tiles
+	// Collects IDs of Selected Tiles
 	Admin.prototype.collectTiles 	= function () {
 		var admin = this,
 			tiles = $('.selected');
@@ -75,16 +78,19 @@ Declare Arguments
 Macros
 */
 
+	// Initialize
 	Admin.prototype.init 			= function () {
+		console.log("Status: Initializing...")
 		var admin = this;
 			//Instatiate & Initialize Explorer
 			admin.scrollBar();
 			admin.explorer.init(function () {
 				admin.bindEvents();
-				console.log("Status: Explorer Data Bindings Applied")
+				console.log("Status: Ready");
 			});
 	};
 
+	// Get Form Values
 	Admin.prototype.submitForm 			= function () {
 		var data = {
 			title 		: $('#title-input').val(),
@@ -97,13 +103,11 @@ Macros
 		// this.request('GET', data, '/cms-submit');
 	};
 
-	Admin.prototype.resetForm 			= function () {
-		$('#title-input').val('');
-		$('#client-input').val('');
-		$('#url-input').val('');
-		$('#content-input').val('');
-		$('#description-input').val('');
-		$('#tags-input').val('');
+	// Clear Form Inputs
+	Admin.prototype.clearForm 			= function () {
+		setTimeout(function () {
+			$('.input-field').val('');
+		}, 500);
 	};
 
 /*
@@ -144,39 +148,44 @@ Declare Args, Instantiation, & Initialization
 Event Bindings
 */
 
-	//Toggle Filters Menu
+	// Toggle Filters Menu
 	$(admin.menu).on("click", function (e) {
 		admin.toggleMenu();
 	});
 
-	//Filter Explorer
+	// Filter Explorer
 	$('.' + admin.explorer.filter).on("click", function (e) {
 		var filter = $(this).data().filter;
 		admin.explorer.filterTiles(filter);
 	});
-	//Open Submission Pane
+
+	// Open Submission Pane
 	$(admin.openSub).on("click", function (e) {
 		$(admin.sub).addClass('active');
 	});
-	//Close Submission Pane
+
+	// Close Submission Pane
 	$(admin.closeSub).on("click", function (e) {
 		$(admin.sub).removeClass('active');
 	});
-	//Get Request
+
+	// Get Request
 	$(admin.adminGet).on("click", function (e) {
 		var call = $(this).data().call;
 		admin.explorer.request("GET", call, {}, function () {
 			console.log("GET done");
 		});
 	});
-	//Post Request
+
+	// Post Request
 	$(admin.adminPost).on("click", function (e) {
 		var call = $(this).data().call;
 		admin.explorer.request("GET", call, {}, function () {
 			console.log("POST done");
 		});
 	});
-	//Search Bar Enter
+
+	// Search Bar Enter
 	$(admin.searchBar).on("keydown", function (e) {
 		if (e.keyCode === 13) {
 			e.preventDefault();
@@ -186,7 +195,8 @@ Event Bindings
 			});
 		};
 	});
-	//Search Bar Go
+
+	// Search Bar Go
 	$(admin.searchGo).on("click", function (e) {
 		var query = $(admin.searchBar).text();
 		console.log(query);
@@ -194,9 +204,10 @@ Event Bindings
 			$(admin.searchBar).text("");
 		});
 	});
-	//Submit Piece Form
+
+	// Submit Piece Form
 	$(admin.submit).on("click", function (e) {
 		admin.submitForm();
-		admin.resetForm();
+		admin.clearForm();
 		$(admin.sub).removeClass('active');
 	});

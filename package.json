@@ -30,7 +30,8 @@
     "aws-sdk": "~2.0.14",
     "neural": "0.0.0",
     "brain": "~0.7.0",
-    "memwatch": "~0.2.2"
+    "memwatch": "~0.2.2",
+    "s3-upload-stream": "~0.6.1"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

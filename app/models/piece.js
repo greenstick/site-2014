@@ -1,29 +1,29 @@
 
-var mongoose = require('mongoose'),
-	Schema = mongoose.Schema;
+var mongoose 	= require('mongoose'),
+	Schema  	= mongoose.Schema;
 
-//Portfolio Piece Schema
+// Portfolio Piece Schema
 var Piece = new Schema({
-	pID: 			String,
-	location: {
-		x: 			Number,
-		y: 			Number
+	pID 		: 	String,
+	location	: 	{
+		x			: 	Number,
+		y 			: 	Number
 	},
-	curated: 		Boolean,
-	featured: 		Boolean,
-	title: 			String,
-	client: 		String,
-	url: 			String,
-	content: 		Object,
-	description: 	String,
-	popularity: 	Number,
-	social: {
-		twitter: 		String,
-		facebook: 		String
+	curated 	: 	Boolean,
+	featured 	: 	Boolean,
+	title 		: 	String,
+	client 		: 	String,
+	url 		: 	String,
+	content 	: 	Object,
+	description : 	String,
+	popularity 	: 	Number,
+	social 		: 	{
+		twitter 	: 	String,
+		facebook 	: 	String
 	},
-	tags: 			Array,
-	createdAt: 		Date,
-	updatedAt: 		Date
+	tags 		: 	Array,
+	createdAt 	: 	Date,
+	updatedAt 	: 	Date
 });
 
 module.exports = mongoose.model('piece', Piece);

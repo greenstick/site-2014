@@ -30,13 +30,13 @@ Dependencies
 Basic Methods
 */
 
-	//Scale Element
+	// Scale Element
 	Tile.prototype.scale		=		function (scale) {
 		var tile = this;
 		$(tile.element).width(tile.width * scale).height(tile.height * scale);
 	};
 
-	//Sanitizes Tags for Rendering to Tile Data Attribute
+	// Sanitizes Tags for Rendering to Tile Data Attribute
 	Tile.prototype.sanitizeTags = 		function () {
 		var tile = this, tagStr = '', tags = tile.tags(), length = tags.length;
 			for (var i = 0; i < length; i++) {

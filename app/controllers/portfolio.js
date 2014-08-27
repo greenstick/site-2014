@@ -1,18 +1,18 @@
 var mongoose 			= require('mongoose');
 
-//Site Index
+// Site Index
 exports.index 			= function (req, res) {
 	res.render('', {
 		title: 'Welcome'
 	});
 };
-//Explore
+// Explore
 exports.explore 		= function (req, res) {
 	res.render('explore', {
 		title: 'Explore'
 	});
 };
-//Admin
+// Admin
 exports.admin 			= function (req, res) {
 	res.render('admin', {
 		title: 'Admin Panel'

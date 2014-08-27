@@ -302,7 +302,7 @@ Explorer
     position: relative;
     margin: 10px;
     float: left;
-    background-color: rgba(11, 14, 23, .7);
+    background-color: rgba(11, 14, 23, 1);
 }
 #explorer .tile .title {
     float: left;

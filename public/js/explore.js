@@ -10,7 +10,11 @@ Explorer Prototype
 	focus: 			string (cached, optional)
 	duration: 		string (cached, optional)
 	routes: 		object (required)
+		new: 			string (optional)
+		retrieve: 		string (optional)
 		getTiles: 		string (optional)
+		getByTag: 		string (optional)
+		search: 		string (optional)
 }
 */
 
@@ -70,7 +74,7 @@ Basic UI Methods
 API Request Methods
 */
 
-	//Basic Get Requests
+	// Basic Request
 	Explorer.prototype.request 		= function (type, route, data, callback) {
 		var explr = this;
 		explr.toggleLoader();
@@ -84,6 +88,7 @@ API Request Methods
 			explr.data = res;
 		}).fail(function () {
 			console.debug("XHR Alert: Request Failed");
+			console.log(type, route, data);
 		}).always(function () {
 			console.debug("XHR Notification: Request Complete");
 			explr.toggleLoader();
@@ -95,7 +100,7 @@ API Request Methods
 Tile Generation & Collection Methods
 */
 
-	//Create a Tile
+	// Create a Tile
 	Explorer.prototype.createTile 		= function (data) {
 		var explr = this,
 			tile = new Tile ({
@@ -109,7 +114,7 @@ Tile Generation & Collection Methods
 		explr.tiles.push(tile);
 	};
 
-	//Generate Tiles From Data Array
+	// Generate Tiles From Data Array
 	Explorer.prototype.generateTiles 	= function () {
 		var explr = this;
 		for (var i = 0; i < explr.data.length; i++) {
@@ -122,25 +127,25 @@ Tile Generation & Collection Methods
 Public / Access Methods
 */
 
-	//Initialization Macro
+	// Initialization Macro
 	Explorer.prototype.init 			= function (callback) {
 		var explr = this;
 		explr.request("GET", explr.routes.new, {}, function () {
 			explr.generateTiles();
-			ko.applyBindings(explr, document.getElementById(explr.element.replace('#', '')));
+			ko.applyBindings(explr, document.querySelector(explr.element));
 			if (typeof callback === 'function') callback();
 		});
 		console.log("Status: Explorer Initialized");
 	};
 
-	//Filter Tiles
+	// Filter Tiles
 	Explorer.prototype.filterTiles 		= function (filter, callback) {
 		var explr = this;
 		$(explr.tile).removeClass(explr.focus);
 		$(filter).addClass(explr.focus);
 	};
 
-	//Search For Tiles by String
+	// Search For Tiles by String
 	Explorer.prototype.search 			= function (query, callback) {
 		var explr = this;
 		explr.request("GET", explr.routes.search, {query: query}, function (res) {
@@ -150,7 +155,7 @@ Public / Access Methods
 		});
 	};
 
-	//Get TIles by Tags
+	// Get TIles by Tags
 	Explorer.prototype.getByTag 		= function (tags, callback) {
 		var explr = this;
 		explr.request("GET", explr.routes.getByTag, {tags: tags}, function () {

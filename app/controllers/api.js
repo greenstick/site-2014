@@ -2,15 +2,14 @@
 Require Dependencies
 */
 
-var Piece 	= require('../models/piece.js'),
-	knox 	= require('knox'),
-	fs 		= require('fs');
+var Piece 		= require('../models/piece.js'),
+	validate 	= require('../utility/validation.js');
 
 /*
 General API Methods
 */
 
-//Retrieve Pieces
+// Retrieve Pieces
 exports.retrieve 		= function (req, res) {
 	var query 			= Piece.find({curated: true}, 'location curated featured title url content description popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
@@ -18,7 +17,15 @@ exports.retrieve 		= function (req, res) {
 			res.json(pieces);
 		});
 };
-//Show Featured
+// Show New Pieces
+exports.new 			= function (req, res) {
+	var query 			= Piece.find({updated: null}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt');
+		query.exec(function (error, pieces) {
+			if (error) return console.trace(error);
+			res.json(pieces)
+		})
+};
+// Show Featured
 exports.showFeatured 	= function (req, res) {
 	var query 			= Piece.find({featured: true}, '*');
 		query.exec(function (error, pieces) {
@@ -26,7 +33,12 @@ exports.showFeatured 	= function (req, res) {
 			res.json(pieces);
 		});
 };
-//Retrieve by Search Query
+// Retrieve by Search Query
 exports.search 	= function (req, res) {
-	res.json({"Search Query Executed": true});
+	var queryStr = req.param("query");
+		queryArr = (validate.str(queryStr)).toLowerCase().split(" ");
+	res.json({
+		"Search Query Executed" : true,
+		"Query" 				: queryArr
+	});
 };
