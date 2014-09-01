@@ -1,3 +1,4 @@
+// Require Dependencies
 var express         = require('express'),
     mongoose        = require('mongoose'),
     fs              = require('fs'),
@@ -5,16 +6,18 @@ var express         = require('express'),
     passport        = require('passport'),
     BasicStrategy   = require('passport-http').BasicStrategy,
     knox            = require('knox'),
-    instagram       = require('instagram-node').instagram();
+    instagram       = require('instagram-node').instagram(),
+    io              = require('socket.io'),
+    credentials     = require('./app/development/credentials.js');
 
-//Connect to DB
+// Connect to DB
 mongoose.connect(config.db);
 var db = mongoose.connection;
     db.on('error', function () {
       throw new Error('unable to connect to database at ' + config.db);
     });
 
-//Access Models
+// Access Models
 var modelsPath = __dirname + '/app/models';
     fs.readdirSync(modelsPath).forEach(function (file) {
         if (file.indexOf('.js') >= 0) {
@@ -22,10 +25,10 @@ var modelsPath = __dirname + '/app/models';
         }
     });
 
-//Remove Development User/Pass on Deployment
+// Remove Development User/Pass on Deployment
 passport.use(new BasicStrategy (
 	function (username, password, done) {
-		if (username.valueOf() === process.env.OWNER_USERNAME || 'test' && password.valueOf() === process.env.OWNER_PASSWORD || 'pass')
+		if (username.valueOf() === process.env.OWNER_USERNAME || credentials.admin.user && password.valueOf() === process.env.OWNER_PASSWORD || credentials.admin.password)
 			return done(null, true);
 		else
 			return done(null, false);

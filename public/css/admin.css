@@ -102,7 +102,7 @@ Piece Submission Pane
     height: 40px;
     width: 536px;
     font-size: 24px;
-    line-height: 40px;
+    line-height: 32px;
     text-align: right;
 }
 #submission-pane form input, #submission-pane form textarea {
@@ -172,6 +172,13 @@ Piece Submission Pane
     left: 20px;
     height: 40px;
 }
+#submission-pane .input-field:nth-child(8) {
+    top: 660px;
+    left: 20px;
+    height: 40px;
+    opacity: 0;
+    z-index: 10;
+}
 #create-submission {
     position: absolute;
     top: 720px;
@@ -218,6 +225,7 @@ Explorer
         -ms-transition: all 550ms;
          -o-transition: all 550ms;
             transition: all 550ms;
+            
 }
 #explorer .tile.selected {
     -webkit-box-shadow: 0px 0px 24px 0px rgba(255,255,255,1);

@@ -16,6 +16,8 @@ Declare Arguments
 			admin.searchBar 	= args.searchBar 	|| 		'.search .bar',
 			admin.searchGo 		= args.searchGo 	|| 		'.search .submit',
 			admin.scrollable 	= args.scrollable 	|| 		'.scrollable',
+			admin.fileInput 	= args.fileInput 	|| 		'#file-input',
+			admin.fileMask 		= args.fileMask 	|| 		'#file-input-mask',
 			admin.submit 		= args.submit 		|| 		'#create-submission',
 			admin.explorer 		= new Explorer (args.explorer),
 			admin.selectedTiles = [];
@@ -88,6 +90,12 @@ Macros
 				admin.bindEvents();
 				console.log("Status: Ready");
 			});
+	};
+
+	Admin.prototype.showFilePath 		= function (e) {
+		var admin 	= this,
+			path 	= $(e.currentTarget).val();
+		if (path.length) $(admin.fileMask).val("FILE(S) READY");
 	};
 
 	// Get Form Values
@@ -203,6 +211,11 @@ Event Bindings
 		admin.explorer.search(query, function () {
 			$(admin.searchBar).text("");
 		});
+	});
+
+	// Display File Input Value on Selection
+	$(admin.fileInput).on("change", function (e) {
+		admin.showFilePath(e);
 	});
 
 	// Submit Piece Form

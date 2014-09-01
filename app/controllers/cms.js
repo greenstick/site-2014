@@ -9,7 +9,7 @@ var Piece 		= require('../models/piece.js'),
 	zlib 		= require('zlib'),
 	uploader 	= require('s3-upload-stream').Uploader,
 	validate 	= require('../utility/validation.js'),
-	credentials = require('../development/credentials.js');
+	credentials = (process.env.NODE_ENV) ? undefined : require('../development/credentials.js');
 
 /*
 CMS API Methods
@@ -17,87 +17,92 @@ CMS API Methods
 
 // Submit Piece
 exports.submit 			= function (req, res) {
-	console.log(req);
 	var date 				= new Date(),
-		form 				= new formidable.IncomingForm();
+		form 				= new formidable.IncomingForm(),
+		filesUploaded 		= 0;
 		form.multiples		= true;
 		form.keepExtensions = true;
 		form.parse(req, function (error, fields, files) {
 			if (error) return console.log(error);
-			form.on('end', function (fields, files) {
-				if (files) {
-				var read 				= fs.createReadStream(path),
-					compress 			= zlib.createGzip(),
-					aws 		 		= {
-						"accessKeyId" 		: process.env.AWS_ACCESSKEY || credentials.aws.accesskey,
-						"secretAccessKey" 	: process.env.AWS_SECRETKEY || credentials.aws.secretkey,
-						"region" 			: process.env.AWS_REGION 	|| credentials.aws.region
-					},
-					bucket 				= {
-						"Bucket" 			: process.env.AWS_BUCKET 	|| credentials.aws.bucket,
-						"Key" 				: "file-name-and-date"
-					},
-					stream 				= new uploader(aws, bucket, function (error, uploadStream) {
-						if (error) return console.log(error)
-						uploadStream.on('chunk', function (data) {
-							console.log(data);
-							console.log('Status: Chunk Streamed');
-						});
-						uploadStream.on('uploaded', function (data) {
-							console.log(data);
-							console.log('Status: Upload complete');
-
-// Save to DB if Upload Stream Successful
-
-							// Setup Client Sent Data
-							var pID 			= ((Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4)),
-								data 			= req.query,
-								locationX 		= null,
-								locationY 		= null,
-								title 			= validate.str(data.title),
-								client 			= validate.str(data.client),
-								url 			= validate.url(data.url),
-								files	 		= files,
-								content 		= validate.str(data.content),
-								description 	= validate.str(data.description),
-								twitter 		= null,
-								facebook 		= null,
-								tags 			= validate.tags(data.tags),
-								createdAt 		= date;
-
-							// Set Data to Schema
-							var piece 				= new Piece({
-								pID 				: 	pID,
-								location 		: 	{
-									x 					: locationX,
-									y 					: locationY,
-								},
-								curated 			: 	false,
-								featured 			: 	false,
-								title 				: 	title,
-								client 				: 	client,
-								url 				: 	url,
-								files 				: 	files,
-								content 			: 	content, 
-								description 	: 		description,
-								popularity 		: 		null,
-								social 			: 	{
-									twitter 			: twitter,
-									facebook 			: facebook
-								},
-								tags 				: 	tags,
-								createdAt 			: 	date,
-								updatedAt 			: 	null
+			form.on('progress', function (received, expected) {
+				console.log((received/expected).toFixed(2) + "%");
+			});
+			form.on('file', function (name, file) {
+				console.log("Status: File Detected");
+				if (file) {
+					var read 				= fs.createReadStream(path),
+						compress 			= zlib.createGzip(),
+						bytes 				= req.form.bytesExpected,
+						aws 		 		= {
+							"accessKeyId" 		: process.env.AWS_ACCESSKEY || credentials.aws.accesskey,
+							"secretAccessKey" 	: process.env.AWS_SECRETKEY || credentials.aws.secretkey,
+							"region" 			: process.env.AWS_REGION 	|| credentials.aws.region
+						},
+						bucket 				= {
+							"Bucket" 			: process.env.AWS_BUCKET 	|| credentials.aws.bucket,
+							"Key" 				: file.name + '-' + date
+						},
+						stream 				= new uploader(aws, bucket, function (error, uploadStream) {
+							if (error) return console.log(error)
+							console.log("Status: New Uploader");
+							uploadStream.on('chunk', function (data) {
+								console.log(data);
+								console.log('Status: Chunk Streamed');
 							});
+							uploadStream.on('uploaded', function (data) {
+								console.log("Status: Uploaded " + data);
+								filesUploaded++;
+								if (files.files.length === filesUploaded) {
+									// Setup Client Sent Data
+									var pID 			= ((Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4)),
+										data 			= req.query,
+										locationX 		= null,
+										locationY 		= null,
+										title 			= validate.str(data.title),
+										client 			= validate.str(data.client),
+										url 			= validate.url(data.url),
+										files	 		= files,
+										content 		= validate.str(data.content),
+										description 	= validate.str(data.description),
+										twitter 		= null,
+										facebook 		= null,
+										tags 			= validate.tags(data.tags),
+										createdAt 		= date;
 
-							// Save Piece
-							// piece.save(function (error, piece, count) {
-							// 	if (error) return console.log(error);
-							// });
+									// Set Data to Schema
+									var piece 				= new Piece({
+										pID 				: 	pID,
+										location 		: 	{
+											x 					: locationX,
+											y 					: locationY,
+										},
+										curated 			: 	false,
+										featured 			: 	false,
+										title 				: 	title,
+										client 				: 	client,
+										url 				: 	url,
+										files 				: 	files,
+										content 			: 	content, 
+										description 	: 		description,
+										popularity 		: 		null,
+										social 			: 	{
+											twitter 			: twitter,
+											facebook 			: facebook
+										},
+										tags 				: 	tags,
+										createdAt 			: 	date,
+										updatedAt 			: 	null
+									});
 
+								};
+							});
+							console.log("Status: Uploading...");
+							read.pipe(compress).pipe(uploadStream);
 						});
-						read.pipe(compress).pipe(uploadStream);
-					});
+						// Save Piece
+						// piece.save(function (error, piece, count) {
+						// 	if (error) return console.log(error);
+						// });
 				};
 			});
 		});
