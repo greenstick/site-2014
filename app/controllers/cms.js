@@ -9,7 +9,7 @@ var Piece 		= require('../models/piece.js'),
 	zlib 		= require('zlib'),
 	uploader 	= require('s3-upload-stream').Uploader,
 	validate 	= require('../utility/validation.js'),
-	credentials = (process.env.NODE_ENV) ? undefined : require('../development/credentials.js');
+	credentials = (process.env.NODE_ENV === 'production') ? undefined : require('../development/credentials.js');
 
 /*
 CMS API Methods

@@ -8,7 +8,7 @@ var express         = require('express'),
     knox            = require('knox'),
     instagram       = require('instagram-node').instagram(),
     io              = require('socket.io'),
-    credentials     = require('./app/development/credentials.js');
+    credentials     = (process.env.NODE_ENV === 'production') ? undefined : require('./app/development/credentials.js');
 
 // Connect to DB
 mongoose.connect(config.db);
