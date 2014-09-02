@@ -16,14 +16,39 @@ CMS API Methods
 */
 
 // Submit Piece
+
+
+/*
+Outline:
+
+- Set date timestamp to be used
+- Create new formidable instance
+- Use formidable parse function
+- Once form has been received, send form received status to client
+- If files are detected, for each file setup new stream to S3 by
+	- Creating read stream
+	- Creating gZip compression
+	- Getting bytes expected - from client, but also possibly from formidable
+	- Create new upload stream using above params and s3-upload-stream module
+	- Once all files have been streamed, save form fields + S3/Cloudfront locations to Mongo
+- Else, no files, save files to Mongo
+- Finally send response using JSON of success (just to see in network tab logs)
+
+*/
+
 exports.submit 			= function (req, res) {
+	
+	// Define date, form, form options
 	var date 				= new Date(),
-		form 				= new formidable.IncomingForm(),
+		form 				= new formidable.IncomingForm({
+			multiples 		: true,
+			keepExtensions 	: true
+		}),
 		filesUploaded 		= 0;
-		form.multiples		= true;
-		form.keepExtensions = true;
 		form.parse(req, function (error, fields, files) {
 			if (error) return console.log(error);
+			console.log(fields);
+			console.log(files);
 			form.on('progress', function (received, expected) {
 				console.log((received/expected).toFixed(2) + "%");
 			});
