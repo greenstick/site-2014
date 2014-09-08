@@ -16,7 +16,7 @@ var Authenticator = {
 		            }
 		        }
 		        if (env === 'production') {
-		            if (username.valueOf() === process.env.OWNER_USERNAME && password.valueOf() === process.env.PASSWORD) return done(null, true);
+		            if (username.valueOf() === process.env.OWNER_USERNAME && password.valueOf() === process.env.OWNER_PASSWORD) return done(null, true);
 		        }
 		        return done(null, false);
 		 	})
