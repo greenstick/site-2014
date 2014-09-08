@@ -4,7 +4,7 @@ var mongoose 	= require('mongoose'),
 
 // Portfolio Piece Schema
 var Piece = new Schema({
-	pID 		: 	String,
+	projectUUID : 	String,
 	location	: 	{
 		x			: 	Number,
 		y 			: 	Number

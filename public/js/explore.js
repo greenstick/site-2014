@@ -28,11 +28,11 @@ Explorer Prototype
 			explr.focus 		= args.focus 			|| explr.focus 			|| "focus",
 			explr.duration 		= args.duration 		|| explr.duration 		|| 600,
 			explr.routes 		= {
-				new 			: 						args.routes.new 		|| "/new",
-				retrieve 		: 						args.routes.retrieve 	|| "/retrieve",
-				getTiles 		:  						args.routes.getTiles 	|| "/getTiles",
-				getByTag		: 						args.routes.getByTag 	|| "/getByTag",
-				search 			: 						args.routes.search 		|| "/search"
+				new 			: 						args.routes.new 		|| "/api/new",
+				retrieve 		: 						args.routes.retrieve 	|| "/api/retrieve",
+				getTiles 		:  						args.routes.getTiles 	|| "/api/getTiles",
+				getByTag		: 						args.routes.getByTag 	|| "/api/getByTag",
+				search 			: 						args.routes.search 		|| "/api/search"
 			},
 			explr.settings 		= {
 				parent 			: explr.parent,

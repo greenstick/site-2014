@@ -3,7 +3,7 @@ var mongoose 	= require('mongoose'),
 
 // User Schema
 var User = new Schema({
-	uID 		: String,
+	userUUID 	: String,
 	name 		: String,
 	level 		: Number,
 	bin 		: String,

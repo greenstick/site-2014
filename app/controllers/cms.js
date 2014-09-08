@@ -7,16 +7,16 @@ var Piece 		= require('../models/piece.js'),
 	util 		= require('util'),
 	formidable 	= require('formidable'),
 	zlib 		= require('zlib'),
-	uploader 	= require('s3-upload-stream').Uploader,
+	Stream 		= require('s3-upload-stream').Uploader,
 	validate 	= require('../utility/validation.js'),
-	credentials = (process.env.NODE_ENV === 'production') ? undefined : require('../development/credentials.js');
+	uuid 		= require('node-uuid'),
+	credentials = (typeof process.env.NODE_ENV === 'undefined') ? require('../development/credentials.js') : undefined;
 
 /*
 CMS API Methods
 */
 
 // Submit Piece
-
 
 /*
 Outline:
@@ -37,101 +37,124 @@ Outline:
 */
 
 exports.submit 			= function (req, res) {
-	
 	// Define date, form, form options
-	var date 				= new Date(),
+	var date 	 			= new Date(),
+		dateString 			= date.valueOf(),
 		form 				= new formidable.IncomingForm({
 			multiples 		: true,
 			keepExtensions 	: true
 		}),
-		filesUploaded 		= 0;
-		form.parse(req, function (error, fields, files) {
-			if (error) return console.log(error);
-			console.log(fields);
-			console.log(files);
-			form.on('progress', function (received, expected) {
-				console.log((received/expected).toFixed(2) + "%");
-			});
-			form.on('file', function (name, file) {
-				console.log("Status: File Detected");
-				if (file) {
-					var read 				= fs.createReadStream(path),
-						compress 			= zlib.createGzip(),
-						bytes 				= req.form.bytesExpected,
-						aws 		 		= {
-							"accessKeyId" 		: process.env.AWS_ACCESSKEY || credentials.aws.accesskey,
-							"secretAccessKey" 	: process.env.AWS_SECRETKEY || credentials.aws.secretkey,
-							"region" 			: process.env.AWS_REGION 	|| credentials.aws.region
-						},
-						bucket 				= {
-							"Bucket" 			: process.env.AWS_BUCKET 	|| credentials.aws.bucket,
-							"Key" 				: file.name + '-' + date
-						},
-						stream 				= new uploader(aws, bucket, function (error, uploadStream) {
-							if (error) return console.log(error)
-							console.log("Status: New Uploader");
-							uploadStream.on('chunk', function (data) {
-								console.log(data);
-								console.log('Status: Chunk Streamed');
-							});
-							uploadStream.on('uploaded', function (data) {
-								console.log("Status: Uploaded " + data);
-								filesUploaded++;
-								if (files.files.length === filesUploaded) {
-									// Setup Client Sent Data
-									var pID 			= ((Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4) + '-' + (Math.random() + 1).toString(36).substring(2, 4) + (Math.random() + 1).toString(36).substring(2, 4)),
-										data 			= req.query,
-										locationX 		= null,
-										locationY 		= null,
-										title 			= validate.str(data.title),
-										client 			= validate.str(data.client),
-										url 			= validate.url(data.url),
-										files	 		= files,
-										content 		= validate.str(data.content),
-										description 	= validate.str(data.description),
-										twitter 		= null,
-										facebook 		= null,
-										tags 			= validate.tags(data.tags),
-										createdAt 		= date;
+		filesUploaded 		= 0,
+		filesDetected 		= 0,
+		s3FilePaths			= [];
+		console.log(date);
+	// Parse Form Using Formidable
+	form.parse(req, function (error, fields, files) {
+		if (error) return console.log(error);
+	});
 
-									// Set Data to Schema
-									var piece 				= new Piece({
-										pID 				: 	pID,
-										location 		: 	{
-											x 					: locationX,
-											y 					: locationY,
-										},
-										curated 			: 	false,
-										featured 			: 	false,
-										title 				: 	title,
-										client 				: 	client,
-										url 				: 	url,
-										files 				: 	files,
-										content 			: 	content, 
-										description 	: 		description,
-										popularity 		: 		null,
-										social 			: 	{
-											twitter 			: twitter,
-											facebook 			: facebook
-										},
-										tags 				: 	tags,
-										createdAt 			: 	date,
-										updatedAt 			: 	null
-									});
+/*
+Formidable Events
+*/
 
-								};
-							});
-							console.log("Status: Uploading...");
-							read.pipe(compress).pipe(uploadStream);
+	form.on('file', function (name, file) {
+		filesDetected++;
+		console.log("Status: File Detected");
+		console.log("Status: " + filesDetected + " Files Detected");
+		console.log("Status: " + filesUploaded + " Files Uploaded");
+		// console.log(file);
+		// console.log(file.path);
+		// console.log(file.size);
+		// console.log(file.type);
+		// console.log(file.name);
+
+// Need to figure out a way of creating unique file names on the fly
+// May be able to get this hash from the temporary file path generated
+// By the browser. Research whether these hashes are unique or just randomized
+
+		var read 				= fs.createReadStream(file.path),
+			compress 			= zlib.createGzip(),
+			bytes 				= file.size,
+			filePath 			= uuid.v4() + "-admin-" + dateString,
+			aws 		 		= {
+				"accessKeyId" 		: process.env.AWS_ACCESSKEY || credentials.aws.accesskey,
+				"secretAccessKey" 	: process.env.AWS_SECRETKEY || credentials.aws.secretkey
+			},
+			bucket 				= {
+				"Bucket" 			: process.env.AWS_BUCKET 	|| credentials.aws.bucket,
+				"Key" 				: filePath,
+				"ContentType" 		: file.type
+			},
+			stream 				= new Stream(aws, bucket, function (error, uploadStream) {
+				if (error) return console.log(error, error.stack);
+				console.log("Status: New Uploader");
+				uploadStream.on('chunk', function (data) {
+					console.log(data);
+					console.log('Status: Chunk Streamed');
+				});
+				uploadStream.on('uploaded', function (data) {
+					console.log("Status: Uploaded, Logging S3 Upload Data...");
+					console.log(data)
+					s3FilePaths.push(data);
+					filesUploaded++;
+					if (filesDetected === filesUploaded) {
+						// Setup Client Sent Data
+						var projectUUID 	= uuid.v4(),
+							data 			= req.query,
+							locationX 		= null,
+							locationY 		= null,
+							title 			= validate.str(data.title),
+							client 			= validate.str(data.client),
+							url 			= validate.url(data.url),
+							files	 		= files,
+							content 		= validate.str(data.content),
+							description 	= validate.str(data.description),
+							twitter 		= null,
+							facebook 		= null,
+							tags 			= validate.tags(data.tags),
+							createdAt 		= date;
+
+						// Set Data to Schema
+						var piece 				= new Piece({
+							projectUUID 		: 	projectUUID,
+							location 		: 	{
+								x 					: locationX,
+								y 					: locationY,
+							},
+							curated 			: 	false,
+							featured 			: 	false,
+							title 				: 	title,
+							client 				: 	client,
+							url 				: 	url,
+							files 				: 	files,
+							content 			: 	content, 
+							description 	: 		description,
+							popularity 		: 		null,
+							social 			: 	{
+								twitter 			: twitter,
+								facebook 			: facebook
+							},
+							tags 				: 	tags,
+							createdAt 			: 	date,
+							updatedAt 			: 	null
 						});
-						// Save Piece
-						// piece.save(function (error, piece, count) {
-						// 	if (error) return console.log(error);
-						// });
-				};
+
+					};
+				});
+				console.log("Status: Uploading...");
+				read.pipe(compress).pipe(uploadStream);
 			});
-		});
-		// form.onPart(part);
+			// Save Piece
+			// piece.save(function (error, piece, count) {
+			// 	if (error) return console.log(error);
+			// });
+	});
+	// Formidable Upload Progress Event - Use This To Roll Progress Bar
+	form.on('progress', function (received, expected) {
+		console.log(((received/expected).toFixed(2) * 100) + "%");
+		res.json((received/expected).toFixed(2))
+	});
+
 };
 
 // Retrieve Pieces

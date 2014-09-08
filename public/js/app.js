@@ -71,10 +71,10 @@ Declare Args, Instantiation, & Initialization
 			focus 			: 		".focus",
 			duration 		: 		1000,
 			routes 			:		{
-					new 			: 		"/new",
-					retrieve 		: 		"/retrieve",
-					getByTag 		: 		"/getByTag",
-					search 			: 		"/search"
+					new 			: 		"/api/new",
+					retrieve 		: 		"/api/retrieve",
+					getByTag 		: 		"/api/getByTag",
+					search 			: 		"/api/search"
 			}
 		}
 	},

@@ -142,10 +142,10 @@ Declare Args, Instantiation, & Initialization
 			focus 			: 		".focus",
 			duration 		: 		1000,
 			routes 			:		{
-					new 			: 		"/cms-new",
-					retrieve 		: 		"/cms-retrieve",
-					getByTag 		: 		"/cms-getByTag",
-					search 			: 		"/cms-search"
+					new 			: 		"/cms/new",
+					retrieve 		: 		"/cms/retrieve",
+					getByTag 		: 		"/cms/getByTag",
+					search 			: 		"/cms/search"
 			}
 		}
 	},
