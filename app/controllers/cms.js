@@ -10,8 +10,10 @@ var Piece 		= require('../models/piece.js'),
 	Stream 		= require('s3-upload-stream').Uploader,
 	validate 	= require('../utility/validation.js'),
 	uuid 		= require('node-uuid'),
+	AWS 		= require('aws-sdk'),
 	credentials = (typeof process.env.NODE_ENV === 'undefined') ? require('../development/credentials.js') : undefined;
 
+	AWS.config.httpOptions = {timeout: 5000};
 /*
 CMS API Methods
 */
@@ -40,14 +42,15 @@ exports.submit 			= function (req, res) {
 	// Define date, form, form options
 	var date 	 			= new Date(),
 		dateString 			= date.valueOf(),
+		projectUUID 		= uuid.v4(),
 		form 				= new formidable.IncomingForm({
 			multiples 		: true,
 			keepExtensions 	: true
 		}),
-		filesUploaded 		= 0,
 		filesDetected 		= 0,
+		filesUploaded 		= 0,
 		s3FilePaths			= [];
-		console.log(date);
+
 	// Parse Form Using Formidable
 	form.parse(req, function (error, fields, files) {
 		if (error) return console.log(error);
@@ -59,22 +62,9 @@ Formidable Events
 
 	form.on('file', function (name, file) {
 		filesDetected++;
-		console.log("Status: File Detected");
-		console.log("Status: " + filesDetected + " Files Detected");
-		console.log("Status: " + filesUploaded + " Files Uploaded");
-		// console.log(file);
-		// console.log(file.path);
-		// console.log(file.size);
-		// console.log(file.type);
-		// console.log(file.name);
-
-// Need to figure out a way of creating unique file names on the fly
-// May be able to get this hash from the temporary file path generated
-// By the browser. Research whether these hashes are unique or just randomized
-
+		console.log("Status: File Detected - " + filesUploaded + '/' + filesDetected + " Uploaded");
 		var read 				= fs.createReadStream(file.path),
 			compress 			= zlib.createGzip(),
-			bytes 				= file.size,
 			filePath 			= uuid.v4() + "-admin-" + dateString,
 			aws 		 		= {
 				"accessKeyId" 		: process.env.AWS_ACCESSKEY || credentials.aws.accesskey,
@@ -87,72 +77,81 @@ Formidable Events
 			},
 			stream 				= new Stream(aws, bucket, function (error, uploadStream) {
 				if (error) return console.log(error, error.stack);
-				console.log("Status: New Uploader");
-				uploadStream.on('chunk', function (data) {
-					console.log(data);
-					console.log('Status: Chunk Streamed');
-				});
+				console.log("Status: New Uploader Streaming");
+				// Once File Has Been Uploaded
 				uploadStream.on('uploaded', function (data) {
-					console.log("Status: Uploaded, Logging S3 Upload Data...");
-					console.log(data)
-					s3FilePaths.push(data);
+					console.log("Status: Uploaded " + data.Key);
+					s3FilePaths.push(data.Key);
+					console.log(s3FilePaths);
 					filesUploaded++;
-					if (filesDetected === filesUploaded) {
-						// Setup Client Sent Data
-						var projectUUID 	= uuid.v4(),
-							data 			= req.query,
-							locationX 		= null,
-							locationY 		= null,
-							title 			= validate.str(data.title),
-							client 			= validate.str(data.client),
-							url 			= validate.url(data.url),
-							files	 		= files,
-							content 		= validate.str(data.content),
-							description 	= validate.str(data.description),
-							twitter 		= null,
-							facebook 		= null,
-							tags 			= validate.tags(data.tags),
-							createdAt 		= date;
-
-						// Set Data to Schema
-						var piece 				= new Piece({
-							projectUUID 		: 	projectUUID,
-							location 		: 	{
-								x 					: locationX,
-								y 					: locationY,
-							},
-							curated 			: 	false,
-							featured 			: 	false,
-							title 				: 	title,
-							client 				: 	client,
-							url 				: 	url,
-							files 				: 	files,
-							content 			: 	content, 
-							description 	: 		description,
-							popularity 		: 		null,
-							social 			: 	{
-								twitter 			: twitter,
-								facebook 			: facebook
-							},
-							tags 				: 	tags,
-							createdAt 			: 	date,
-							updatedAt 			: 	null
-						});
-
-					};
+					// Save Piece
+					if (filesUploaded === filesDetected && s3FilePaths.length > 0) {
+						console.log("Status: Files Uploaded");
+						var updated 	= new Date(),
+							query 		= Piece.update({projectUUID: projectUUID}, {$set: {files: s3FilePaths, updatedAt: updated}});
+							query.exec(function (error, piece) {
+								if (error) return console.log(error);
+								console.log("Status: Mongo Updated");
+								console.log(piece);
+								return res.json(piece);
+							});
+					}
 				});
-				console.log("Status: Uploading...");
+				// Read File, Compress, & Stream to S3
 				read.pipe(compress).pipe(uploadStream);
 			});
-			// Save Piece
-			// piece.save(function (error, piece, count) {
-			// 	if (error) return console.log(error);
-			// });
 	});
 	// Formidable Upload Progress Event - Use This To Roll Progress Bar
 	form.on('progress', function (received, expected) {
-		console.log(((received/expected).toFixed(2) * 100) + "%");
-		res.json((received/expected).toFixed(2))
+		console.log("Status: Form " + ((received/expected).toFixed(2) * 100) + "% Uploaded");
+	});
+	// Once Form Data Has Been Uploaded
+	form.on('end', function () {
+		console.log("Status: Form Received");
+		// Setup Client Sent Data
+		var data 			= req.query,
+			locationX 		= null,
+			locationY 		= null,
+			title 			= validate.str(data.title),
+			client 			= validate.str(data.client),
+			url 			= validate.url(data.url),
+			files	 		= s3FilePaths,
+			content 		= validate.str(data.content),
+			description 	= validate.str(data.description),
+			twitter 		= null,
+			facebook 		= null,
+			tags 			= validate.tags(data.tags),
+			createdAt 		= date;
+		// Set Data to Schema
+		var piece 				= new Piece({
+			projectUUID 		: 	projectUUID,
+			location 		: 	{
+				x 					: locationX,
+				y 					: locationY,
+			},
+			curated 			: 	false,
+			featured 			: 	false,
+			title 				: 	title,
+			client 				: 	client,
+			url 				: 	url,
+			files 				: 	files,
+			content 			: 	content, 
+			description 	: 		description,
+			popularity 		: 		null,
+			social 			: 	{
+				twitter 			: twitter,
+				facebook 			: facebook
+			},
+			tags 				: 	tags,
+			createdAt 			: 	date,
+			updatedAt 			: 	null
+		});
+		// Save Piece to Mongo
+		piece.save(function (error, piece, count) {
+			if (error) return console.log(error);
+			console.log("Status: Saved to Mongo");
+			return res.json(piece);
+		});
 	});
 
 };
