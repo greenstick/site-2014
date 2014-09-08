@@ -66,12 +66,15 @@ Formidable Events
 		var read 				= fs.createReadStream(file.path),
 			compress 			= zlib.createGzip(),
 			filePath 			= uuid.v4() + "-admin-" + dateString,
+			keyID 				= process.env.AWS_ACCESSKEY || credentials.aws.accesskey,
+			secretKey 			= process.env.AWS_SECRETKEY || credentials.aws.secretkey,
+			bucketLoc 			= process.env.AWS_BUCKET 	|| credentials.aws.bucket,
 			aws 		 		= {
-				"accessKeyId" 		: process.env.AWS_ACCESSKEY || credentials.aws.accesskey,
-				"secretAccessKey" 	: process.env.AWS_SECRETKEY || credentials.aws.secretkey
+				"accessKeyId" 		: keyID,
+				"secretAccessKey" 	: secretKey
 			},
 			bucket 				= {
-				"Bucket" 			: process.env.AWS_BUCKET 	|| credentials.aws.bucket,
+				"Bucket" 			: bucketLoc,
 				"Key" 				: filePath,
 				"ContentType" 		: file.type
 			},
