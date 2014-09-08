@@ -107,7 +107,7 @@ Formidable Events
 	form.on('end', function () {
 		console.log("Status: Form Received");
 		// Setup Client Sent Data
-		var data 			= req.query,
+		var data 			= req.body,
 			locationX 		= null,
 			locationY 		= null,
 			title 			= validate.str(data.title),
