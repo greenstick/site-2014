@@ -1,7 +1,7 @@
 var passport 		= require('passport'),
 	BasicStrategy   = require('passport-http').BasicStrategy,
 	env         	= process.env.NODE_ENV || 'development',
-	credentials 	= require('../development/testers.js');
+	credentials 	= require('../../app/development/testers.js');
 	
 
 // Authentication Module
