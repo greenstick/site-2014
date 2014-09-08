@@ -11,7 +11,7 @@ var Piece 		= require('../models/piece.js'),
 	validate 	= require('../utility/validation.js'),
 	uuid 		= require('node-uuid'),
 	AWS 		= require('aws-sdk'),
-	credentials = (typeof process.env.NODE_ENV === 'undefined') ? require('../development/credentials.js') : undefined;
+	credentials = (typeof process.env.NODE_ENV === 'undefined') ? require('../development/credentials.js') : false;
 
 	AWS.config.httpOptions = {timeout: 5000};
 /*
@@ -66,15 +66,12 @@ Formidable Events
 		var read 				= fs.createReadStream(file.path),
 			compress 			= zlib.createGzip(),
 			filePath 			= uuid.v4() + "-admin-" + dateString,
-			keyID 				= process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
-			secretKey 			= process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey,
-			bucketLoc 			= process.env.AWS_BUCKET 		|| credentials.aws.bucket,
 			aws 		 		= {
-				"accessKeyId" 		: keyID,
-				"secretAccessKey" 	: secretKey
+				"accessKeyId" 		: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
+				"secretAccessKey" 	: process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey,
 			},
 			bucket 				= {
-				"Bucket" 			: bucketLoc,
+				"Bucket" 			: process.env.AWS_BUCKET 		|| credentials.aws.bucket,
 				"Key" 				: filePath,
 				"ContentType" 		: file.type
 			},
@@ -91,13 +88,10 @@ Formidable Events
 					if (filesUploaded === filesDetected && s3FilePaths.length > 0) {
 						console.log("Status: Files Uploaded");
 						var updated 	= new Date(),
-							query 		= Piece.update({projectUUID: projectUUID}, {$set: {files: s3FilePaths, updatedAt: updated}}, function () {
-								query.exec(function (error, piece) {
-									if (error) return console.log(error);
-									console.log("Status: Mongo Updated");
-									console.log(piece);
-									return res.json(piece);
-								});
+							query 		= Piece.update({projectUUID: projectUUID}, {$set: {files: s3FilePaths, updatedAt: updated}});
+							query.exec(function (error, updated) {
+								if (error) return console.log(error);
+								console.log("Status: Mongo Updated " + updated + " Document");
 							});
 					}
 				});
