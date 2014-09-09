@@ -21,9 +21,10 @@ Dependencies
 			tile.ratio			=		args.ratio,
 			tile.width			=		ko.observable(args.width),
 			tile.height 		=		ko.observable(args.width * args.ratio),
-			tile.id 			= 		ko.observable(args.data().pID),
+			tile.id 			= 		ko.observable(args.data().projectUUID),
 			tile.tags 			= 		ko.observable(args.data().tags),
 			tile.data 			= 		ko.observable(args.data())
+			console.log(args.data());
 	};
 
 /*

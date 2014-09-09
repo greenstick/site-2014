@@ -106,8 +106,8 @@ Tile Generation & Collection Methods
 			tile = new Tile ({
 				parent 		: 	explr.tile.parent,
 				element 	: 	explr.tile.element,
-				width 		: 	explr.tile.width,
 				ratio 		: 	explr.tile.ratio,
+				width 		: 	explr.tile.width,
 				data		: 	ko.observable(data)
 			});
 		tile.init();

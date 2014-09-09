@@ -84,8 +84,11 @@
 	</div>
 	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
 		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, style: {width: width() + 'px', height: height() + 'px'}">
-			<div class="image" data-bind="html: 'd2osuiq5lifihc.cloudfront.net/' + data().image"></div>
-			<!-- <img class="image" data-bind="attr: {src: 'http://d2osuiq5lifihc.cloudfront.net/ded38da2-6df7-488b-9579-db53076dbe4a-admin-1410143010306'}"></div> -->
+			<div class="carousel" data-bind="foreach: data().files">
+				<div class="image">
+					<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
+				</div>
+			</div>
 			<a data-bind="attr{href: data().url}" target="_blank">
 				<div class="title" data-bind="html: data().title"></div>
 			</as>

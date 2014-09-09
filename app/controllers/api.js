@@ -11,7 +11,7 @@ General API Methods
 
 // Retrieve Pieces
 exports.retrieve 		= function (req, res) {
-	var query 			= Piece.find({curated: true}, 'location curated featured title url content description popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.trace(error);
 			res.json(pieces);
@@ -19,7 +19,7 @@ exports.retrieve 		= function (req, res) {
 };
 // Show New Pieces
 exports.new 			= function (req, res) {
-	var query 			= Piece.find({updated: null}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({updated: null}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.trace(error);
 			res.json(pieces)

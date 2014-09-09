@@ -19,25 +19,6 @@ CMS API Methods
 */
 
 // Submit Piece
-
-/*
-Outline:
-
-- Set date timestamp to be used
-- Create new formidable instance
-- Use formidable parse function
-- Once form has been received, send form received status to client
-- If files are detected, for each file setup new stream to S3 by
-	- Creating read stream
-	- Creating gZip compression
-	- Getting bytes expected - from client, but also possibly from formidable
-	- Create new upload stream using above params and s3-upload-stream module
-	- Once all files have been streamed, save form fields + S3/Cloudfront locations to Mongo
-- Else, no files, save files to Mongo
-- Finally send response using JSON of success (just to see in network tab logs)
-
-*/
-
 exports.submit 			= function (req, res) {
 	// Define date, form, form options
 	var date 	 			= new Date(),
@@ -81,7 +62,7 @@ Formidable Events
 				// Once File Has Been Uploaded
 				uploadStream.on('uploaded', function (data) {
 					console.log("Status: Uploaded " + data.Key);
-					s3FilePaths.push(data.Key);
+					s3FilePaths.push({path: data.Key});
 					console.log(s3FilePaths);
 					filesUploaded++;
 					// Save Piece
@@ -156,7 +137,7 @@ Formidable Events
 
 // Retrieve Pieces
 exports.retrieve 		= function (req, res) {
-	var query 			= Piece.find({curated: true}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			res.json(pieces);
@@ -164,7 +145,11 @@ exports.retrieve 		= function (req, res) {
 };
 // Show New Pieces
 exports.new 			= function (req, res) {
-	var query 			= Piece.find({updated: null}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt');
+		// Piece.remove({}, function (error, removed) {
+		// 	if (error) return console.log(error);
+		// 	console.log(removed);
+		// });
+	var query 			= Piece.find({updated: null}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			res.json(pieces)
@@ -177,6 +162,7 @@ exports.curate			= function (req, res) {
 		query 			= Piece.update({_id: {$in: posts}}, {$set: {curated: true, updatedAt: updated}}, {multi: true});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
+			console.log(pieces);
 			res.json(pieces);
 		});
 };
@@ -187,6 +173,7 @@ exports.hide 			= function (req, res) {
 		query 			= Piece.update({_id: {$in: posts}}, {$set: {curated: false, updatedAt: updated}}, {multi: true});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
+			console.log(pieces);
 			res.json(pieces);
 		});
 };
@@ -197,30 +184,34 @@ exports.feature 		= function (req, res) {
 		query 			= Piece.update({_id: {$in: posts}}, {$set: {featured: true, curated: true, updatedAt: updated}}, {multi: true});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
+			console.log(pieces);
 			res.json(pieces);
 		});
 };
 // Show curated Pieces
 exports.showCurated 	= function (req, res) {
-	var query 			= Piece.find({curated: true}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
+			console.log(pieces);
 			res.json(pieces)
 		});
 };
 // Show Hidden Pieces
 exports.showHidden 		= function (req, res) {
-	var query 			= Piece.find({curated: true}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
+			console.log(pieces);
 			res.json(pieces);
 		});
 };
 // Show Featured
 exports.showFeatured 	= function (req, res) {
-	var query 			= Piece.find({featured: true}, '_id pID location curated featured title client url content description popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({featured: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
+			console.log(pieces);
 			res.json(pieces);
 		});
 };
@@ -231,15 +222,16 @@ exports.delete 			= function (req, res) {
 		query 			= Piece.remove({_id: {$in: posts}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
-			res.json({deleted: posts});
+			console.log(pieces);
+			res.json({deleted: pieces});
 		});
 };
 // Retrieve by Search Query
 exports.search 	= function (req, res) {
 	var queryStr = validate.str(req.param("query"));
 		queryArr = (validate.str(queryStr)).toLowerCase().split(" ");
-	res.json({
-		"Search Query Executed" : true,
-		"Query String" 			: queryArr
-	});
+		res.json({
+			"Search Query Executed" : true,
+			"Query String" 			: queryArr
+		});
 };
