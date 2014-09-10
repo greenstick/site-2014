@@ -31,16 +31,11 @@ exports.submit 			= function (req, res) {
 		filesDetected 		= 0,
 		filesUploaded 		= 0,
 		s3FilePaths			= [];
-
 	// Parse Form Using Formidable
 	form.parse(req, function (error, fields, files) {
 		if (error) return console.log(error);
 	});
-
-/*
-Formidable Events
-*/
-
+	// When File is Detected
 	form.on('file', function (name, file) {
 		filesDetected++;
 		console.log("Status: File Detected - " + filesUploaded + '/' + filesDetected + " Uploaded");
@@ -68,11 +63,10 @@ Formidable Events
 					// Save Piece
 					if (filesUploaded === filesDetected && s3FilePaths.length > 0) {
 						console.log("Status: Files Uploaded");
-						var updated 	= new Date(),
-							query 		= Piece.update({projectUUID: projectUUID}, {$set: {files: s3FilePaths, updatedAt: updated}});
+						var query 		= Piece.update({projectUUID: projectUUID}, {$set: {files: s3FilePaths}});
 							query.exec(function (error, updated) {
 								if (error) return console.log(error);
-								console.log("Status: Mongo Updated " + updated + " Document");
+								console.log("Status: CloudFront URL Updated");
 							});
 					}
 				});
@@ -157,9 +151,9 @@ exports.new 			= function (req, res) {
 };
 // Approve Piece
 exports.curate			= function (req, res) {
-	var posts 			= req.param("selectedPosts"),
+	var posts 			= req.param("selectedTiles"),
 		updated 		= new Date(),
-		query 			= Piece.update({_id: {$in: posts}}, {$set: {curated: true, updatedAt: updated}}, {multi: true});
+		query 			= Piece.update({projectUUID: {$in: posts}}, {$set: {curated: true, updatedAt: updated}}, {multi: true});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -168,9 +162,9 @@ exports.curate			= function (req, res) {
 };
 // Hide Piece
 exports.hide 			= function (req, res) {
-	var posts 			= req.param("selectedPosts"),
+	var posts 			= req.param("selectedTiles"),
 		updated 		= new Date(),
-		query 			= Piece.update({_id: {$in: posts}}, {$set: {curated: false, updatedAt: updated}}, {multi: true});
+		query 			= Piece.update({projectUUID: {$in: posts}}, {$set: {curated: false, updatedAt: updated}}, {multi: true});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -179,9 +173,9 @@ exports.hide 			= function (req, res) {
 };
 // Feature Piece
 exports.feature 		= function (req, res) {
-	var posts 			= req.param("selectedPosts"),
+	var posts 			= req.param("selectedTiles"),
 		updated 		= new Date(),
-		query 			= Piece.update({_id: {$in: posts}}, {$set: {featured: true, curated: true, updatedAt: updated}}, {multi: true});
+		query 			= Piece.update({projectUUID: {$in: posts}}, {$set: {featured: true, curated: true, updatedAt: updated}}, {multi: true});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -217,9 +211,9 @@ exports.showFeatured 	= function (req, res) {
 };
 // Delete Piece
 exports.delete 			= function (req, res) {
-	var posts 			= req.param("selectedPosts"),
+	var posts 			= req.param("selectedTiles"),
 		updated 		= new Date(),
-		query 			= Piece.remove({_id: {$in: posts}});
+		query 			= Piece.remove({projectUUID: {$in: posts}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);

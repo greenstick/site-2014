@@ -45,7 +45,7 @@ Explorer Prototype
 				data 			: explr.data
 			},
 			explr.tiles 		= ko.observableArray([]),
-			explr.data;
+			explr.data 			= ko.observable();
 	};
 
 /*
@@ -78,12 +78,14 @@ API Request Methods
 	Explorer.prototype.request 		= function (type, route, data, callback) {
 		var explr = this;
 		explr.toggleLoader();
+		console.log(data);
 		$.ajax({
 			type: type,
 			url: route,
+			dataType: "json",
 			data: data,
 		}).done(function (res) {
-			console.log("Response: ");
+			console.log("XHR Notification: Response... ");
 			console.log(res);
 			explr.data = res;
 		}).fail(function () {
@@ -117,6 +119,7 @@ Tile Generation & Collection Methods
 	// Generate Tiles From Data Array
 	Explorer.prototype.generateTiles 	= function () {
 		var explr = this;
+		console.log(explr.data);
 		for (var i = 0; i < explr.data.length; i++) {
 			explr.createTile(explr.data[i]);
 		};
@@ -136,6 +139,13 @@ Public / Access Methods
 			if (typeof callback === 'function') callback();
 		});
 		console.log("Status: Explorer Initialized");
+	};
+
+	// Update Macro
+	Explorer.prototype.update 			= function (callback) {
+		var explr = this;
+		explr.generateTiles();
+		if (typeof callback === 'function') callback();
 	};
 
 	// Filter Tiles
