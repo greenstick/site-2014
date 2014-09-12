@@ -18,6 +18,7 @@ Declare Arguments
 			admin.scrollable 	= args.scrollable 		|| 	'.scrollable',
 			admin.fileInput 	= args.fileInput 		|| 	'#file-input',
 			admin.fileMask 		= args.fileMask 		|| 	'#file-input-mask',
+			admin.form 			= args.form 			|| 	'#form',
 			admin.submit 		= args.submit 			|| 	'#create-submission',
 			admin.explorer 		= new Explorer (args.explorer),
 			admin.selectedTiles = [];
@@ -46,9 +47,9 @@ Declare Arguments
 		console.log("Status: Tile Events Bound");
 	};
 	// Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID From Select Array
-	Admin.prototype.toggleTile 		= function (e) {
+	Admin.prototype.toggleTile 		= function (data) {
 		var admin 	= this,
-			tile 	= e.currentTarget;
+			tile 	= $('#' + data.id());
 		$(tile).toggleClass('selected');
 		if ($(tile).hasClass('selected')) {
 			admin.selectedTiles.push($(tile).attr('id'));
@@ -127,6 +128,7 @@ Declare Args, Instantiation, & Initialization
 		menu 		: 		".menu-open",
 		adminGet 	: 		".admin.get",
 		adminPost 	: 		".admin.post",
+		form 		: 		"#piece",
 		explorer 	: 		{
 			parent			: 		"#wrapper",
 			element			: 		"#explorer",
@@ -178,19 +180,33 @@ Event Bindings
 
 	// Get Request
 	$(admin.adminGet).on("click", function (e) {
-		var call = $(this).data().call;
-		admin.explorer.request("GET", call, {}, function () {
-			admin.explorer.generateTiles();
-			console.log("GET done");
+		var call 	= $(this).data().call,
+			key 	= $(this).data().key,
+			val 	= $(this).data().val;
+		admin.explorer.request({
+			type 		: "GET",
+			route 		: call,
+			data 		: {},
+			callback 	: function () {
+				admin.explorer.generateTiles(key, val);
+				console.log("GET done");
+			}
 		});
 	});
 
 	// Post Request
 	$(admin.adminPost).on("click", function (e) {
-		var call = $(this).data().call;
-		admin.explorer.request("GET", call, {"selectedTiles": admin.selectedTiles}, function () {
-			admin.explorer.generateTiles();
-			console.log("POST done");
+		var call 	= $(this).data().call,
+			key 	= $(this).data().key,
+			val 	= $(this).data().val;
+		admin.explorer.request({
+			type 		: "GET", 
+			route 		: call, 
+			data 		: {"selectedTiles": admin.selectedTiles}, 
+			callback 	: function () {
+				admin.explorer.generateTiles(key, val);
+				console.log("POST done");
+			}
 		});
 	});
 
@@ -225,3 +241,8 @@ Event Bindings
 		admin.clearForm();
 		$(admin.sub).removeClass('active');
 	});
+
+	// Prevent Form Redirect
+	// $(admin.form).on("submit", function (e) {
+	// 	e.preventDefault();
+	// });

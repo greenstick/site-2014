@@ -45,7 +45,7 @@ Explorer Prototype
 				data 			: explr.data
 			},
 			explr.tiles 		= ko.observableArray([]),
-			explr.data 			= ko.observable();
+			explr.data;
 	};
 
 /*
@@ -74,20 +74,25 @@ Basic UI Methods
 API Request Methods
 */
 
-	// Basic Request
-	Explorer.prototype.request 		= function (type, route, data, callback) {
-		var explr = this;
+	// Basic Request Method
+	Explorer.prototype.request 		= function (args) {
+		var explr 		= this,
+			type 		= args.type,
+			route 		= args.route,
+			data 		= args.data,
+			callback	= args.callback;
+		// Toggle Loader On
 		explr.toggleLoader();
-		console.log(data);
+		// Construct Request
 		$.ajax({
-			type: type,
-			url: route,
-			dataType: "json",
-			data: data,
+			type 		: type,
+			url 		: route,
+			dataType 	: "json",
+			data 		: data,
 		}).done(function (res) {
-			console.log("XHR Notification: Response... ");
-			console.log(res);
 			explr.data = res;
+			console.log("XHR Notification: Response... "); 
+			console.log(explr.data);
 		}).fail(function () {
 			console.debug("XHR Alert: Request Failed");
 			console.log(type, route, data);
@@ -117,12 +122,20 @@ Tile Generation & Collection Methods
 	};
 
 	// Generate Tiles From Data Array
-	Explorer.prototype.generateTiles 	= function () {
+	Explorer.prototype.generateTiles 	= function (key, val) {
 		var explr = this;
-		console.log(explr.data);
-		for (var i = 0; i < explr.data.length; i++) {
-			explr.createTile(explr.data[i]);
-		};
+		explr.tiles([]);
+		if ((typeof key !== 'undefined') && (typeof val !== 'undefined')) {
+			for (var i = 0; i < explr.data.length; i++) {
+				if (explr.data[i][key] === val) {
+					explr.createTile(explr.data[i]);
+				};
+			};
+		} else {
+			for (var i = 0; i < explr.data.length; i++) {
+				explr.createTile(explr.data[i]);
+			};
+		}
 		console.log("Status: Tiles Generated");
 	};
 
@@ -133,11 +146,16 @@ Public / Access Methods
 	// Initialization Macro
 	Explorer.prototype.init 			= function (callback) {
 		var explr = this;
-		explr.request("GET", explr.routes.new, {}, function () {
-			explr.generateTiles();
-			ko.applyBindings(explr, document.querySelector(explr.element));
-			if (typeof callback === 'function') callback();
+		explr.request({
+			type 			: "GET",
+			route 			: explr.routes.new,
+			data 			: {},
+			callback 		: function () {
+				explr.generateTiles();
+				ko.applyBindings(explr, document.querySelector(explr.element));
+			}
 		});
+		if (typeof callback === 'function') callback();
 		console.log("Status: Explorer Initialized");
 	};
 

@@ -4,15 +4,15 @@ Require Modules
 
 var Piece 		= require('../models/piece.js'),
 	fs 			= require('fs'),
-	util 		= require('util'),
 	formidable 	= require('formidable'),
 	zlib 		= require('zlib'),
+	AWS 		= require('aws-sdk'),
 	Stream 		= require('s3-upload-stream').Uploader,
 	validate 	= require('../utility/validation.js'),
 	uuid 		= require('node-uuid'),
-	AWS 		= require('aws-sdk'),
 	credentials = (typeof process.env.NODE_ENV === 'undefined') ? require('../development/credentials.js') : false;
-
+	
+	// Configure AWS Connection Timeout
 	AWS.config.httpOptions = {timeout: 5000};
 /*
 CMS API Methods
@@ -95,7 +95,7 @@ exports.submit 			= function (req, res) {
 			facebook 		= null,
 			tags 			= validate.tags(data.tags),
 			createdAt 		= date;
-		// Set Data to Schema
+		// Set Data & Default Values to Schema
 		var piece 				= new Piece({
 			projectUUID 		: 	projectUUID,
 			location 		: 	{
@@ -123,7 +123,7 @@ exports.submit 			= function (req, res) {
 		piece.save(function (error, piece, count) {
 			if (error) return console.log(error);
 			console.log("Status: Saved to Mongo");
-			return res.json(piece);
+			return res.status(201).end();
 		});
 	});
 
@@ -182,6 +182,17 @@ exports.feature 		= function (req, res) {
 			res.json(pieces);
 		});
 };
+// Unfeature Piece
+exports.unfeature 		= function (req, res) {
+	var posts 			= req.param("selectedTiles"),
+		updated 		= new Date(),
+		query 			= Piece.update({projectUUID: {$in: posts}}, {$set: {featured: false, updatedAt: updated}}, {multi: true});
+		query.exec(function (error, pieces) {
+			if (error) return console.log(error);
+			console.log(pieces);
+			res.json(pieces);
+		});
+};
 // Show curated Pieces
 exports.showCurated 	= function (req, res) {
 	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
@@ -193,7 +204,7 @@ exports.showCurated 	= function (req, res) {
 };
 // Show Hidden Pieces
 exports.showHidden 		= function (req, res) {
-	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: false}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);

@@ -10,32 +10,35 @@
 				<div id="open-submission" class="button admin">
 					ADD PIECE
 				</div>
-				<div class="button admin post" data-call="/cms/feature">
+				<div class="button admin post" data-call="/cms/feature" data-key="featured" data-val=true>
 					FEATURE PIECE
 				</div>
-				<div class="button admin post" data-call="/cms/curate">
+				<div class="button admin post" data-call="/cms/unfeature" data-key="featured" data-val=false>
+					UNFEATURE PIECE
+				</div>
+				<div class="button admin post" data-call="/cms/curate" data-key="curated" data-val=true>
 					CURATE PIECE
 				</div>
-				<div class="button admin post" data-call="/cms/hide">
+				<div class="button admin post" data-call="/cms/hide" data-key="curated" data-val=false>
 					HIDE PIECE
 				</div>
-				<div class="button admin get" data-call="/cms/showFeatured">
+				<div class="button admin get" data-call="/cms/showFeatured" data-key="featured" data-val=true>
 					SHOW FEATURED
 				</div>
-				<div class="button admin get" data-call="/cms/showCurated">
+				<div class="button admin get" data-call="/cms/showCurated" data-key="curated" data-val=true>
 					SHOW CURATED
 				</div>
-				<div class="button admin get" data-call="/cms/showHidden">
+				<div class="button admin get" data-call="/cms/showHidden" data-key="curated" data-val=false>
 					SHOW HIDDEN
 				</div>
-				<div class="button admin get" data-call="/cms/new">
+				<div class="button admin get" data-call="/cms/new" data-key="updatedAt" data-val=null>
 					SHOW NEW
 				</div>
 				<div class="button admin post" data-call="/cms/delete">
 					DELETE PIECE
 				</div>
-				<div class="button filter get" data-filter="web-sites">
-					WEB SITES
+				<div class="button filter get" data-filter="websites">
+					WEBSITES
 				</div>
 				<div class="button filter get" data-filter="interactives">
 					INTERACTIVES
@@ -83,7 +86,7 @@
 		<!-- <div id="create-submission">DONE</div> -->
 	</div>
 	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
-		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, style: {width: width() + 'px', height: height() + 'px'}">
+		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, click: admin.toggleTile($data), style: {width: width() + 'px', height: height() + 'px'}">
 			<div class="carousel" data-bind="foreach: data().files">
 				<div class="image">
 					<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
