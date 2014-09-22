@@ -60,6 +60,9 @@ CMS Routes
 	// Feature
 	app.get('/cms/feature', passport.authenticate('basic', {session: false}), cms.feature);
 
+	// Unfeature
+	app.get('/cms/unfeature', passport.authenticate('basic', {session: false}), cms.unfeature);
+
 	// Show Approved
 	app.get('/cms/showCurated', passport.authenticate('basic', {session: false}), cms.showCurated);
 

@@ -1,3 +1,4 @@
+<link href="../css/reset.css" rel="stylesheet" type="text/css">
 <div id="wrapper">
 	<div id="navigation">
 		<div class="menu-open">
@@ -8,34 +9,34 @@
 		<div class="filters-expanded">
 			<div class="filter-items scrollable">
 				<div id="open-submission" class="button admin">
-					ADD PIECE
-				</div>
-				<div class="button admin post" data-call="/cms/feature" data-key="featured" data-val=true>
-					FEATURE PIECE
-				</div>
-				<div class="button admin post" data-call="/cms/unfeature" data-key="featured" data-val=false>
-					UNFEATURE PIECE
+					CREATE
 				</div>
 				<div class="button admin post" data-call="/cms/curate" data-key="curated" data-val=true>
-					CURATE PIECE
+					CURATE
 				</div>
 				<div class="button admin post" data-call="/cms/hide" data-key="curated" data-val=false>
-					HIDE PIECE
+					HIDE
 				</div>
-				<div class="button admin get" data-call="/cms/showFeatured" data-key="featured" data-val=true>
-					SHOW FEATURED
+				<div class="button admin post" data-call="/cms/feature" data-key="featured" data-val=true>
+					FEATURE
 				</div>
-				<div class="button admin get" data-call="/cms/showCurated" data-key="curated" data-val=true>
-					SHOW CURATED
-				</div>
-				<div class="button admin get" data-call="/cms/showHidden" data-key="curated" data-val=false>
-					SHOW HIDDEN
-				</div>
-				<div class="button admin get" data-call="/cms/new" data-key="updatedAt" data-val=null>
-					SHOW NEW
+				<div class="button admin post" data-call="/cms/unfeature" data-key="featured" data-val=false>
+					UNFEATURE
 				</div>
 				<div class="button admin post" data-call="/cms/delete">
-					DELETE PIECE
+					DELETE
+				</div>
+				<div class="button admin get" data-call="/cms/showFeatured" data-key="featured" data-val=true>
+					FEATURED
+				</div>
+				<div class="button admin get" data-call="/cms/showCurated" data-key="curated" data-val=true>
+					CURATED
+				</div>
+				<div class="button admin get" data-call="/cms/showHidden" data-key="curated" data-val=false>
+					HIDDEN
+				</div>
+				<div class="button admin get" data-call="/cms/new" data-key="updatedAt" data-val=null>
+					NEW
 				</div>
 				<div class="button filter get" data-filter="websites">
 					WEBSITES

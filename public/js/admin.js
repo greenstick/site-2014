@@ -45,17 +45,14 @@ Declare Arguments
 			admin.toggleTile(e);
 		});
 		console.log("Status: Tile Events Bound");
+		console.log($('.' + admin.explorer.tile.element));
 	};
 	// Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID From Select Array
 	Admin.prototype.toggleTile 		= function (data) {
 		var admin 	= this,
 			tile 	= $('#' + data.id());
 		$(tile).toggleClass('selected');
-		if ($(tile).hasClass('selected')) {
-			admin.selectedTiles.push($(tile).attr('id'));
-		} else {
-			admin.removeID(admin.selectedTiles, $(tile).attr('id'));
-		};
+		($(tile).hasClass('selected')) ? admin.selectedTiles.push($(tile).attr('id')) : admin.removeID(admin.selectedTiles, $(tile).attr('id'));
 	};
 	// Collects IDs of Selected Tiles
 	Admin.prototype.collectTiles 	= function () {
@@ -205,6 +202,7 @@ Event Bindings
 			data 		: {"selectedTiles": admin.selectedTiles}, 
 			callback 	: function () {
 				admin.explorer.generateTiles(key, val);
+				admin.selectedTiles = [];
 				console.log("POST done");
 			}
 		});

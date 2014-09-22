@@ -37,23 +37,34 @@ exports.submit 			= function (req, res) {
 	});
 	// When File is Detected
 	form.on('file', function (name, file) {
+		console.log(file);
 		filesDetected++;
 		console.log("Status: File Detected - " + filesUploaded + '/' + filesDetected + " Uploaded");
 		var read 				= fs.createReadStream(file.path),
 			compress 			= zlib.createGzip(),
-			filePath 			= uuid.v4() + "-admin-" + dateString,
+			fileType 			= file.name.split('.').pop() + ".gz",
+			fileName 			= uuid.v4() + "-admin-" + dateString + "." + fileType,
 			aws 		 		= {
 				"accessKeyId" 		: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
 				"secretAccessKey" 	: process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey,
 			},
 			bucket 				= {
 				"Bucket" 			: process.env.AWS_BUCKET 		|| credentials.aws.bucket,
-				"Key" 				: filePath,
-				"ContentType" 		: file.type
+				"Key" 				: fileName,
+				"ContentType" 		: file.type,
+				"ContentEncoding" 	: "gzip"
 			},
 			stream 				= new Stream(aws, bucket, function (error, uploadStream) {
 				if (error) return console.log(error, error.stack);
+				// Read File, Compress, & Stream to S3
 				console.log("Status: New Uploader Streaming");
+				// read.pipe(compress).pipe(uploadStream);
+				read.pipe(compress).pipe(uploadStream);
+				// When A Part Has Completed
+				uploadStream.on('part', function (details) {
+					console.log("Status: Part Streamed...");
+					console.log(details);
+				});
 				// Once File Has Been Uploaded
 				uploadStream.on('uploaded', function (data) {
 					console.log("Status: Uploaded " + data.Key);
@@ -70,8 +81,6 @@ exports.submit 			= function (req, res) {
 							});
 					}
 				});
-				// Read File, Compress, & Stream to S3
-				read.pipe(compress).pipe(uploadStream);
 			});
 	});
 	// Formidable Upload Progress Event - Use This To Roll Progress Bar
@@ -123,7 +132,7 @@ exports.submit 			= function (req, res) {
 		piece.save(function (error, piece, count) {
 			if (error) return console.log(error);
 			console.log("Status: Saved to Mongo");
-			return res.status(201).end();
+			res.location(req.headers.referer);
 		});
 	});
 
@@ -164,7 +173,7 @@ exports.curate			= function (req, res) {
 exports.hide 			= function (req, res) {
 	var posts 			= req.param("selectedTiles"),
 		updated 		= new Date(),
-		query 			= Piece.update({projectUUID: {$in: posts}}, {$set: {curated: false, updatedAt: updated}}, {multi: true});
+		query 			= Piece.update({projectUUID: {$in: posts}}, {$set: {curated: false, featured: false, updatedAt: updated}}, {multi: true});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -175,7 +184,7 @@ exports.hide 			= function (req, res) {
 exports.feature 		= function (req, res) {
 	var posts 			= req.param("selectedTiles"),
 		updated 		= new Date(),
-		query 			= Piece.update({projectUUID: {$in: posts}}, {$set: {featured: true, curated: true, updatedAt: updated}}, {multi: true});
+		query 			= Piece.update({projectUUID: {$in: posts}}, {$set: {curated: true, featured: true, updatedAt: updated}}, {multi: true});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);

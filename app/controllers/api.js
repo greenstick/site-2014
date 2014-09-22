@@ -23,7 +23,7 @@ exports.new 			= function (req, res) {
 		query.exec(function (error, pieces) {
 			if (error) return console.trace(error);
 			res.json(pieces)
-		})
+		});
 };
 // Show Featured
 exports.showFeatured 	= function (req, res) {
@@ -37,8 +37,8 @@ exports.showFeatured 	= function (req, res) {
 exports.search 	= function (req, res) {
 	var queryStr = req.param("query");
 		queryArr = (validate.str(queryStr)).toLowerCase().split(" ");
-	res.json({
-		"Search Query Executed" : true,
-		"Query" 				: queryArr
-	});
+		res.json({
+			"Search Query Executed" : true,
+			"Query" 				: queryArr
+		});
 };
