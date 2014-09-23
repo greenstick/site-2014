@@ -19,26 +19,6 @@ Declare Arguments
 		$(app.navigation).toggleClass('active');
 	};
 
-	// Base Request Method
-	App.prototype.request 		= function (type, data, route) {
-		var admin = this;
-		$.ajax({
-			type: type,
-			data: data,
-			url: route,
-		}).done(function (res) {
-			app.data = res;
-			console.log("Response: ");
-			console.log(res);
-		}).fail(function () {
-			console.debug("XHR Alert: Request Failed");
-			console.log(type, data, route);
-		}).always(function () {
-			console.debug("XHR Notification: Request Complete");
-			if (typeof callback === 'function') callback();
-		});
-	};
-
 /*
 Macros
 */
@@ -71,6 +51,7 @@ Declare Args, Instantiation, & Initialization
 			focus 			: 		".focus",
 			duration 		: 		1000,
 			routes 			:		{
+					def 			: 		"/api/retrieve",
 					new 			: 		"/api/new",
 					retrieve 		: 		"/api/retrieve",
 					getByTag 		: 		"/api/getByTag",

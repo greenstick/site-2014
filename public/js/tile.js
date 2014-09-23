@@ -9,9 +9,6 @@ Tile Prototype
 		- Object.width	 	(Number)
 		- Object.ratio	 	(Number)
 		- Object.content 	(Object)
-
-Dependencies	
-		- D3.js
 */
 
 	var Tile = function (args) {

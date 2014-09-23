@@ -28,6 +28,7 @@ Explorer Prototype
 			explr.focus 		= args.focus 			|| explr.focus 			|| "focus",
 			explr.duration 		= args.duration 		|| explr.duration 		|| 600,
 			explr.routes 		= {
+				def 			: 						args.routes.def 		|| "/api/retrieve",
 				new 			: 						args.routes.new 		|| "/api/new",
 				retrieve 		: 						args.routes.retrieve 	|| "/api/retrieve",
 				getTiles 		:  						args.routes.getTiles 	|| "/api/getTiles",
@@ -135,7 +136,7 @@ Tile Generation & Collection Methods
 			for (var i = 0; i < explr.data.length; i++) {
 				explr.createTile(explr.data[i]);
 			};
-		}
+		};
 		console.log("Status: Tiles Generated");
 	};
 
@@ -148,7 +149,7 @@ Public / Access Methods
 		var explr = this;
 		explr.request({
 			type 			: "GET",
-			route 			: explr.routes.new,
+			route 			: explr.routes.def,
 			data 			: {},
 			callback 		: function () {
 				explr.generateTiles();
@@ -169,8 +170,14 @@ Public / Access Methods
 	// Filter Tiles
 	Explorer.prototype.filterTiles 		= function (filter, callback) {
 		var explr = this;
-		$(explr.tile).removeClass(explr.focus);
-		$(filter).addClass(explr.focus);
+		explr.tiles([]);
+		for (var i = 0; i < explr.data.length; i++) {
+			for (var j = 0; j < explr.data[i].tags.length; j++) {
+				if (explr.data[i].tags[j] === filter) {
+					explr.createTile(explr.data[i]);
+				}
+			}
+		};
 	};
 
 	// Search For Tiles by String

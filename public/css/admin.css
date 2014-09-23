@@ -76,10 +76,10 @@ Piece Submission Pane
 
 #submission-pane {
     position: fixed;
-    top: 0px;
-    right: -640px;
+    top: 100%;
+    left: 0px;
     height: 100%;
-    width: 640px;
+    width: 100%;
     background-color: rgba(11, 14, 23, .6);
     color: rgba(232, 227, 241, 1);
     opacity: 0;
@@ -92,7 +92,7 @@ Piece Submission Pane
     transition: all 550ms;
 }
 #submission-pane.active {
-    right: 0px;
+    top: 0%;
     opacity: 1;
 }
 #submission-pane .header {

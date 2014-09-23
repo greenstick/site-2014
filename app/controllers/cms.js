@@ -42,7 +42,7 @@ exports.submit 			= function (req, res) {
 		console.log("Status: File Detected - " + filesUploaded + '/' + filesDetected + " Uploaded");
 		var read 				= fs.createReadStream(file.path),
 			compress 			= zlib.createGzip(),
-			fileType 			= file.name.split('.').pop() + ".gz",
+			fileType 			= file.name.split('.').pop(),
 			fileName 			= uuid.v4() + "-admin-" + dateString + "." + fileType,
 			aws 		 		= {
 				"accessKeyId" 		: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
@@ -156,7 +156,7 @@ exports.new 			= function (req, res) {
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			res.json(pieces)
-		})
+		});
 };
 // Approve Piece
 exports.curate			= function (req, res) {

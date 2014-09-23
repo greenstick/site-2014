@@ -7,23 +7,29 @@
 		</div>
 		<div class="filters-expanded">
 			<div class="filter-items">
-				<div class="button filter get" data-filter="web-sites">
+				<div class="button filter" data-filter="about">
+					ABOUT
+				</div>
+				<div class="button filter" data-filter="website">
 					WEBSITES
 				</div>
-				<div class="button filter get" data-filter="interactives">
+				<div class="button filter" data-filter="interactive">
 					INTERACTIVES
 				</div>
-				<div class="button filter get" data-filter="music">
+				<div class="button filter" data-filter="music">
 					MUSIC
 				</div>
-				<div class="button filter get" data-filter="sound-design">
+				<div class="button filter" data-filter="sound">
 					SOUND DESIGN
 				</div>
-				<div class="button filter get" data-filter="photography">
+				<div class="button filter" data-filter="photography">
 					PHOTOGRAPHY
 				</div>
-				<div class="button filter get" data-filter="technology">
+				<div class="button filter" data-filter="technology">
 					TECHNOLOGIES
+				</div>
+				<div class="button filter" data-filter="experience">
+					EXPERIENCE
 				</div>
 			</div>
 		</div>
@@ -32,8 +38,20 @@
 			<div class="submit button">SEARCH</div>
 		</div>
 	</div>
-	<div id="explorer" class="content w d-bg">
-		<div class="tile"></div>
+	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
+		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, style: {width: width() + 'px', height: height() + 'px'}">
+			<div class="carousel" data-bind="foreach: data().files">
+				<div class="image">
+					<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
+				</div>
+			</div>
+			<a data-bind="attr{href: data().url}" target="_blank">
+				<div class="title" data-bind="html: data().title"></div>
+			</a>
+			<div class="client" data-bind="html: data().client"></div>
+			<div class="content" data-bind="html: data().content"></div>
+			<div class="description" data-bind="html: data().description"></div>
+		</div>
 	</div>
 	<div id="footer">
 		FOOTER

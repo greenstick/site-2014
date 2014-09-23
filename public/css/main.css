@@ -90,7 +90,7 @@ UI Elements
 }
 #navigation.active {
     left: 0;
-    background-color: rgba(11, 14, 23, .6);
+    background-color: rgba(11, 14, 23, .9);
 }
 
 /* Hamburger Menu */
@@ -338,7 +338,12 @@ Explorer
     width: 560px;
     height: 560px;
     margin: 20px;
-    background-color: rgba(255, 255, 255, .1);
+/*    background-color: rgba(255, 255, 255, .1);*/
+    opacity: .1;
+}
+#explorer .tile .image img {
+    width: 100%;
+    height: 100%;
 }
 #explorer .tile .url {
     

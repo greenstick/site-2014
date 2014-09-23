@@ -140,6 +140,7 @@ Declare Args, Instantiation, & Initialization
 			focus 			: 		".focus",
 			duration 		: 		1000,
 			routes 			:		{
+					def 			: 		"/cms/new",
 					new 			: 		"/cms/new",
 					retrieve 		: 		"/cms/retrieve",
 					getByTag 		: 		"/cms/getByTag",
@@ -168,6 +169,7 @@ Event Bindings
 	// Open Submission Pane
 	$(admin.openSub).on("click", function (e) {
 		$(admin.sub).addClass('active');
+		admin.toggleMenu();
 	});
 
 	// Close Submission Pane
@@ -239,8 +241,3 @@ Event Bindings
 		admin.clearForm();
 		$(admin.sub).removeClass('active');
 	});
-
-	// Prevent Form Redirect
-	// $(admin.form).on("submit", function (e) {
-	// 	e.preventDefault();
-	// });
