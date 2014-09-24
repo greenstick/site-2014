@@ -37,7 +37,7 @@ Close Icon
 .close {
     position: absolute;
     top: 20px;
-    left: 20px;
+    right: 20px;
     width: 30px;
     height: 30px;
     cursor: pointer;
@@ -98,7 +98,7 @@ Piece Submission Pane
 #submission-pane .header {
     position: absolute;
     top: 20px;
-    left: 80px;
+    left: 60px;
     height: 40px;
     width: 536px;
     font-size: 24px;
@@ -139,42 +139,42 @@ Piece Submission Pane
 }
 #submission-pane .input-field:nth-child(1) {
     top: 80px;
-    left: 20px;
+    left: 10px;
     height: 40px;
 }
 #submission-pane .input-field:nth-child(2) {
     top: 140px;
-    left: 20px;
+    left: 10px;
     height: 40px;
 }
 #submission-pane .input-field:nth-child(3) {
     top: 200px;
-    left: 20px;
+    left: 10px;
     height: 40px;
 }
 #submission-pane .input-field:nth-child(4) {
     top: 260px;
-    left: 20px;
+    left: 10px;
     height: 40px;
 }
 #submission-pane .input-field:nth-child(5) {
     top: 320px;
-    left: 20px;
+    left: 10px;
     height: 260px;
 }
 #submission-pane .input-field:nth-child(6) {
     top: 600px;
-    left: 20px;
+    left: 10px;
     height: 40px;
 }
 #submission-pane .input-field:nth-child(7) {
     top: 660px;
-    left: 20px;
+    left: 10px;
     height: 40px;
 }
 #submission-pane .input-field:nth-child(8) {
     top: 660px;
-    left: 20px;
+    left: 10px;
     height: 40px;
     opacity: 0;
     z-index: 10;
@@ -182,7 +182,7 @@ Piece Submission Pane
 #create-submission {
     position: absolute;
     top: 720px;
-    left: 20px;
+    left: 10px;
     height: 40px;
     width: 600px;
     line-height: 40px;

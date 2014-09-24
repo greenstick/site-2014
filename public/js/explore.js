@@ -190,7 +190,7 @@ Public / Access Methods
 		});
 	};
 
-	// Get TIles by Tags
+	// Get Tiles by Tags
 	Explorer.prototype.getByTag 		= function (tags, callback) {
 		var explr = this;
 		explr.request("GET", explr.routes.getByTag, {tags: tags}, function () {

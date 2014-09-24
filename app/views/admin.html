@@ -1,4 +1,3 @@
-<link href="../css/reset.css" rel="stylesheet" type="text/css">
 <div id="wrapper">
 	<div id="navigation">
 		<div class="menu-open">
@@ -79,7 +78,7 @@
 		<div class="header">
 			Post That Shit
 		</div>
-		<form id="piece" action="/cms/submit" enctype="multipart/form-data" method="post">
+		<form id="piece" action="/cms/submit" enctype="multipart/form-data" method="post" target="uploader">
 			<input id="title-input" name="title" type="text" class="input-field" placeholder="TITLE" />
 			<input id="client-input" name="client" type="text" class="input-field" placeholder="CLIENT" />
 			<input id="url-input" name="url" type="text" class="input-field" placeholder="URL" />
@@ -90,6 +89,7 @@
 			<input id="file-input" type="file" name="files" class="input-field" multiple/>
 			<input id="create-submission" type="submit" value="DONE">
 		</form>
+		<iframe id="uploader" name="uploader" style="display: none;"></iframe>
 		<!-- <div id="create-submission">DONE</div> -->
 	</div>
 	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">

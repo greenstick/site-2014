@@ -4,7 +4,7 @@ Core Styles
 
 html {
 	background-color: rgba(11, 14, 23, .6);
-	font-family: helvetica;
+	font-family: helvetica, arial, sans-serif;
 	zoom: 1;
 }
 a, a:visited, a:link, a:active {

@@ -4,22 +4,22 @@ Declare Arguments
 
 	var Admin = function (args) {
 		var admin = this;
-			admin.element 		= args.element 			|| 	'#wradminer',
-			admin.navigation 	= args.navigation 		|| 	'#navigation',
-			admin.menu 			= args.menu 			|| 	'.menu',
-			admin.sub 			= args.sub 				|| 	'#submission-pane',
-			admin.openSub		= args.openSub 			|| 	'#open-submission',
-			admin.createSub 	= args.create 			|| 	'#create-submission',
-			admin.closeSub 		= args.closeSub 		|| 	'#close-submission',
-			admin.adminGet 		= args.adminGet 		|| 	'.get',
-			admin.adminPost 	= args.adminPost 		|| 	'.post',
-			admin.searchBar 	= args.searchBar 		|| 	'.search .bar',
-			admin.searchGo 		= args.searchGo 		|| 	'.search .submit',
-			admin.scrollable 	= args.scrollable 		|| 	'.scrollable',
-			admin.fileInput 	= args.fileInput 		|| 	'#file-input',
-			admin.fileMask 		= args.fileMask 		|| 	'#file-input-mask',
-			admin.form 			= args.form 			|| 	'#form',
-			admin.submit 		= args.submit 			|| 	'#create-submission',
+			admin.element 		= args.element 				|| 	'#wradminer',
+			admin.navigation 	= args.navigation 			|| 	'#navigation',
+			admin.menu 			= args.menu 				|| 	'.menu',
+			admin.sub 			= args.sub 					|| 	'#submission-pane',
+			admin.openSub		= args.openSub 				|| 	'#open-submission',
+			admin.createSub 	= args.create 				|| 	'#create-submission',
+			admin.closeSub 		= args.closeSub 			|| 	'#close-submission',
+			admin.adminGet 		= args.adminGet 			|| 	'.get',
+			admin.adminPost 	= args.adminPost 			|| 	'.post',
+			admin.searchBar 	= args.searchBar 			|| 	'.search .bar',
+			admin.searchGo 		= args.searchGo 			|| 	'.search .submit',
+			admin.scrollable 	= args.scrollable 			|| 	'.scrollable',
+			admin.fileInput 	= args.fileInput 			|| 	'#file-input',
+			admin.fileMask 		= args.fileMask 			|| 	'#file-input-mask',
+			admin.form 			= args.form 				|| 	'#form',
+			admin.submit 		= args.submit 				|| 	'#create-submission',
 			admin.explorer 		= new Explorer (args.explorer),
 			admin.selectedTiles = [];
 	};
@@ -45,7 +45,6 @@ Declare Arguments
 			admin.toggleTile(e);
 		});
 		console.log("Status: Tile Events Bound");
-		console.log($('.' + admin.explorer.tile.element));
 	};
 	// Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID From Select Array
 	Admin.prototype.toggleTile 		= function (data) {
@@ -64,14 +63,35 @@ Declare Arguments
 	};
 	// Remove ID From Array
 	Admin.prototype.removeID 		= function (arr) {
-		var what, a = arguments, L = a.length, ax;
-	    while (L > 1 && arr.length) {
-	        what = a[--L];
-	        while ((ax = arr.indexOf(what)) !== -1) {
-	            arr.splice(ax, 1);
-	        };
+		var what, a = arguments, l = a.length, ax;
+	    while (l > 1 && arr.length) {
+	        what = a[--l];
+	        while ((ax = arr.indexOf(what)) !== -1) arr.splice(ax, 1);
 	    };
 	    return arr;
+	};
+	// Populate Image Preview
+	Admin.prototype.previewImage 	= function (input) {
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        reader.onload = function (e) {
+	            $('#preview .image').attr('src', e.target.result);
+	        };
+	        reader.readAsDataURL(input.files[0]);
+	    };
+	};
+
+	// Update File Placeholder Text
+	Admin.prototype.showFilePath 	= function (path) {
+		var admin 	= this;
+		if (path.length) $(admin.fileMask).val("UPLOAD READY");
+	};
+
+	// Clear Form Inputs
+	Admin.prototype.clearForm 		= function () {
+		setTimeout(function () {
+			$('.input-field').val('');
+		}, 500);
 	};
 
 /*
@@ -90,29 +110,24 @@ Macros
 			});
 	};
 
-	Admin.prototype.showFilePath 	= function (e) {
-		var admin 	= this,
-			path 	= $(e.currentTarget).val();
-		if (path.length) $(admin.fileMask).val("FILE(S) READY");
-	};
-
 	// Get Form Values
-	Admin.prototype.submitForm 		= function () {
-		var data = {
-			title 		: $('#title-input').val(),
-			client 		: $('#client-input').val(),
-			url 		: $('#url-input').val(),
-			content 	: $('#content-input').val(),
-			description : $('#description-input').val(),
-			tags 		: $('#tags-input').val()
-		};
-	};
-
-	// Clear Form Inputs
-	Admin.prototype.clearForm 		= function () {
-		setTimeout(function () {
-			$('.input-field').val('');
-		}, 500);
+	Admin.prototype.submitForm 		= function (form) {
+		var data = new FormData(form);
+		$.ajax({
+			type 		: "POST",
+			url 		: "/cms/submit",
+			data 		: data
+		}).done(function (res) {
+			console.log("XHR Notification: Response... "); 
+			console.log(res);
+			admin.clearForm();
+			admin.explorer.generateTiles();
+		}).fail(function () {
+			console.debug("XHR Alert: Request Failed");
+			console.log(type, route, data);
+		}).always(function () {
+			console.debug("XHR Notification: Request Complete");
+		});
 	};
 
 /*
@@ -232,12 +247,15 @@ Event Bindings
 
 	// Display File Input Value on Selection
 	$(admin.fileInput).on("change", function (e) {
-		admin.showFilePath(e);
+		var input = $(e.currentTarget);
+		admin.showFilePath(input.val());
+		admin.previewImage(input);
 	});
 
 	// Submit Piece Form
-	$(admin.submit).on("click", function (e) {
-		admin.submitForm();
-		admin.clearForm();
+	$(admin.submit).on("submit", function (e) {
+		var form = $(this)[0];
+		e.preventDefault();
+		admin.submitForm(form);
 		$(admin.sub).removeClass('active');
 	});

@@ -24,7 +24,7 @@ Private Locations
 	app.get('/admin', passport.authenticate('basic', {session: false}), portfolio.admin);
 
 /*
-API Routes
+Public API Routes
 */
 
 	// Get New
@@ -40,10 +40,11 @@ API Routes
 	app.get('/api/search', api.search);
 
 /*
-CMS Routes
+Adming CMS Routes
 */
 
-	app.post('/cms/submit', passport.authenticate('basic', {session: false}), cms.submit)
+	// Submit Piece
+	app.post('/cms/submit', passport.authenticate('basic', {session: false}), cms.submit);
 
 	// Basic Retrieval
 	app.get('/cms/retrieve', passport.authenticate('basic', {session: false}), cms.retrieve);

@@ -10,10 +10,10 @@ var Piece 		= require('../models/piece.js'),
 	Stream 		= require('s3-upload-stream').Uploader,
 	validate 	= require('../utility/validation.js'),
 	uuid 		= require('node-uuid'),
-	credentials = (typeof process.env.NODE_ENV === 'undefined') ? require('../development/credentials.js') : false;
+	credentials = typeof process.env.NODE_ENV === 'undefined' ? require('../development/credentials.js') : false;
 	
 	// Configure AWS Connection Timeout
-	AWS.config.httpOptions = {timeout: 5000};
+	AWS.config.httpOptions = {timeout: 2500};
 /*
 CMS API Methods
 */
@@ -37,9 +37,8 @@ exports.submit 			= function (req, res) {
 	});
 	// When File is Detected
 	form.on('file', function (name, file) {
-		console.log(file);
+		if (file.size === 0) return;
 		filesDetected++;
-		console.log("Status: File Detected - " + filesUploaded + '/' + filesDetected + " Uploaded");
 		var read 				= fs.createReadStream(file.path),
 			compress 			= zlib.createGzip(),
 			fileType 			= file.name.split('.').pop(),
@@ -57,27 +56,17 @@ exports.submit 			= function (req, res) {
 			stream 				= new Stream(aws, bucket, function (error, uploadStream) {
 				if (error) return console.log(error, error.stack);
 				// Read File, Compress, & Stream to S3
-				console.log("Status: New Uploader Streaming");
-				// read.pipe(compress).pipe(uploadStream);
 				read.pipe(compress).pipe(uploadStream);
-				// When A Part Has Completed
-				uploadStream.on('part', function (details) {
-					console.log("Status: Part Streamed...");
-					console.log(details);
-				});
 				// Once File Has Been Uploaded
 				uploadStream.on('uploaded', function (data) {
-					console.log("Status: Uploaded " + data.Key);
 					s3FilePaths.push({path: data.Key});
-					console.log(s3FilePaths);
 					filesUploaded++;
 					// Save Piece
 					if (filesUploaded === filesDetected && s3FilePaths.length > 0) {
-						console.log("Status: Files Uploaded");
 						var query 		= Piece.update({projectUUID: projectUUID}, {$set: {files: s3FilePaths}});
 							query.exec(function (error, updated) {
 								if (error) return console.log(error);
-								console.log("Status: CloudFront URL Updated");
+								console.log("MONGO STATUS: Image Update Successful");
 							});
 					}
 				});
@@ -89,7 +78,6 @@ exports.submit 			= function (req, res) {
 	});
 	// Once Form Data Has Been Uploaded
 	form.on('end', function () {
-		console.log("Status: Form Received");
 		// Setup Client Sent Data
 		var data 			= req.body,
 			locationX 		= null,
@@ -103,39 +91,39 @@ exports.submit 			= function (req, res) {
 			twitter 		= null,
 			facebook 		= null,
 			tags 			= validate.tags(data.tags),
-			createdAt 		= date;
-		// Set Data & Default Values to Schema
-		var piece 				= new Piece({
-			projectUUID 		: 	projectUUID,
-			location 		: 	{
-				x 					: locationX,
-				y 					: locationY,
-			},
-			curated 			: 	false,
-			featured 			: 	false,
-			title 				: 	title,
-			client 				: 	client,
-			url 				: 	url,
-			files 				: 	files,
-			content 			: 	content, 
-			description 	: 		description,
-			popularity 		: 		null,
-			social 			: 	{
-				twitter 			: twitter,
-				facebook 			: facebook
-			},
-			tags 				: 	tags,
-			createdAt 			: 	createdAt,
-			updatedAt 			: 	null
-		});
+			createdAt 		= date,
+
+			// Set Data & Default Values to Schema
+			piece 			= new Piece({
+				projectUUID 		: projectUUID,
+				location 			: {
+					x 					: locationX,
+					y 					: locationY,
+				},
+				curated 			: false,
+				featured 			: false,
+				title 				: title,
+				client 				: client,
+				url 				: url,
+				files 				: files,
+				content 			: content, 
+				description 		: description,
+				popularity 			: null,
+				social 				: {
+					twitter 			: twitter,
+					facebook 			: facebook
+				},
+				tags 				: tags,
+				createdAt 			: createdAt,
+				updatedAt 			: null
+			});
 		// Save Piece to Mongo
-		piece.save(function (error, piece, count) {
+		var query = piece.save(function (error, piece, count) {
 			if (error) return console.log(error);
-			console.log("Status: Saved to Mongo");
-			res.location(req.headers.referer);
+			console.log("MONGO STATUS: Document Save Successful");
+			res.json(piece);
 		});
 	});
-
 };
 
 // Retrieve Pieces
@@ -146,7 +134,7 @@ exports.retrieve 		= function (req, res) {
 			res.json(pieces);
 		});
 };
-// Show New Pieces
+// Show New Pieces - Commented Section Cleans DB
 exports.new 			= function (req, res) {
 		// Piece.remove({}, function (error, removed) {
 		// 	if (error) return console.log(error);
