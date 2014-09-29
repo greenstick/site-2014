@@ -5,7 +5,7 @@ Declare Arguments
 	var Admin = function (args) {
 		var admin = this;
 			admin.element 		= args.element 				|| 	'#wradminer',
-			admin.navigation 	= args.navigation 			|| 	'#navigation',
+			admin.navigation 	= args.navigation 			|| 	'#navsigation',
 			admin.menu 			= args.menu 				|| 	'.menu',
 			admin.sub 			= args.sub 					|| 	'#submission-pane',
 			admin.openSub		= args.openSub 				|| 	'#open-submission',
@@ -21,8 +21,13 @@ Declare Arguments
 			admin.form 			= args.form 				|| 	'#form',
 			admin.submit 		= args.submit 				|| 	'#create-submission',
 			admin.explorer 		= new Explorer (args.explorer),
-			admin.selectedTiles = [];
+			admin.selectedTiles = [],
+			admin.selectedFiles = [];
 	};
+
+/*
+UI Handling Functions
+*/
 
 	// Toggle Le Menu
 	Admin.prototype.toggleMenu 		= function () {
@@ -37,32 +42,37 @@ Declare Arguments
 		$(admin.scrollable).perfectScrollbar();
 		$(admin.scrollable).perfectScrollbar('update');
 	};
-	// Binds Events Once Tiles Have Been Rendered
-	Admin.prototype.bindEvents 		= function () {
-		var admin 	= this;
-		// Select Tile Event
-		$('.' + admin.explorer.tile.element).on("click", function (e) {
-			admin.toggleTile(e);
-		});
-		console.log("Status: Tile Events Bound");
-	};
-	// Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID From Select Array
+
+	// Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID & Tile 
+	// File Paths From selectedTiles and selectedFiles Arrays Respectively
 	Admin.prototype.toggleTile 		= function (data) {
 		var admin 	= this,
-			tile 	= $('#' + data.id());
-		$(tile).toggleClass('selected');
-		($(tile).hasClass('selected')) ? admin.selectedTiles.push($(tile).attr('id')) : admin.removeID(admin.selectedTiles, $(tile).attr('id'));
+			id 		= data.id(),
+			tile 	= $('#' + id);
+		tile.toggleClass('selected');
+		if (tile.hasClass('selected')) {
+			admin.selectedTiles.push(id);
+			$.each(admin.explorer.data, function (k, v) {
+				if (id === v.projectUUID) {
+					for (var i = 0; i < v.files.length; i++) {
+						admin.selectedFiles.push(v.files[i].path);
+					};
+				};
+			});
+		} else {
+			admin.removeArrayValue(admin.selectedTiles, id);
+			$.each(admin.explorer.data, function (k, v) {
+				if (id === v.projectUUID) {
+					for (var i = 0; i < v.files.length; i++) {
+						admin.removeArrayValue(admin.selectedFiles, v.files[i].path);
+					};
+				};
+			});
+		};
 	};
-	// Collects IDs of Selected Tiles
-	Admin.prototype.collectTiles 	= function () {
-		var admin = this,
-			tiles = $('.selected');
-		$.each(tiles, function (k, v) {
-			admin.selectedTiles.push(v.id);
-		});
-	};
-	// Remove ID From Array
-	Admin.prototype.removeID 		= function (arr) {
+
+	// Remove Value From Array
+	Admin.prototype.removeArrayValue 		= function (arr) {
 		var what, a = arguments, l = a.length, ax;
 	    while (l > 1 && arr.length) {
 	        what = a[--l];
@@ -70,6 +80,7 @@ Declare Arguments
 	    };
 	    return arr;
 	};
+
 	// Populate Image Preview
 	Admin.prototype.previewImage 	= function (input) {
 	    if (input.files && input.files[0]) {
@@ -105,8 +116,7 @@ Macros
 			//Instatiate & Initialize Explorer
 			admin.scrollBar();
 			admin.explorer.init(function () {
-				admin.bindEvents();
-				console.log("Status: Ready");
+				console.log("Status: Admin Controller Initialized");
 			});
 	};
 
@@ -116,9 +126,12 @@ Macros
 		$.ajax({
 			type 		: "POST",
 			url 		: "/cms/submit",
-			data 		: data
+			data 		: data,
+			processData : false,
+			contentType : 'multipart/form-data',
+			mimeType 	: 'multipart/form-data'
 		}).done(function (res) {
-			console.log("XHR Notification: Response... "); 
+			console.log("XHR Notification:1` Response... "); 
 			console.log(res);
 			admin.clearForm();
 			admin.explorer.generateTiles();
@@ -200,11 +213,10 @@ Event Bindings
 		admin.explorer.request({
 			type 		: "GET",
 			route 		: call,
-			data 		: {},
-			callback 	: function () {
-				admin.explorer.generateTiles(key, val);
-				console.log("GET done");
-			}
+			data 		: {}
+		},  function () {
+			admin.explorer.generateTiles(key, val);
+			console.log("GET done");
 		});
 	});
 
@@ -216,12 +228,12 @@ Event Bindings
 		admin.explorer.request({
 			type 		: "GET", 
 			route 		: call, 
-			data 		: {"selectedTiles": admin.selectedTiles}, 
-			callback 	: function () {
-				admin.explorer.generateTiles(key, val);
-				admin.selectedTiles = [];
-				console.log("POST done");
-			}
+			data 		: {"selectedTiles": admin.selectedTiles, "selectedFiles": admin.selectedFiles}
+		},  function () {
+			console.log(admin.selectedFiles);
+			admin.explorer.generateTiles(key, val);
+			admin.selectedTiles = [];
+			console.log("POST done");
 		});
 	});
 

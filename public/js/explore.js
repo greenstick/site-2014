@@ -76,12 +76,11 @@ API Request Methods
 */
 
 	// Basic Request Method
-	Explorer.prototype.request 		= function (args) {
+	Explorer.prototype.request 		= function (args, callback) {
 		var explr 		= this,
 			type 		= args.type,
 			route 		= args.route,
-			data 		= args.data,
-			callback	= args.callback;
+			data 		= args.data;
 		// Toggle Loader On
 		explr.toggleLoader();
 		// Construct Request
@@ -105,13 +104,43 @@ API Request Methods
 	};
 
 /*
+Request Handlers
+*/
+
+	// Search For Tiles by String
+	Explorer.prototype.search 			= function (query, callback) {
+		var explr = this;
+		explr.request({
+			type 			: "GET", 
+			route 			: explr.routes.search, 
+			data 			: {query: query}
+		},  function () {
+			explr.update();
+		});
+		if (typeof callback === 'function') callback();
+	};
+
+	// Get Tiles by Tags
+	Explorer.prototype.getByTag 		= function (tags, callback) {
+		var explr = this;
+		explr.request({
+			type 			: "GET", 
+			route 			: explr.routes.getByTag, 
+			data 			: {tags: tags}
+		}, 	function () {
+			explr.update();
+		});
+		if (typeof callback === 'function') callback();
+	};
+
+/*
 Tile Generation & Collection Methods
 */
 
 	// Create a Tile
 	Explorer.prototype.createTile 		= function (data) {
 		var explr = this,
-			tile = new Tile ({
+			tile  = new Tile ({
 				parent 		: 	explr.tile.parent,
 				element 	: 	explr.tile.element,
 				ratio 		: 	explr.tile.ratio,
@@ -140,33 +169,6 @@ Tile Generation & Collection Methods
 		console.log("Status: Tiles Generated");
 	};
 
-/*
-Public / Access Methods
-*/
-
-	// Initialization Macro
-	Explorer.prototype.init 			= function (callback) {
-		var explr = this;
-		explr.request({
-			type 			: "GET",
-			route 			: explr.routes.def,
-			data 			: {},
-			callback 		: function () {
-				explr.generateTiles();
-				ko.applyBindings(explr, document.querySelector(explr.element));
-			}
-		});
-		if (typeof callback === 'function') callback();
-		console.log("Status: Explorer Initialized");
-	};
-
-	// Update Macro
-	Explorer.prototype.update 			= function (callback) {
-		var explr = this;
-		explr.generateTiles();
-		if (typeof callback === 'function') callback();
-	};
-
 	// Filter Tiles
 	Explorer.prototype.filterTiles 		= function (filter, callback) {
 		var explr = this;
@@ -180,21 +182,28 @@ Public / Access Methods
 		};
 	};
 
-	// Search For Tiles by String
-	Explorer.prototype.search 			= function (query, callback) {
+/*
+Macros
+*/
+
+	// Initialization Macro
+	Explorer.prototype.init 			= function (callback) {
 		var explr = this;
-		explr.request("GET", explr.routes.search, {query: query}, function (res) {
-			console.log(res);
+		explr.request({
+			type 			: "GET",
+			route 			: explr.routes.def,
+			data 			: {}
+		},  function () {
 			explr.generateTiles();
-			if (typeof callback === 'function') callback();
+			ko.applyBindings(explr, document.querySelector(explr.element));
 		});
+		if (typeof callback === 'function') callback();
+		console.log("Status: Explorer Initialized");
 	};
 
-	// Get Tiles by Tags
-	Explorer.prototype.getByTag 		= function (tags, callback) {
+	// Update Macro
+	Explorer.prototype.update 			= function (callback) {
 		var explr = this;
-		explr.request("GET", explr.routes.getByTag, {tags: tags}, function () {
-			explr.generateTiles();
-			if (typeof callback === 'function') callback();
-		});
+		explr.generateTiles();
+		if (typeof callback === 'function') callback();
 	};

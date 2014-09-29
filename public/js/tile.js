@@ -36,10 +36,10 @@ Basic Methods
 	// Sanitizes Tags for Rendering to Tile Data Attribute
 	Tile.prototype.sanitizeTags = 		function () {
 		var tile = this, tagStr = '', tags = tile.tags(), length = tags.length;
-			for (var i = 0; i < length; i++) {
-				var tag = (i + 1 === length) ? (tags[i]).toString().trim().split(",").join("").split("#").join("") : (tags[i]).toString().trim().split(",").join("").split("#").join("") + " ";
-				tagStr = (tag === " ") ? tagStr : tagStr += tag;
-			};
+		for (var i = 0; i < length; i++) {
+			var tag  	= (i + 1 === length) ? (tags[i]).toString().trim().split(",").join("").split("#").join("") : (tags[i]).toString().trim().split(",").join("").split("#").join("") + " ",
+				tagStr 	= (tag === " ") ? tagStr : tagStr += tag;
+		};
 		return tagStr;
 	};
 

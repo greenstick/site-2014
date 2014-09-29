@@ -220,12 +220,34 @@ exports.showFeatured 	= function (req, res) {
 // Delete Piece
 exports.delete 			= function (req, res) {
 	var posts 			= req.param("selectedTiles"),
+		files 			= req.param("selectedFiles"),
 		updated 		= new Date(),
-		query 			= Piece.remove({projectUUID: {$in: posts}});
-		query.exec(function (error, pieces) {
-			if (error) return console.log(error);
-			console.log(pieces);
-			res.json({deleted: pieces});
+		s3 				= new AWS.S3(),
+		s3Delete 		= function (items) {
+			var arr = [];
+			for (var i = 0; i < items.length; i++) {
+				var obj = {"Key": items[i]};
+				arr.push(obj);
+			};
+			console.log(arr);
+			return arr;
+		},
+		request 				= {
+			"accessKeyId" 		: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
+			"secretAccessKey" 	: process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey,
+			"Bucket" 			: process.env.AWS_BUCKET 		|| credentials.aws.bucket,
+			"Delete" 			: {
+				"Objects" 			: s3Delete(posts)
+			}
+		};
+		console.log(request);
+		var query 			= Piece.remove({projectUUID: {$in: posts}});
+		s3.deleteObjects(request, function () {
+			query.exec(function (error, pieces) {
+				if (error) return console.log(error);
+				console.log(pieces);
+				res.json({deleted: pieces});
+			});
 		});
 };
 // Retrieve by Search Query

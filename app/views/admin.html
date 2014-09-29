@@ -93,7 +93,7 @@
 		<!-- <div id="create-submission">DONE</div> -->
 	</div>
 	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
-		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, click: admin.toggleTile($data), style: {width: width() + 'px', height: height() + 'px'}">
+		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, click: function () { admin.toggleTile($data) }, style: {width: width() + 'px', height: height() + 'px'}">
 			<div class="carousel" data-bind="foreach: data().files">
 				<div class="image">
 					<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
