@@ -11,7 +11,11 @@ var Piece 		= require('../models/piece.js'),
 	validate 	= require('../utility/validation.js'),
 	uuid 		= require('node-uuid'),
 	credentials = typeof process.env.NODE_ENV === 'undefined' ? require('../development/credentials.js') : false;
-	
+	// Configure AWS Credentials
+	AWS.config.credentials = {
+		"accessKeyId" 		: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
+		"secretAccessKey" 	: process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey,
+	};
 	// Configure AWS Connection Timeout
 	AWS.config.httpOptions = {timeout: 2500};
 /*
@@ -43,17 +47,13 @@ exports.submit 			= function (req, res) {
 			compress 			= zlib.createGzip(),
 			fileType 			= file.name.split('.').pop(),
 			fileName 			= uuid.v4() + "-admin-" + dateString + "." + fileType,
-			aws 		 		= {
-				"accessKeyId" 		: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
-				"secretAccessKey" 	: process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey,
-			},
-			bucket 				= {
+			request 			= {
 				"Bucket" 			: process.env.AWS_BUCKET 		|| credentials.aws.bucket,
 				"Key" 				: fileName,
 				"ContentType" 		: file.type,
 				"ContentEncoding" 	: "gzip"
 			},
-			stream 				= new Stream(aws, bucket, function (error, uploadStream) {
+			stream 				= new Stream(request, function (error, uploadStream) {
 				if (error) return console.log(error, error.stack);
 				// Read File, Compress, & Stream to S3
 				read.pipe(compress).pipe(uploadStream);
@@ -92,7 +92,6 @@ exports.submit 			= function (req, res) {
 			facebook 		= null,
 			tags 			= validate.tags(data.tags),
 			createdAt 		= date,
-
 			// Set Data & Default Values to Schema
 			piece 			= new Piece({
 				projectUUID 		: projectUUID,
@@ -136,10 +135,6 @@ exports.retrieve 		= function (req, res) {
 };
 // Show New Pieces - Commented Section Cleans DB
 exports.new 			= function (req, res) {
-		// Piece.remove({}, function (error, removed) {
-		// 	if (error) return console.log(error);
-		// 	console.log(removed);
-		// });
 	var query 			= Piece.find({updated: null}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
@@ -222,33 +217,37 @@ exports.delete 			= function (req, res) {
 	var posts 			= req.param("selectedTiles"),
 		files 			= req.param("selectedFiles"),
 		updated 		= new Date(),
-		s3 				= new AWS.S3(),
-		s3Delete 		= function (items) {
+		s3 				= new AWS.S3();
+	if (files) {
+		var s3MultiDelete 	= function (items) {
 			var arr = [];
 			for (var i = 0; i < items.length; i++) {
 				var obj = {"Key": items[i]};
 				arr.push(obj);
 			};
-			console.log(arr);
 			return arr;
 		},
-		request 				= {
-			"accessKeyId" 		: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
-			"secretAccessKey" 	: process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey,
+		request 			= {
 			"Bucket" 			: process.env.AWS_BUCKET 		|| credentials.aws.bucket,
 			"Delete" 			: {
-				"Objects" 			: s3Delete(posts)
+				"Objects" 			: s3MultiDelete(files)
 			}
 		};
-		console.log(request);
-		var query 			= Piece.remove({projectUUID: {$in: posts}});
-		s3.deleteObjects(request, function () {
+		var query = Piece.remove({projectUUID: {$in: posts}});
+		s3.deleteObjects(request, function (error, objects) {
+			if (error) return console.log(error);
 			query.exec(function (error, pieces) {
 				if (error) return console.log(error);
-				console.log(pieces);
 				res.json({deleted: pieces});
 			});
 		});
+	} else {
+		var query = Piece.remove({projectUUID: {$in: posts}});
+		query.exec(function (error, pieces) {
+			if (error) return console.log(error);
+			res.json({deleted: pieces});
+		});
+	};
 };
 // Retrieve by Search Query
 exports.search 	= function (req, res) {

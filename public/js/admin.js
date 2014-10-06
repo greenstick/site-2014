@@ -59,6 +59,7 @@ UI Handling Functions
 					};
 				};
 			});
+			console.log(admin.selectedFiles);
 		} else {
 			admin.removeArrayValue(admin.selectedTiles, id);
 			$.each(admin.explorer.data, function (k, v) {
@@ -131,7 +132,7 @@ Macros
 			contentType : 'multipart/form-data',
 			mimeType 	: 'multipart/form-data'
 		}).done(function (res) {
-			console.log("XHR Notification:1` Response... "); 
+			console.log("XHR Notification: Response... "); 
 			console.log(res);
 			admin.clearForm();
 			admin.explorer.generateTiles();
@@ -224,11 +225,12 @@ Event Bindings
 	$(admin.adminPost).on("click", function (e) {
 		var call 	= $(this).data().call,
 			key 	= $(this).data().key,
-			val 	= $(this).data().val;
+			val 	= $(this).data().val,
+			data 	= admin.selectedFiles.length ? {"selectedTiles": admin.selectedTiles, "selectedFiles": admin.selectedFiles} : {"selectedTiles": admin.selectedTiles};
 		admin.explorer.request({
 			type 		: "GET", 
 			route 		: call, 
-			data 		: {"selectedTiles": admin.selectedTiles, "selectedFiles": admin.selectedFiles}
+			data 		: data
 		},  function () {
 			console.log(admin.selectedFiles);
 			admin.explorer.generateTiles(key, val);
