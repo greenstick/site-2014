@@ -23,10 +23,12 @@ Explorer Prototype
 			explr.parent 		= args.parent 			|| explr.parent 		|| "#wrapper",
 			explr.element 		= args.element 			|| explr.element 		|| "#explorer",
 			explr.tile 			= args.tile 			|| explr.tile,
+			explr.flipcard 		= args.flipcard 		|| explr.flipcard,
 			explr.filter 		= args.filter 			|| explr.filter 		|| "filter",
 			explr.loader 		= args.loader 			|| explr.loader 		|| "loader",
 			explr.focus 		= args.focus 			|| explr.focus 			|| "focus",
 			explr.duration 		= args.duration 		|| explr.duration 		|| 600,
+			explr.flipTarget 	= args.flipTarget 		|| explr.flipTarget 	|| ".card",
 			explr.routes 		= {
 				def 			: 						args.routes.def 		|| "/api/retrieve",
 				new 			: 						args.routes.new 		|| "/api/new",
@@ -39,6 +41,7 @@ Explorer Prototype
 				parent 			: explr.parent,
 				element 		: explr.element,
 				tile 			: explr.tile,
+				flipcard 		: explr.flipcard,
 				filter 			: explr.filter,
 				loader 			: explr.loader,
 				duration 		: explr.duration,
@@ -139,8 +142,8 @@ Tile Generation & Collection Methods
 
 	// Create a Tile
 	Explorer.prototype.createTile 		= function (data) {
-		var explr = this,
-			tile  = new Tile ({
+		var explr 		= this,
+			tile  		= new Tile ({
 				parent 		: 	explr.tile.parent,
 				element 	: 	explr.tile.element,
 				ratio 		: 	explr.tile.ratio,
@@ -180,6 +183,12 @@ Tile Generation & Collection Methods
 				}
 			}
 		};
+	};
+
+	// Flip Tile
+	Explorer.prototype.flipTile 		= function (tile) {
+		var explr = this;
+		$('#' + tile.id() + " " + explr.flipTarget).toggleClass('flipped');
 	};
 
 /*

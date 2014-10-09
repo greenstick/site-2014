@@ -93,18 +93,26 @@
 		<!-- <div id="create-submission">DONE</div> -->
 	</div>
 	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
-		<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, click: function () { admin.toggleTile($data) }, style: {width: width() + 'px', height: height() + 'px'}">
-			<div class="carousel" data-bind="foreach: data().files">
-				<div class="image">
-					<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
+		<div class="flip-container">
+			<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, click: function () { admin.toggleTile($data) }, style: {width: width() + 'px', height: height() + 'px'}">
+				<div class="card" data-bind="click: function () { admin.explorer.flipTile($data) }">
+					<div class="face front">
+						<div class="carousel" data-bind="foreach: data().files">
+							<div class="image">
+								<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
+							</div>
+						</div>
+					</div>
+					<div class="face back">
+						<a data-bind="attr{href: data().url}" target="_blank">
+							<div class="title" data-bind="html: data().title"></div>
+						</a>
+						<div class="client" data-bind="html: data().client"></div>
+						<div class="content" data-bind="html: data().content"></div>
+						<div class="description" data-bind="html: data().description"></div>
+					</div>
 				</div>
-			</div>
-			<a data-bind="attr{href: data().url}" target="_blank">
-				<div class="title" data-bind="html: data().title"></div>
-			</a>
-			<div class="client" data-bind="html: data().client"></div>
-			<div class="content" data-bind="html: data().content"></div>
-			<div class="description" data-bind="html: data().description"></div>
+			<div>
 		</div>
 	</div>
 	<div id="footer">

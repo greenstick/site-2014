@@ -4,8 +4,8 @@ Declare Arguments
 
 	var Admin = function (args) {
 		var admin = this;
-			admin.element 		= args.element 				|| 	'#wradminer',
-			admin.navigation 	= args.navigation 			|| 	'#navsigation',
+			admin.element 		= args.element 				|| 	'#wrapper',
+			admin.navigation 	= args.navigation 			|| 	'#navigation',
 			admin.menu 			= args.menu 				|| 	'.menu',
 			admin.sub 			= args.sub 					|| 	'#submission-pane',
 			admin.openSub		= args.openSub 				|| 	'#open-submission',

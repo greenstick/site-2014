@@ -67,6 +67,67 @@ Color Palette
 }
 
 /*
+Card Flipping
+*/
+
+.flip-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    perspective: 4000;
+    -webkit-perspective: 4000;
+}
+.flip-container .card {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transition: 0.8s;
+    -moz-transform-style: preserve-3d;
+    -moz-transition: 0.8s;
+    -ms-transform-style: preserve-3d;
+    -ms-transition: 0.8s;
+    -o-transform-style: preserve-3d;
+    -o-transition: 0.8s;
+    transform-style: preserve-3d;
+    transition: 0.8s;
+}
+.flip-container .card .face {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -o-backface-visibility: hidden;
+    backface-visibility: hidden;
+    opacity: .99;
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+.flip-container .card .face.front {
+    position: absolute;
+    width: inherit;
+}
+.flip-container .card .face.back {
+    position: absolute;
+    width: 100%;
+    -webkit-transform: rotatey(180deg);
+    -moz-transform: rotatey(180deg);
+    -ms-transform: rotatey(180deg);
+    -o-transform: rotatey(180deg);
+    transform: rotatey(180deg);
+    z-index: 10;
+}
+.flip-container .card.flipped {
+    -webkit-transform: rotateY( -180deg );
+    -moz-transform: rotateY( -180deg );
+    -o-transform: rotateY( -180deg );
+    transform: rotateY( -180deg );
+}
+.flip-container .card.flipped .face.back {
+    z-index: 100;
+}
+
+/*
 UI Elements
 */
 
@@ -302,30 +363,46 @@ Explorer
     position: relative;
     margin: 10px;
     float: left;
-    background-color: rgba(11, 14, 23, 1);
+    background-color: rgba(11, 14, 23, .9);
 }
-#explorer .tile .title {
+#explorer .tile .front {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+#explorer .tile .back {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+#explorer .tile .back .title {
     float: left;
     margin: 40px;
     width: 520px;
     height: 32px;
     font-size: 24px;
 }
-#explorer .tile .client {
+#explorer .tile .back .client {
     float: left;
     margin: 40px 20px 40px 40px;
     width: 230px;
     height: 32px;  
     font-size: 24px;
 }
-#explorer .tile .content {
+#explorer .tile .back .content {
     float: left;
     margin: 40px 40px 40px 20px;
     width: 230px;
     height: 32px;
     font-size: 24px;
 }
-#explorer .tile .description {
+#explorer .tile .back .description {
     float: left;
     margin: 20px 40px 40px 40px;
     width: 520px;
@@ -333,7 +410,7 @@ Explorer
     font-size: 20px;
     line-height: 24px;
 }
-#explorer .tile .image {
+#explorer .tile .front .image {
     position: absolute;
     width: 560px;
     height: 560px;
@@ -341,11 +418,11 @@ Explorer
 /*    background-color: rgba(255, 255, 255, .1);*/
     opacity: .1;
 }
-#explorer .tile .image img {
+#explorer .tile .front .image img {
     width: 100%;
     height: 100%;
 }
-#explorer .tile .url {
+#explorer .tile .back .url {
     
 }
 
