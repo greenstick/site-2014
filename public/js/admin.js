@@ -4,25 +4,27 @@ Declare Arguments
 
 	var Admin = function (args) {
 		var admin = this;
-			admin.element 		= args.element 				|| 	'#wrapper',
-			admin.navigation 	= args.navigation 			|| 	'#navigation',
-			admin.menu 			= args.menu 				|| 	'.menu',
-			admin.sub 			= args.sub 					|| 	'#submission-pane',
-			admin.openSub		= args.openSub 				|| 	'#open-submission',
-			admin.createSub 	= args.create 				|| 	'#create-submission',
-			admin.closeSub 		= args.closeSub 			|| 	'#close-submission',
-			admin.adminGet 		= args.adminGet 			|| 	'.get',
-			admin.adminPost 	= args.adminPost 			|| 	'.post',
-			admin.searchBar 	= args.searchBar 			|| 	'.search .bar',
-			admin.searchGo 		= args.searchGo 			|| 	'.search .submit',
-			admin.scrollable 	= args.scrollable 			|| 	'.scrollable',
-			admin.fileInput 	= args.fileInput 			|| 	'#file-input',
-			admin.fileMask 		= args.fileMask 			|| 	'#file-input-mask',
-			admin.form 			= args.form 				|| 	'#form',
-			admin.submit 		= args.submit 				|| 	'#create-submission',
-			admin.explorer 		= new Explorer (args.explorer),
-			admin.selectedTiles = [],
-			admin.selectedFiles = [];
+			admin.element 			= args.element 				|| 	'#wrapper',
+			admin.navigation 		= args.navigation 			|| 	'#navigation',
+			admin.menu 				= args.menu 				|| 	'.menu',
+			admin.sub 				= args.sub 					|| 	'#submission-pane',
+			admin.openSub			= args.openSub 				|| 	'#open-submission',
+			admin.createSub 		= args.create 				|| 	'#create-submission',
+			admin.closeSub 			= args.closeSub 			|| 	'#close-submission',
+			admin.selectTiles		= args.selectTiles 			|| 	'#selectTiles',
+			admin.deselectTiles		= args.deselectTiles 		|| 	'#deselectTiles',
+			admin.adminGet 			= args.adminGet 			|| 	'.get',
+			admin.adminPost 		= args.adminPost 			|| 	'.post',
+			admin.searchBar 		= args.searchBar 			|| 	'.search .bar',
+			admin.searchGo 			= args.searchGo 			|| 	'.search .submit',
+			admin.scrollable 		= args.scrollable 			|| 	'.scrollable',
+			admin.fileInput 		= args.fileInput 			|| 	'#file-input',
+			admin.fileMask 			= args.fileMask 			|| 	'#file-input-mask',
+			admin.form 				= args.form 				|| 	'#form',
+			admin.submit 			= args.submit 				|| 	'#create-submission',
+			admin.explorer 			= new Explorer (args.explorer),
+			admin.selectedTiles 	= [],
+			admin.selectedFiles 	= [];
 	};
 
 /*
@@ -69,7 +71,29 @@ UI Handling Functions
 					};
 				};
 			});
+			console.log(admin.selectedFiles);
 		};
+	};
+
+	Admin.prototype.selectAllTiles 			= function () {
+		var admin = this;
+		$('.' + admin.explorer.tile.element).addClass('selected');
+		$.each($('.' + admin.explorer.tile.element), function (k, v) {
+			var id = $(this).attr("id");
+			admin.selectedTiles.push(id);
+			$.each(admin.explorer.data, function (k, v) {
+				if (id === v.projectUUID) {
+					for (var i = 0; i < v.files.length; i++) {
+						admin.selectedFiles.push(v.files[i].path);
+					};
+				};
+			});
+		});
+	};
+
+	Admin.prototype.deselectAllTiles 		= function () {
+		$('.' + admin.explorer.tile.element).removeClass('selected');
+		admin.selectedTiles = [];
 	};
 
 	// Remove Value From Array
@@ -206,6 +230,16 @@ Event Bindings
 		$(admin.sub).removeClass('active');
 	});
 
+	// Select All Tiles
+	$(admin.selectTiles).on("click", function (e) {
+		admin.selectAllTiles();
+	});
+
+	// Deselect ALl Tiles
+	$(admin.deselectTiles).on("click", function (e) {
+		admin.deselectAllTiles();
+	});
+
 	// Get Request
 	$(admin.adminGet).on("click", function (e) {
 		var call 	= $(this).data().call,
@@ -217,6 +251,7 @@ Event Bindings
 			data 		: {}
 		},  function () {
 			admin.explorer.generateTiles(key, val);
+			admin.deselectAllTiles();
 			console.log("GET done");
 		});
 	});
@@ -234,7 +269,7 @@ Event Bindings
 		},  function () {
 			console.log(admin.selectedFiles);
 			admin.explorer.generateTiles(key, val);
-			admin.selectedTiles = [];
+			admin.deselectAllTiles();
 			console.log("POST done");
 		});
 	});

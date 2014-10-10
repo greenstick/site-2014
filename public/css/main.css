@@ -363,7 +363,22 @@ Explorer
     position: relative;
     margin: 10px;
     float: left;
-    background-color: rgba(11, 14, 23, .9);
+}
+#explorer .tile .flip-handle {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+}
+#explorer .tile .flip-handle img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    color: #FFFFFF;
 }
 #explorer .tile .front {
     position: absolute;
@@ -380,6 +395,7 @@ Explorer
     width: 100%;
     height: 100%;
     z-index: 0;
+    background-color: rgba(11, 14, 23, .9);
 }
 #explorer .tile .back .title {
     float: left;
@@ -412,11 +428,11 @@ Explorer
 }
 #explorer .tile .front .image {
     position: absolute;
-    width: 560px;
-    height: 560px;
-    margin: 20px;
+    width: 600px;
+    height: 600px;
+    margin: 0px;
 /*    background-color: rgba(255, 255, 255, .1);*/
-    opacity: .1;
+    opacity: 1;
 }
 #explorer .tile .front .image img {
     width: 100%;

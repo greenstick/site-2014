@@ -10,6 +10,12 @@
 				<div id="open-submission" class="button admin">
 					CREATE
 				</div>
+				<div id="selectTiles" class="button admin">
+					SELECT ALL
+				</div>
+				<div id="deselectTiles" class="button admin">
+					DESELECT ALL
+				</div>
 				<div class="button admin post" data-call="/cms/curate" data-key="curated" data-val=true>
 					CURATE
 				</div>
@@ -95,12 +101,15 @@
 	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
 		<div class="flip-container">
 			<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, click: function () { admin.toggleTile($data) }, style: {width: width() + 'px', height: height() + 'px'}">
-				<div class="card" data-bind="click: function () { admin.explorer.flipTile($data) }">
+				<div class="card">
 					<div class="face front">
 						<div class="carousel" data-bind="foreach: data().files">
 							<div class="image">
 								<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
 							</div>
+						</div>
+						<div class="flip-handle" data-bind="click: function (data, event) { admin.explorer.flipTile(data, event) }">
+							<img src="../img/icons/spinner5.svg" />
 						</div>
 					</div>
 					<div class="face back">
@@ -110,6 +119,9 @@
 						<div class="client" data-bind="html: data().client"></div>
 						<div class="content" data-bind="html: data().content"></div>
 						<div class="description" data-bind="html: data().description"></div>
+						<div class="flip-handle" data-bind="click: function (data, event) { admin.explorer.flipTile(data, event) }">
+							<img src="../img/icons/spinner5.svg" />
+						</div>
 					</div>
 				</div>
 			<div>

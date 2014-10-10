@@ -186,8 +186,9 @@ Tile Generation & Collection Methods
 	};
 
 	// Flip Tile
-	Explorer.prototype.flipTile 		= function (tile) {
+	Explorer.prototype.flipTile 		= function (tile, e) {
 		var explr = this;
+		e.stopPropagation();
 		$('#' + tile.id() + " " + explr.flipTarget).toggleClass('flipped');
 	};
 
