@@ -9,14 +9,22 @@ Declare Arguments
 			app.menu 		= args.menu 		|| 		'.menu',
 			app.searchBar 	= args.searchBar 	|| 		'.search .bar',
 			app.searchGo	= args.searchGo		|| 		'.search .submit',
+			app.scrollable 	= args.scrollable 	|| 		'.scrollable',
 			app.explorer 	= new Explorer (args.explorer),
 			app.data;
 	};
 
-	// Toggle Meunu - Duh
+	// Toggle Le Menu
 	App.prototype.toggleMenu 	= function () {
 		$(app.menu).toggleClass('close');
 		$(app.navigation).toggleClass('active');
+	};
+
+		// Instantiate Scroll Bar
+	App.prototype.scrollBar 		= function () {
+		var app = this;
+		$(app.scrollable).perfectScrollbar();
+		$(app.scrollable).perfectScrollbar('update');
 	};
 
 /*
@@ -26,6 +34,7 @@ Macros
 	App.prototype.init 			= function () {
 		var app = this;
 			//Initialize Explorer
+			app.scrollBar();
 			app.explorer.init();
 	};
 

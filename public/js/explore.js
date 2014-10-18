@@ -49,6 +49,8 @@ Explorer Prototype
 				data 			: explr.data
 			},
 			explr.tiles 		= ko.observableArray([]),
+			explr.tagSearch 	= false,
+			explr.tagData,
 			explr.data;
 	};
 
@@ -93,7 +95,7 @@ API Request Methods
 			dataType 	: "json",
 			data 		: data,
 		}).done(function (res) {
-			explr.data = res;
+			explr.tagSearch === true ? explr.tagData = res : explr.data = res;
 			console.log("XHR Notification: Response... "); 
 			console.log(explr.data);
 		}).fail(function () {
@@ -126,6 +128,7 @@ Request Handlers
 	// Get Tiles by Tags
 	Explorer.prototype.getByTag 		= function (tags, callback) {
 		var explr = this;
+		explr.tagSearch = true;
 		explr.request({
 			type 			: "GET", 
 			route 			: explr.routes.getByTag, 
@@ -159,15 +162,29 @@ Tile Generation & Collection Methods
 		var explr = this;
 		explr.tiles([]);
 		if ((typeof key !== 'undefined') && (typeof val !== 'undefined')) {
-			for (var i = 0; i < explr.data.length; i++) {
-				if (explr.data[i][key] === val) {
+			if (explr.tagSearch === false) {
+				for (var i = 0; i < explr.data.length; i++) {
+					if (explr.data[i][key] === val) {
+						explr.createTile(explr.data[i]);
+					};
+				};
+			} else {
+				for (var i = 0; i < explr.tagData.length; i++) {
+					if (explr.tagData[i][key] === val) {
+						explr.createTile(explr.tagData[i]);
+					};
+				};
+			}
+		} else {
+			if (explr.tagSearch === false) {
+				for (var i = 0; i < explr.data.length; i++) {
 					explr.createTile(explr.data[i]);
 				};
-			};
-		} else {
-			for (var i = 0; i < explr.data.length; i++) {
-				explr.createTile(explr.data[i]);
-			};
+			} else {
+				for (var i = 0; i < explr.tagData.length; i++) {
+					explr.createTile(explr.tagData[i]);
+				};
+			}
 		};
 		console.log("Status: Tiles Generated");
 	};
@@ -176,10 +193,25 @@ Tile Generation & Collection Methods
 	Explorer.prototype.filterTiles 		= function (filter, callback) {
 		var explr = this;
 		explr.tiles([]);
-		for (var i = 0; i < explr.data.length; i++) {
-			for (var j = 0; j < explr.data[i].tags.length; j++) {
-				if (explr.data[i].tags[j] === filter) {
-					explr.createTile(explr.data[i]);
+		if (filter === "all") explr.tagSearch = false;
+		if (explr.tagSearch === false && filter === "all") {
+			for (var i = 0; i < explr.data.length; i++) {
+				explr.createTile(explr.data[i]);
+			};
+		} else if (explr.tagSearch === false) {
+			for (var i = 0; i < explr.data.length; i++) {
+				for (var j = 0; j < explr.data[i].tags.length; j++) {
+					if (explr.data[i].tags[j] === filter) {
+						explr.createTile(explr.data[i]);
+					}
+				}
+			}
+		} else {
+			for (var i = 0; i < explr.tagData.length; i++) {
+				for (var j = 0; j < explr.tagData[i].tags.length; j++) {
+					if (explr.tagData[i].tags[j] === filter) {
+						explr.createTile(explr.tagData[i]);
+					}
 				}
 			}
 		}

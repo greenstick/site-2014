@@ -272,9 +272,9 @@ Filters
     width: 100%;
     height: 60%;
     max-height: 400px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: hidden;
     margin: 20px 0 0 0;
+
 }
 #navigation .filters-expanded .filter-items .filter {
     width: 300px;
@@ -432,7 +432,7 @@ Explorer
     width: 600px;
     height: 600px;
     margin: 0px;
-/*    background-color: rgba(255, 255, 255, .1);*/
+/*  background-color: rgba(255, 255, 255, .1);*/
     opacity: 1;
 }
 #explorer .tile .front .image img {
@@ -442,7 +442,6 @@ Explorer
 #explorer .tile .back .url {
     
 }
-
 
 /*
 Footer
@@ -503,15 +502,6 @@ Index - Specific Styles
 	letter-spacing: 6px;
 	text-align: center;
 	color: rgba(232, 227, 241, 1);
-}
-
-/*
-Portfolio Styles
-*/
-
-#portfolio .content {
-	top: 128px;
-	height: 1872px;
 }
 
 /*

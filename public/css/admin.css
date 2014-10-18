@@ -2,9 +2,6 @@
 Additional Navigation Styles
 */
 
-#navigation .filters-expanded .filter-items {
-    overflow: hidden;
-}
 #navigation .filters-expanded .filter-items .admin {
     width: 300px;
     height: 28px;
