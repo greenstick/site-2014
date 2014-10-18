@@ -182,7 +182,7 @@ Tile Generation & Collection Methods
 					explr.createTile(explr.data[i]);
 				}
 			}
-		};
+		}
 	};
 
 	// Flip Tile

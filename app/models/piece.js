@@ -16,11 +16,13 @@ var Piece = new Schema({
 	url 		: 	String,
 	files 		: 	Array,
 	content 	: 	Object,
+	postType 	: 	String,
 	description : 	String,
 	popularity 	: 	Number,
 	social 		: 	{
 		twitter 	: 	String,
-		facebook 	: 	String
+		facebook 	: 	String,
+		linkedin 	: 	String
 	},
 	tags 		: 	Array,
 	createdAt 	: 	Date,

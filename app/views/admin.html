@@ -89,14 +89,17 @@
 			<input id="client-input" name="client" type="text" class="input-field" placeholder="CLIENT" />
 			<input id="url-input" name="url" type="text" class="input-field" placeholder="URL" />
 			<input id="content-input" name="content" type="text" class="input-field" placeholder="CONTENT" />
+			<input id="postType-input" name="postType" type="text" class="input-field" placeholder="POST TYPE" />
 			<textarea id="description-input" name="description" type="text" class="input-field" placeholder="DESCRIPTION"></textarea>
 			<input id="tags-input" type="text" name="tags" class="input-field" placeholder="TAGS" />
 			<input id="file-input-mask" class="input-field" placeholder="FILE UPLOAD" />
 			<input id="file-input" type="file" name="files" class="input-field" multiple/>
+			<input id="facebook-input" type="text" class="input-field" placeholder="FACEBOOK" />
+			<input id="twitter-input" type="text" class="input-field" placeholder="TWITTER" />
+			<input id="linkedin-input" type="text" class="input-field" placeholder="LINKEDIN" />
 			<input id="create-submission" type="submit" value="DONE">
 		</form>
 		<iframe id="uploader" name="uploader" style="display: none;"></iframe>
-		<!-- <div id="create-submission">DONE</div> -->
 	</div>
 	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
 		<div class="flip-container">
@@ -109,18 +112,18 @@
 							</div>
 						</div>
 						<div class="flip-handle" data-bind="click: function (data, event) { admin.explorer.flipTile(data, event) }">
-							<img src="../img/icons/spinner5.svg" />
+							<img src="../img/rotate-l.ico" />
 						</div>
 					</div>
 					<div class="face back">
-						<a data-bind="attr{href: data().url}" target="_blank">
-							<div class="title" data-bind="html: data().title"></div>
-						</a>
+						<div class="title">
+							<a data-bind="html: data().title, attr{href: data().url}" target="_blank"></a>
+						</div>
 						<div class="client" data-bind="html: data().client"></div>
 						<div class="content" data-bind="html: data().content"></div>
 						<div class="description" data-bind="html: data().description"></div>
 						<div class="flip-handle" data-bind="click: function (data, event) { admin.explorer.flipTile(data, event) }">
-							<img src="../img/icons/spinner5.svg" />
+							<img src="../img/rotate-r.ico" />
 						</div>
 					</div>
 				</div>

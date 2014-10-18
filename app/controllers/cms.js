@@ -87,9 +87,11 @@ exports.submit 			= function (req, res) {
 			url 			= validate.url(data.url),
 			files	 		= s3FilePaths,
 			content 		= validate.str(data.content),
+			postType 		= validate.str(data.postType),
 			description 	= validate.str(data.description),
-			twitter 		= null,
-			facebook 		= null,
+			twitter 		= validate.str(data.twitter),
+			facebook 		= validate.str(data.facebook),
+			linkedin 		= validate.str(data.linkedin),
 			tags 			= validate.tags(data.tags),
 			createdAt 		= date,
 			// Set Data & Default Values to Schema
@@ -106,11 +108,13 @@ exports.submit 			= function (req, res) {
 				url 				: url,
 				files 				: files,
 				content 			: content, 
+				postType 			: postType,
 				description 		: description,
 				popularity 			: null,
 				social 				: {
 					twitter 			: twitter,
-					facebook 			: facebook
+					facebook 			: facebook,
+					linkedin 			: linkedin
 				},
 				tags 				: tags,
 				createdAt 			: createdAt,

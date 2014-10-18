@@ -167,6 +167,7 @@ Macros
 			console.debug("XHR Notification: Request Complete");
 		});
 	};
+	
 
 /*
 Declare Args, Instantiation, & Initialization
