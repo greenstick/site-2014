@@ -115,25 +115,12 @@ Request Handlers
 	// Search For Tiles by String
 	Explorer.prototype.search 			= function (query, callback) {
 		var explr = this;
+		explr.tagSearch = true;
 		explr.request({
 			type 			: "GET", 
 			route 			: explr.routes.search, 
 			data 			: {query: query}
 		},  function () {
-			explr.update();
-		});
-		if (typeof callback === 'function') callback();
-	};
-
-	// Get Tiles by Tags
-	Explorer.prototype.getByTag 		= function (tags, callback) {
-		var explr = this;
-		explr.tagSearch = true;
-		explr.request({
-			type 			: "GET", 
-			route 			: explr.routes.getByTag, 
-			data 			: {tags: tags}
-		}, 	function () {
 			explr.update();
 		});
 		if (typeof callback === 'function') callback();
@@ -174,7 +161,7 @@ Tile Generation & Collection Methods
 						explr.createTile(explr.tagData[i]);
 					};
 				};
-			}
+			};
 		} else {
 			if (explr.tagSearch === false) {
 				for (var i = 0; i < explr.data.length; i++) {
@@ -184,7 +171,7 @@ Tile Generation & Collection Methods
 				for (var i = 0; i < explr.tagData.length; i++) {
 					explr.createTile(explr.tagData[i]);
 				};
-			}
+			};
 		};
 		console.log("Status: Tiles Generated");
 	};
@@ -203,18 +190,18 @@ Tile Generation & Collection Methods
 				for (var j = 0; j < explr.data[i].tags.length; j++) {
 					if (explr.data[i].tags[j] === filter) {
 						explr.createTile(explr.data[i]);
-					}
-				}
-			}
+					};
+				};
+			};
 		} else {
 			for (var i = 0; i < explr.tagData.length; i++) {
 				for (var j = 0; j < explr.tagData[i].tags.length; j++) {
 					if (explr.tagData[i].tags[j] === filter) {
 						explr.createTile(explr.tagData[i]);
-					}
-				}
-			}
-		}
+					};
+				};
+			};
+		};
 	};
 
 	// Flip Tile

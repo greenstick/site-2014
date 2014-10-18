@@ -257,8 +257,10 @@ exports.delete 			= function (req, res) {
 exports.search 	= function (req, res) {
 	var queryStr = validate.str(req.param("query"));
 		queryArr = (validate.str(queryStr)).toLowerCase().split(" ");
-		res.json({
-			"Search Query Executed" : true,
-			"Query String" 			: queryArr
+		query 			= Piece.find({tags: {$in: queryArr}}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
+		query.exec(function (error, pieces) {
+			if (error) return console.log(error);
+			console.log(pieces);
+			res.json(pieces);
 		});
 };
