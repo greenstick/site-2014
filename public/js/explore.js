@@ -51,7 +51,8 @@ Explorer Prototype
 			explr.tiles 		= ko.observableArray([]),
 			explr.tagSearch 	= false,
 			explr.tagData,
-			explr.data;
+			explr.data,
+			explr.loc;
 	};
 
 /*
@@ -182,10 +183,12 @@ Tile Generation & Collection Methods
 		explr.tiles([]);
 		if (filter === "all") explr.tagSearch = false;
 		if (explr.tagSearch === false && filter === "all") {
+			explr.setLocation("");
 			for (var i = 0; i < explr.data.length; i++) {
 				explr.createTile(explr.data[i]);
 			};
 		} else if (explr.tagSearch === false) {
+			explr.setLocation(filter);
 			for (var i = 0; i < explr.data.length; i++) {
 				for (var j = 0; j < explr.data[i].tags.length; j++) {
 					if (explr.data[i].tags[j] === filter) {
@@ -194,6 +197,7 @@ Tile Generation & Collection Methods
 				};
 			};
 		} else {
+			explr.setLocation(filter);
 			for (var i = 0; i < explr.tagData.length; i++) {
 				for (var j = 0; j < explr.tagData[i].tags.length; j++) {
 					if (explr.tagData[i].tags[j] === filter) {
@@ -202,6 +206,17 @@ Tile Generation & Collection Methods
 				};
 			};
 		};
+		if (typeof callback === 'function') callback();
+	};
+
+	Explorer.prototype.setLocation 		= function (location) {
+		var explr = this;
+		explr.location = location;
+		console.log(location);
+		explr.loc = (explr.loc !== null && explr.loc !== undefined) ? explr.loc : (location.hash) ? location.hash : '#', link = explr.loc.substr(1);
+		// console.log(explr.loc);
+		history.pushState ? history.pushState({}, document.title, explr.loc) : location.hash = explr.loc;
+		window.dispatchEvent(new HashChangeEvent("hashchange"));
 	};
 
 	// Flip Tile

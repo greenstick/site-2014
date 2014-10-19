@@ -33,8 +33,8 @@ Macros
 
 	App.prototype.init 			= function () {
 		var app = this;
-			//Initialize Explorer
 			app.scrollBar();
+			//Initialize Explorer
 			app.explorer.init();
 	};
 
@@ -89,7 +89,6 @@ Event Bindings
 	// Search Bar Enter
 	$(app.searchBar).on("keydown", function (e) {
 		if (e.keyCode === 13) {
-			e.preventDefault();
 			var query = $(app.searchBar).text();
 			app.explorer.search(query, function () {
 				$(app.searchBar).text("");
