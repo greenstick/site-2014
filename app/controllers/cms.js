@@ -131,7 +131,7 @@ exports.submit 			= function (req, res) {
 
 // Retrieve Pieces
 exports.retrieve 		= function (req, res) {
-	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			res.json(pieces);
@@ -139,7 +139,7 @@ exports.retrieve 		= function (req, res) {
 };
 // Show New Pieces - Commented Section Cleans DB
 exports.new 			= function (req, res) {
-	var query 			= Piece.find({updated: null}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({updated: null}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			res.json(pieces)
@@ -191,7 +191,7 @@ exports.unfeature 		= function (req, res) {
 };
 // Show curated Pieces
 exports.showCurated 	= function (req, res) {
-	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -200,7 +200,7 @@ exports.showCurated 	= function (req, res) {
 };
 // Show Hidden Pieces
 exports.showHidden 		= function (req, res) {
-	var query 			= Piece.find({curated: false}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: false}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -209,7 +209,7 @@ exports.showHidden 		= function (req, res) {
 };
 // Show Featured
 exports.showFeatured 	= function (req, res) {
-	var query 			= Piece.find({featured: true}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({featured: true}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -257,7 +257,7 @@ exports.delete 			= function (req, res) {
 exports.search 	= function (req, res) {
 	var queryStr = validate.str(req.param("query"));
 		queryArr = (validate.str(queryStr)).toLowerCase().split(" ");
-		query 			= Piece.find({tags: {$in: queryArr}}, '_id projectUUID location curated featured title client url files content description popularity social tags createdAt updatedAt');
+		query 			= Piece.find({tags: {$in: queryArr}}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);

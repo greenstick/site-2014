@@ -44,7 +44,7 @@
 			<div class="submit button">SEARCH</div>
 		</div>
 	</div>
-	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
+	<div id="explorer" class="content w d-bg active" data-bind="foreach: tiles">
 		<div class="flip-container">
 			<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, style: {width: width() + 'px', height: height() + 'px'}">
 				<div class="card">
@@ -53,6 +53,10 @@
 							<div class="image">
 								<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
 							</div>
+						</div>
+						<div class="navigation">
+							<div class="next">NEXT</div>
+							<div class="prev">PREV</div>
 						</div>
 						<div class="flip-handle" data-bind="click: function (data, event) { app.explorer.flipTile(data, event) }">
 							<img src="../img/rotate-l.ico" />

@@ -1,179 +1,225 @@
-/*
-Declare Arguments
-*/
+(function () {
 
-	var Admin = function (args) {
-		var admin = this;
-			admin.element 			= args.element 				|| 	'#wrapper',
-			admin.navigation 		= args.navigation 			|| 	'#navigation',
-			admin.menu 				= args.menu 				|| 	'.menu',
-			admin.sub 				= args.sub 					|| 	'#submission-pane',
-			admin.openSub			= args.openSub 				|| 	'#open-submission',
-			admin.createSub 		= args.create 				|| 	'#create-submission',
-			admin.closeSub 			= args.closeSub 			|| 	'#close-submission',
-			admin.selectTiles		= args.selectTiles 			|| 	'#selectTiles',
-			admin.deselectTiles		= args.deselectTiles 		|| 	'#deselectTiles',
-			admin.adminGet 			= args.adminGet 			|| 	'.get',
-			admin.adminPost 		= args.adminPost 			|| 	'.post',
-			admin.searchBar 		= args.searchBar 			|| 	'.search .bar',
-			admin.searchGo 			= args.searchGo 			|| 	'.search .submit',
-			admin.scrollable 		= args.scrollable 			|| 	'.scrollable',
-			admin.fileInput 		= args.fileInput 			|| 	'#file-input',
-			admin.fileMask 			= args.fileMask 			|| 	'#file-input-mask',
-			admin.form 				= args.form 				|| 	'#form',
-			admin.submit 			= args.submit 				|| 	'#create-submission',
-			admin.explorer 			= new Explorer (args.explorer),
-			admin.selectedTiles 	= [],
-			admin.selectedFiles 	= [];
-	};
-
-/*
-UI Handling Functions
-*/
-
-	// Toggle Le Menu
-	Admin.prototype.toggleMenu 		= function () {
-		var admin = this;
-		$(admin.menu).toggleClass('close');
-		$(admin.navigation).toggleClass('active');
-	};
-
-	// Instantiate Scroll Bar
-	Admin.prototype.scrollBar 		= function () {
-		var admin = this;
-		$(admin.scrollable).perfectScrollbar();
-		$(admin.scrollable).perfectScrollbar('update');
-	};
-
-	// Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID & Tile 
-	// File Paths From selectedTiles and selectedFiles Arrays Respectively
-	Admin.prototype.toggleTile 		= function (data) {
-		var admin 	= this,
-			id 		= data.id(),
-			tile 	= $('#' + id);
-		tile.toggleClass('selected');
-		if (tile.hasClass('selected')) {
-			admin.selectedTiles.push(id);
-			$.each(admin.explorer.data, function (k, v) {
-				if (id === v.projectUUID) {
-					for (var i = 0; i < v.files.length; i++) {
-						admin.selectedFiles.push(v.files[i].path);
-					};
-				};
-			});
-			console.log(admin.selectedFiles);
-		} else {
-			admin.removeArrayValue(admin.selectedTiles, id);
-			$.each(admin.explorer.data, function (k, v) {
-				if (id === v.projectUUID) {
-					for (var i = 0; i < v.files.length; i++) {
-						admin.removeArrayValue(admin.selectedFiles, v.files[i].path);
-					};
-				};
-			});
-			console.log(admin.selectedFiles);
-		};
-	};
-
-	Admin.prototype.selectAllTiles 			= function () {
-		var admin = this;
-		$('.' + admin.explorer.tile.element).addClass('selected');
-		$.each($('.' + admin.explorer.tile.element), function (k, v) {
-			var id = $(this).attr("id");
-			admin.selectedTiles.push(id);
-			$.each(admin.explorer.data, function (k, v) {
-				if (id === v.projectUUID) {
-					for (var i = 0; i < v.files.length; i++) {
-						admin.selectedFiles.push(v.files[i].path);
-					};
-				};
-			});
-		});
-	};
-
-	Admin.prototype.deselectAllTiles 		= function () {
-		$('.' + admin.explorer.tile.element).removeClass('selected');
-		admin.selectedTiles = [];
-	};
-
-	// Remove Value From Array
-	Admin.prototype.removeArrayValue 		= function (arr) {
-		var what, a = arguments, l = a.length, ax;
-	    while (l > 1 && arr.length) {
-	        what = a[--l];
-	        while ((ax = arr.indexOf(what)) !== -1) arr.splice(ax, 1);
-	    };
-	    return arr;
-	};
-
-	// Populate Image Preview
-	Admin.prototype.previewImage 	= function (input) {
-	    if (input.files && input.files[0]) {
-	        var reader = new FileReader();
-	        reader.onload = function (e) {
-	            $('#preview .image').attr('src', e.target.result);
-	        };
-	        reader.readAsDataURL(input.files[0]);
-	    };
-	};
-
-	// Update File Placeholder Text
-	Admin.prototype.showFilePath 	= function (path) {
-		var admin 	= this;
-		if (path.length) $(admin.fileMask).val("UPLOAD READY");
-	};
-
-	// Clear Form Inputs
-	Admin.prototype.clearForm 		= function () {
-		setTimeout(function () {
-			$('.input-field').val('');
-		}, 500);
-	};
-
-/*
-Macros
-*/
-
-	// Initialize
-	Admin.prototype.init 			= function () {
+	var Admin = function (config) {
 		console.log("Status: Initializing...");
-		var admin = this;
-			//Instatiate & Initialize Explorer
-			admin.scrollBar();
-			admin.explorer.init(function () {
+		this.init(config);
+		console.log("Status: Done");
+	};
+
+	/*
+	Admin Prototype
+
+	@Params
+			- Object
+			- Object.element 	 	(String)
+			- Object.navigation  	(String)
+			- Object.menu 		 	(String)
+			- Object.sub 		 	(String)
+			- Object.openSub 	 	(String)
+			- Object.createSub  	(String)
+			- Object.closeSub 	 	(String)
+			- Object.selectTiles 	(String)
+			- Object.deselectTiles	(String)
+			- Object.adminGet		(String)
+			- Object.adminPost	 	(String)
+			- Object.searchBar	 	(String)
+			- Object.searchGo	 	(String)
+			- Object.fileInput	 	(String)
+			- Object.fileMask	 	(String)
+			- Object.form 		 	(String)
+			- Object.submit	  		(String)
+			- Object.explorer 		(Module)
+	*/
+
+	Admin.prototype = {
+
+		/*
+		Macro Methods
+		*/
+
+		//Initialize
+		init: function (config) {
+			var admin = this;
+				admin.element 			= config.element 				|| 	'#wrapper',
+				admin.navigation 		= config.navigation 			|| 	'#navigation',
+				admin.menu 				= config.menu 					|| 	'.menu',
+				admin.sub 				= config.sub 					|| 	'#submission-pane',
+				admin.openSub			= config.openSub 				|| 	'#open-submission',
+				admin.createSub 		= config.create 				|| 	'#create-submission',
+				admin.closeSub 			= config.closeSub 				|| 	'#close-submission',
+				admin.selectTiles		= config.selectTiles 			|| 	'#selectTiles',
+				admin.deselectTiles		= config.deselectTiles 			|| 	'#deselectTiles',
+				admin.adminGet 			= config.adminGet 				|| 	'.get',
+				admin.adminPost 		= config.adminPost 				|| 	'.post',
+				admin.searchBar 		= config.searchBar 				|| 	'.search .bar',
+				admin.searchGo 			= config.searchGo 				|| 	'.search .submit',
+				admin.scrollable 		= config.scrollable 			|| 	'.scrollable',
+				admin.fileInput 		= config.fileInput 				|| 	'#file-input',
+				admin.fileMask 			= config.fileMask 				|| 	'#file-input-mask',
+				admin.form 				= config.form 					|| 	'#form',
+				admin.submit 			= config.submit 				|| 	'#create-submission',
+				admin.explorer 			= new Explorer (config.explorer),
+				admin.selectedTiles 	= [],
+				admin.selectedFiles 	= [];
+				admin.scrollBar();
 				console.log("Status: Admin Controller Initialized");
+		},
+
+		//Update
+		update: function (args) {
+
+		},
+
+		/*
+		UI Handling Functions
+		*/
+
+		//Toggle Le Menu
+		toggleMenu: function () {
+			var admin = this;
+			$(admin.menu).toggleClass('close');
+			$(admin.navigation).toggleClass('active');
+		},
+
+		// Toggle Submissions
+		toggleSub: function () {
+			var admin = this;
+			$(admin.sub).toggleClass('active');
+			$(admin.explorer.element).toggleClass('active');
+		},
+
+		//Instantiate Scroll Bar
+		scrollBar: function () {
+			var admin = this;
+			$(admin.scrollable).perfectScrollbar();
+			$(admin.scrollable).perfectScrollbar('update');
+		},
+
+		//Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID & Tile 
+		//File Paths From selectedTiles and selectedFiles Arrays Respectively
+		toggleTile: function (data) {
+			var admin 	= this,
+				id 		= data.id(),
+				tile 	= $('#' + id);
+			tile.toggleClass('selected');
+			if (tile.hasClass('selected')) {
+				admin.selectedTiles.push(id);
+				$.each(admin.explorer.data, function (k, v) {
+					if (id === v.projectUUID) {
+						for (var i = 0; i < v.files.length; i++) {
+							admin.selectedFiles.push(v.files[i].path);
+						};
+					};
+				});
+				console.log(admin.selectedFiles);
+			} else {
+				admin.removeArrayValue(admin.selectedTiles, id);
+				$.each(admin.explorer.data, function (k, v) {
+					if (id === v.projectUUID) {
+						for (var i = 0; i < v.files.length; i++) {
+							admin.removeArrayValue(admin.selectedFiles, v.files[i].path);
+						};
+					};
+				});
+				console.log(admin.selectedFiles);
+			};
+		},
+
+		//Select All Tiles
+		selectAllTiles: function () {
+			var admin = this;
+			if ($('.' + admin.explorer.tile.element).hasClass('selected')) {
+				return 
+			} else {
+				$('.' + admin.explorer.tile.element).addClass('selected');
+				$.each($('.' + admin.explorer.tile.element), function (k, v) {
+					var id = $(this).attr("id");
+					admin.selectedTiles.push(id);
+					$.each(admin.explorer.data, function (k, v) {
+						if (id === v.projectUUID) {
+							for (var i = 0; i < v.files.length; i++) {
+								admin.selectedFiles.push(v.files[i].path);
+							};
+						};
+					});
+				});
+			}
+		},
+
+		//Deselect All Tiles
+		deselectAllTiles: function () {
+			admin.selectedTiles = [];
+			admin.selectedFiles = [];
+			$('.' + admin.explorer.tile.element).removeClass('selected');
+		},
+
+		//Image Previewer
+		previewImage: function (input) {
+		    if (input.files && input.files[0]) {
+		        var reader = new FileReader();
+		        reader.onload = function (e) {
+		            $('#preview .image').attr('src', e.target.result);
+		        };
+		        reader.readAsDataURL(input.files[0]);
+		    };
+		},
+
+		// Update File Placeholder Text
+		showFilePath: function (path) {
+			var admin 	= this;
+			if (path.length) $(admin.fileMask).val("UPLOAD READY");
+		},
+
+		// Clear Form Inputs
+		clearForm: function () {
+			setTimeout(function () {
+				$('.input-field').val('');
+			}, 500);
+		},
+
+		// Get Form Values
+		submitForm: function (form) {
+			var data = new FormData(form);
+			$.ajax({
+				type 		: "POST",
+				url 		: "/cms/submit",
+				data 		: data,
+				processData : false,
+				contentType : 'multipart/form-data',
+				mimeType 	: 'multipart/form-data'
+			}).done(function (res) {
+				console.log("XHR Notification: Response... "); 
+				console.log(res);
+				admin.clearForm();
+				admin.explorer.generateTiles();
+			}).fail(function () {
+				console.debug("XHR Alert: Request Failed");
+				console.log(type, route, data);
+			}).always(function () {
+				console.debug("XHR Notification: Request Complete");
 			});
+		},
+
+		/*
+		Utility
+		*/
+
+		//Remove Value From Array
+		removeArrayValue: function (arr) {
+			var what, a = arguments, l = a.length, ax;
+		    while (l > 1 && arr.length) {
+		        what = a[--l];
+		        while ((ax = arr.indexOf(what)) !== -1) arr.splice(ax, 1);
+		    };
+		    return arr;
+		}
 	};
 
-	// Get Form Values
-	Admin.prototype.submitForm 		= function (form) {
-		var data = new FormData(form);
-		$.ajax({
-			type 		: "POST",
-			url 		: "/cms/submit",
-			data 		: data,
-			processData : false,
-			contentType : 'multipart/form-data',
-			mimeType 	: 'multipart/form-data'
-		}).done(function (res) {
-			console.log("XHR Notification: Response... "); 
-			console.log(res);
-			admin.clearForm();
-			admin.explorer.generateTiles();
-		}).fail(function () {
-			console.debug("XHR Alert: Request Failed");
-			console.log(type, route, data);
-		}).always(function () {
-			console.debug("XHR Notification: Request Complete");
-		});
-	};
-	
+	/*
+	Configure
+	*/
 
-/*
-Declare Args, Instantiation, & Initialization
-*/
-
-	var args = {
+	var config = {
 		element		: 		"#wrapper",
 		navigation 	: 		"#navigation",
 		menu 		: 		".menu-open",
@@ -201,13 +247,17 @@ Declare Args, Instantiation, & Initialization
 					search 			: 		"/cms/search"
 			}
 		}
-	},
-	admin = new Admin (args);
-	admin.init();
+	};
 
-/*
-Event Bindings
-*/
+	/*
+	Instatiation & Initialization
+	*/
+
+	admin = new Admin (config);
+
+	/*
+	Event Bindings
+	*/
 
 	// Toggle Filters Menu
 	$(admin.menu).on("click", function (e) {
@@ -222,13 +272,13 @@ Event Bindings
 
 	// Open Submission Pane
 	$(admin.openSub).on("click", function (e) {
-		$(admin.sub).addClass('active');
+		admin.toggleSub();
 		admin.toggleMenu();
 	});
 
 	// Close Submission Pane
 	$(admin.closeSub).on("click", function (e) {
-		$(admin.sub).removeClass('active');
+		admin.toggleSub();
 	});
 
 	// Select All Tiles
@@ -281,6 +331,7 @@ Event Bindings
 			e.preventDefault();
 			var query = $(admin.searchBar).text();
 			admin.explorer.search(query, function () {
+				admin.deselectAllTiles();
 				$(admin.searchBar).text("");
 			});
 		};
@@ -288,9 +339,10 @@ Event Bindings
 
 	// Search Bar Go
 	$(admin.searchGo).on("click", function (e) {
-		var query = $(admin.searchBar).text();
+		var query = $(admin.searchBar).text().toLowerCase();
 		console.log(query);
 		admin.explorer.search(query, function () {
+			admin.deselectAllTiles();
 			$(admin.searchBar).text("");
 		});
 	});
@@ -309,3 +361,5 @@ Event Bindings
 		admin.submitForm(form);
 		$(admin.sub).removeClass('active');
 	});
+
+})(jQuery, ko, Explorer, Tile)

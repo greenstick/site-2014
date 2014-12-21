@@ -1,3 +1,7 @@
+var Explorer = function (config) {
+	this.init(config);
+};
+
 /*
 Explorer Prototype
 
@@ -18,10 +22,6 @@ Explorer Prototype
 }
 */
 
-var Explorer = function (config) {
-	this.init(config);
-};
-
 Explorer.prototype = {
 
 	/*
@@ -33,8 +33,7 @@ Explorer.prototype = {
 		var explr = this;
 			explr.parent 		= config.parent 		|| explr.parent 			|| "#wrapper",
 			explr.element 		= config.element 		|| explr.element 			|| "#explorer",
-			explr.tile 			= config.tile 			|| explr.tile,
-			explr.flipcard 		= config.flipcard 		|| explr.flipcard,
+			explr.tile 			= config.tile 			|| explr.tile 				|| ".tile",
 			explr.filter 		= config.filter 		|| explr.filter 			|| "filter",
 			explr.loader 		= config.loader 		|| explr.loader 			|| "loader",
 			explr.focus 		= config.focus 			|| explr.focus 				|| "focus",
@@ -59,7 +58,7 @@ Explorer.prototype = {
 			type 			: "GET",
 			route 			: explr.routes.def,
 			data 			: {}
-		},  function () {
+		}, function () {
 			explr.generateTiles();
 			ko.applyBindings(explr, document.querySelector(explr.element));
 		});
@@ -233,3 +232,4 @@ Explorer.prototype = {
 		$('#' + tile.id() + " " + explr.flipTarget).toggleClass('flipped');
 	}
 };
+

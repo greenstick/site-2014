@@ -107,7 +107,7 @@
 		</form>
 		<iframe id="uploader" name="uploader" style="display: none;"></iframe>
 	</div>
-	<div id="explorer" class="content w d-bg" data-bind="foreach: tiles">
+	<div id="explorer" class="content w d-bg active" data-bind="foreach: tiles">
 		<div class="flip-container">
 			<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, click: function () { admin.toggleTile($data) }, style: {width: width() + 'px', height: height() + 'px'}">
 				<div class="card">
@@ -116,6 +116,10 @@
 							<div class="image">
 								<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
 							</div>
+						</div>
+						<div class="navigation">
+							<div class="next" data-bind="click: function (data, event) {">NEXT</div>
+							<div class="prev">PREV</div>
 						</div>
 						<div class="flip-handle" data-bind="click: function (data, event) { admin.explorer.flipTile(data, event) }">
 							<img src="../img/rotate-l.ico" />

@@ -1,6 +1,9 @@
 var validator = require('validator');
 
-var Validate = {
+Validate = {
+	init: function () {
+		return this
+	},
 	str: function (string) {
 		return validator.escape(validator.toString(validator.trim(string)));
 	},
