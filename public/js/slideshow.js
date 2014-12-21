@@ -23,16 +23,11 @@ Slideshow.prototype = {
 			show.easing 	= config.easing 					|| "linear",
 			show.width 		= config.width 						|| "100%",
 			show.height 	= config.height 					|| "100%",
+			show.eventHooks = {
+				next: ".next",
+				prev: ".prev"
+			},
 			show.index 		= 0;
-		// for (var i = 0; i < show.data.files.length; i++) {
-		// 	var element = document.createElement("img")
-		// 		element.setAttribute("class", show.slide);
-		// 		element.setAttribute("src", "https://d2osuiq5lifihc.cloudfront.net/" + show.data.files[i]["path"])
-		// 		element.setAttribute("id", show.data.files[i]["path"])
-
-		// 	$(show.slideshow)
-		// 	console.log(show.data.files[i]);
-		// }
 		return show
 	},
 	update: function () {
@@ -45,6 +40,7 @@ Slideshow.prototype = {
 	},
 	next: function () {
 		var show = this;
+		console.log("meow");
 		show.animate({
 			selector: show.slide,
 			duration: show.duration,
@@ -53,7 +49,14 @@ Slideshow.prototype = {
 		});
 	},
 	previous: function () {
-
+		var show = this;
+		console.log("meow");
+		show.animate({
+			selector: show.slide,
+			duration: show.duration,
+			attr 	: show.direction,
+			value 	: show.width
+		});
 	},
 	to: function () {
 

@@ -579,3 +579,27 @@ Scrollbar Styles
 .ps-container.ie.hover .ps-scrollbar-y {
     visibility: visible;
 }
+
+.face.front {
+
+}
+.face.front .navigation {
+    position: absolute;
+    top: 270px;
+    left: 0px;
+    width: 600px;
+    height: 60px;
+}
+.face.front .navigation .prev, .face.front .navigation .next {
+    position: absolute;
+    top: 20px;
+    height: 20px;
+    text-align: center;
+    width: 80px;
+}
+.face.front .navigation .prev {
+    left: 0px;
+}
+.face.front .navigation .next {
+    right: 0px;
+}

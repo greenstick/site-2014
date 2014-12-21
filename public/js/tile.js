@@ -32,7 +32,8 @@ Tile.prototype = {
 			tile.id 		= ko.observable(config.data().projectUUID),
 			tile.tags 		= ko.observable(tile.sanitizeTags(config.data().tags)),
 			tile.data 		= ko.observable(config.data()),
-			tile.type 		= config.data()["postType"].toLowerCase()
+			tile.type 		= config.data()["postType"].toLowerCase(),
+			tile.child 		= {},
 			tile.settings 	= {
 				parent			: tile.parent,
 				element 		: tile.element,
@@ -68,15 +69,24 @@ Tile.prototype = {
 						height 		: 560,
 						navigation 	: ".navigation"
 					};
-					return new Slideshow(config)
+					tile.child = new Slideshow(config);
+					$('#' + id + " " + tile.child.eventHooks["next"]).on("click", function () {
+						tile.child.next()
+					});
+					$('#' + id + " " + tile.child.eventHooks["prev"]).on("click", function () {
+						tile.child.prev()
+					});
+					return tile.child
 				},
 				blogpost 	: function (id) {
 					config = tile.config.blogpost;
-					return new Blogpost(config)
+					tile.child = new Blogpost(config);
+					return tile.child
 				},
 				soundcloud 	: function (id) {
 					config = tile.config.soundcloud;
-					return new Soundcloud(config)
+					tile.child = new Soundcloud(config);
+					return tile.child
 				},
 				default 	: function (id) {
 					config = {
@@ -91,10 +101,12 @@ Tile.prototype = {
 						height 		: 560,
 						navigation 	: ".navigation"
 					};
-					return new Slideshow(config)
+					tile.child =  new Slideshow(config);
+					return tile.child
 				},
 				error 		: function () {
-					return new TileError();
+					tile.child =  new TileError();
+					return tile.child
 				}
 			};
 		return types[type]() || types["default"]() || types["error"];
