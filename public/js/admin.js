@@ -1,9 +1,7 @@
 (function () {
 
 	var Admin = function (config) {
-		console.log("Status: Initializing...");
 		this.init(config);
-		console.log("Status: Done");
 	};
 
 	/*
@@ -39,6 +37,7 @@
 
 		//Initialize
 		init: function (config) {
+			console.log("Status: App Controller Initializing...");
 			var admin = this;
 				admin.element 			= config.element 				|| 	'#wrapper',
 				admin.navigation 		= config.navigation 			|| 	'#navigation',
@@ -60,9 +59,15 @@
 				admin.submit 			= config.submit 				|| 	'#create-submission',
 				admin.explorer 			= new Explorer (config.explorer),
 				admin.selectedTiles 	= [],
-				admin.selectedFiles 	= [];
-				admin.scrollBar();
-				console.log("Status: Admin Controller Initialized");
+				admin.selectedFiles 	= [],
+				admin.scrollBar(),
+				admin.typeOptions 		= ko.observableArray(config.typeOptions),
+				admin.selectedType 		= ko.observable(""),
+				admin.selectedTypeText 	= ko.computed(function () {
+					if (admin.selectedType() === "") return "TYPE";
+					return admin.selectedType();
+				});
+				console.log("Status: App Controller Initialized");
 		},
 
 		//Update
@@ -98,6 +103,7 @@
 		//Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID & Tile 
 		//File Paths From selectedTiles and selectedFiles Arrays Respectively
 		toggleTile: function (data) {
+			console.log(data);
 			var admin 	= this,
 				id 		= data.id(),
 				tile 	= $('#' + id);
@@ -180,6 +186,7 @@
 		// Get Form Values
 		submitForm: function (form) {
 			var data = new FormData(form);
+			console.log(data);
 			$.ajax({
 				type 		: "POST",
 				url 		: "/cms/submit",
@@ -246,7 +253,8 @@
 					getByTag 		: 		"/cms/getByTag",
 					search 			: 		"/cms/search"
 			}
-		}
+		},
+		typeOptions : 		["Slideshow", "Blogpost", "Soundcloud", "Instagram"]
 	};
 
 	/*
@@ -254,6 +262,7 @@
 	*/
 
 	admin = new Admin (config);
+	ko.applyBindings(admin, document.getElementById("type-input"));
 
 	/*
 	Event Bindings

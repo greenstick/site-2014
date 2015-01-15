@@ -68,6 +68,63 @@ Close Icon
 }
 
 /*
+Dropdown Menu
+*/
+
+.dropdown {
+    z-index: 10;
+    font-size: 19px;
+    cursor: pointer;
+    background-color: rgba(11, 14, 23, 1);  
+    color: rgba(232, 227, 241, .7);
+}
+.dropdown .ddSelected {
+    width: 275px;
+    height: 40px;
+    color: rgba(232, 227, 241, .7);
+}
+.dropdown img {
+    position: absolute;
+    left: 270px;
+    top: 12px;
+    width: 16px;
+}
+.dropdown .ddList {
+    position: relative;
+    top: 0px;
+    left: -20px;
+    width: 315px;
+    height: 0px;
+    overflow: hidden;
+    -webkit-transition: height 550ms;
+       -moz-transition: height 550ms;
+        -ms-transition: height 550ms;
+         -o-transition: height 550ms;
+            transition: height 550ms;
+}
+.dropdown:hover .ddList, .dropdown.active .ddList {
+    position: relative;
+    height: 210px;
+}
+.dropdown .ddList .ddOption {
+    width: 275px;
+    left: 10px;
+    padding: 0 10px;
+    margin: 10px 0 0 10px;
+    height: 40px;
+    background-color: rgba(11, 14, 23, 1); 
+    color: rgba(232, 227, 241, .7);
+    -webkit-transition: all 250ms;
+       -moz-transition: all 250ms;
+        -ms-transition: all 250ms;
+         -o-transition: all 250ms;
+            transition: all 250ms;
+}
+.dropdown .ddList .ddOption:last-child {
+    margin: 10px 0 10px 10px;
+}
+
+/*
 Piece Submission Pane
 */
 
@@ -102,7 +159,7 @@ Piece Submission Pane
     line-height: 32px;
     text-align: right;
 }
-#submission-pane form input, #submission-pane form textarea {
+#submission-pane form input, #submission-pane form textarea, #submission-pane form selection, #submission-pane form .ddOption {
     background-color: rgba(11, 14, 23, 1);
     color: rgba(232, 227, 241, 1);
     border: none;
@@ -115,15 +172,18 @@ Piece Submission Pane
        -moz-box-shadow: none;
             box-shadow: none;
 }
-#submission-pane form textarea {
-    width: 80%;
-    resize: none;
-}
-#submission-pane form input:focus, #submission-pane form textarea:focus {
+#submission-pane form input:focus, #submission-pane form textarea:focus, #submission-pane form selection:focus, #submission-pane form .ddOption:hover {
     outline: none;
     -webkit-box-shadow: 0px 0px 24px 0px rgba(255,255,255,1);
        -moz-box-shadow: 0px 0px 24px 0px rgba(255,255,255,1);
             box-shadow: 0px 0px 24px 0px rgba(255,255,255,1);
+}
+#submission-pane form selection:hover {
+    cursor: pointer;
+}
+#submission-pane form textarea {
+    width: 80%;
+    resize: none;
 }
 #submission-pane .input-field {
     position: absolute;
@@ -161,43 +221,44 @@ Piece Submission Pane
     height: 40px;
     width: 275px;
 }
-#submission-pane .input-field:nth-child(6) {
+#submission-pane .input-field:nth-child(7) {
     top: 280px;
     left: 10px;
     height: 260px;
 }
-#submission-pane .input-field:nth-child(7) {
+#submission-pane .input-field:nth-child(8) {
     top: 550px;
     left: 10px;
     height: 40px;
-}
-#submission-pane .input-field:nth-child(8) {
-    top: 600px;
-    left: 10px;
-    height: 40px;
-    width: 275px;
 }
 #submission-pane .input-field:nth-child(9) {
     top: 600px;
     left: 10px;
     height: 40px;
     width: 275px;
-    opacity: 0;
-    z-index: 10;
 }
 #submission-pane .input-field:nth-child(10) {
+    top: 600px;
+    left: 10px;
+    height: 40px;
+    width: 275px;
+    opacity: 0;
+    z-index: 10;
+    cursor: pointer;
+}
+#submission-pane .input-field:nth-child(11) {
     top: 600px;
     left: 315px;
     height: 40px;
     width: 275px;
 }
-#submission-pane .input-field:nth-child(11) {
+#submission-pane .input-field:nth-child(12) {
     top: 650px;
     left: 10px;
     height: 40px;
     width: 275px;
 }
-#submission-pane .input-field:nth-child(12) {
+#submission-pane .input-field:nth-child(13) {
     top: 650px;
     left: 315px;
     height: 40px;

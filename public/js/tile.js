@@ -31,9 +31,9 @@ Tile.prototype = {
 			tile.height 	= ko.observable(config.width * config.ratio),
 			tile.id 		= ko.observable(config.data().projectUUID),
 			tile.tags 		= ko.observable(tile.sanitizeTags(config.data().tags)),
-			tile.data 		= ko.observable(config.data()),
-			tile.type 		= config.data()["postType"].toLowerCase(),
-			tile.child 		= {},
+			tile.data 		= config.data,
+			tile.type 		= ko.observable(config.data().type.toLowerCase()),
+			tile.content 	= {},
 			tile.settings 	= {
 				parent			: tile.parent,
 				element 		: tile.element,
@@ -44,7 +44,7 @@ Tile.prototype = {
 				tags 			: tile.tags(),
 				data 			: tile.data()
 			};
-			tile.setType(tile.type, tile.id, tile.data);
+		tile.setContent(tile.type(), tile.id(), tile.data());
 	},
 	//Update
 	update: function (args) {
@@ -52,64 +52,77 @@ Tile.prototype = {
 	},
 
 	//Set Tile Type
-	setType: function (type, id, data) {
+	setContent: function (type, id, data) {
 		var tile 	= this,
 			types 	= {
-				slideshow 	: function (id) {
-					config = {
+				slideshow 	: function (id, data) {
+					var config = {
 						id 			: id,
-						data 		: data(),
+						data 		: data,
 						container 	: ".tile",
-						element 	: ".carousel",
+						element 	: ".slideshow",
 						slide 		: ".image",
 						direction 	: "left",
 						duration 	: 550,
 						easing 		: "linear",
-						width	 	: 560,
-						height 		: 560,
+						width	 	: 600,
+						height 		: 600,
 						navigation 	: ".navigation"
 					};
-					tile.child = new Slideshow(config);
-					$('#' + id + " " + tile.child.eventHooks["next"]).on("click", function () {
-						tile.child.next()
-					});
-					$('#' + id + " " + tile.child.eventHooks["prev"]).on("click", function () {
-						tile.child.prev()
-					});
-					return tile.child
+					tile.content = new Slideshow(config);
+					return tile.content
 				},
-				blogpost 	: function (id) {
-					config = tile.config.blogpost;
-					tile.child = new Blogpost(config);
-					return tile.child
-				},
-				soundcloud 	: function (id) {
-					config = tile.config.soundcloud;
-					tile.child = new Soundcloud(config);
-					return tile.child
-				},
-				default 	: function (id) {
-					config = {
-						id 			: id,
-						container 	: ".tile",
-						element 	: ".slideshow",
-						slide 		: ".slide",
-						direction 	: "left",
-						duration 	: 550,
-						easing 		: "linear",
-						width	 	: 560,
-						height 		: 560,
-						navigation 	: ".navigation"
+				blogpost 	: function (id, data) {
+					var config = {
+
 					};
-					tile.child =  new Slideshow(config);
-					return tile.child
+					tile.content = new Blogpost(config);
+					return tile.content
 				},
-				error 		: function () {
-					tile.child =  new TileError();
-					return tile.child
+				soundcloud 	: function (id, data) {
+					var config = {
+						player 		: "",
+						link 		: ""
+					};
+					tile.content = new Soundcloud(config);
+					return tile.content
+				},
+				instagram 	: function (id, data) {
+					var config = {
+
+					};
+					tile.content = new Instagram(config);
+					return tile.content;
+				},
+				default 	: function (id, data) {
+					console.log("Default tile render mode");
+					// var config = {
+					// 	id 			: id,
+					// 	container 	: ".tile",
+					// 	element 	: ".slideshow",
+					// 	slide 		: ".slide",
+					// 	direction 	: "left",
+					// 	duration 	: 550,
+					// 	easing 		: "linear",
+					// 	width	 	: 600,
+					// 	height 		: 600,
+					// 	navigation 	: ".navigation"
+					// };
+					// tile.content =  new Slideshow(config);
+					// return tile.content
+				},
+				error 		: function (id, data, e) {
+					console.log("Error on tile render: ");
+					console.log("\t", id);
+					// console.log("\t", data);
+					console.log("\t", e.message);
 				}
 			};
-		return types[type]() || types["default"]() || types["error"];
+		try {
+			return types[type](id, data);
+		} catch (e) {
+			return types["default"](id, data) || types["error"](e, id, data);
+		}
 	},
 
 	/*
@@ -131,5 +144,8 @@ Tile.prototype = {
 		};
 		tagStr = tagStr.toLowerCase();
 		return tagStr;
+	},
+	toggle: function () {
+
 	}
 };

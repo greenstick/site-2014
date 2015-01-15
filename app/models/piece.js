@@ -16,7 +16,7 @@ var Piece = new Schema({
 	url 		: 	String,
 	files 		: 	Array,
 	content 	: 	Object,
-	postType 	: 	String,
+	type 		: 	String,
 	description : 	String,
 	popularity 	: 	Number,
 	social 		: 	{

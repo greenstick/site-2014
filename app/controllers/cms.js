@@ -46,9 +46,9 @@ exports.submit 			= function (req, res) {
 		var read 				= fs.createReadStream(file.path),
 			compress 			= zlib.createGzip(),
 			fileType 			= file.name.split('.').pop(),
-			fileName 			= uuid.v4() + "-admin-" + dateString + "." + fileType,
+			fileName 			= uuid.v4() + "-" + dateString + "." + fileType,
 			request 			= {
-				"Bucket" 			: process.env.AWS_BUCKET 		|| credentials.aws.bucket,
+				"Bucket" 			: process.env.AWS_BUCKET || credentials.aws.bucket,
 				"Key" 				: fileName,
 				"ContentType" 		: file.type,
 				"ContentEncoding" 	: "gzip"
@@ -74,7 +74,7 @@ exports.submit 			= function (req, res) {
 	});
 	// Formidable Upload Progress Event - Use This To Roll Progress Bar
 	form.on('progress', function (received, expected) {
-		console.log("Status: Form " + ((received/expected).toFixed(2) * 100) + "% Uploaded");
+		console.log("Status: Form " + ((received/expected) * 100).toFixed(0) + "% Uploaded");
 	});
 	// Once Form Data Has Been Uploaded
 	form.on('end', function () {
@@ -87,7 +87,7 @@ exports.submit 			= function (req, res) {
 			url 			= validate.url(data.url),
 			files	 		= s3FilePaths,
 			content 		= validate.str(data.content),
-			postType 		= validate.str(data.postType),
+			type 			= validate.str(data.type),
 			description 	= validate.str(data.description),
 			twitter 		= validate.str(data.twitter),
 			facebook 		= validate.str(data.facebook),
@@ -108,7 +108,7 @@ exports.submit 			= function (req, res) {
 				url 				: url,
 				files 				: files,
 				content 			: content, 
-				postType 			: postType,
+				type 				: type,
 				description 		: description,
 				popularity 			: null,
 				social 				: {
@@ -131,7 +131,7 @@ exports.submit 			= function (req, res) {
 
 // Retrieve Pieces
 exports.retrieve 		= function (req, res) {
-	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description type popularity social tags createdAt updatedAt', {limit: 16, sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			res.json(pieces);
@@ -139,7 +139,7 @@ exports.retrieve 		= function (req, res) {
 };
 // Show New Pieces - Commented Section Cleans DB
 exports.new 			= function (req, res) {
-	var query 			= Piece.find({updated: null}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({updated: null}, '_id projectUUID location curated featured title client url files content description type popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			res.json(pieces)
@@ -191,7 +191,7 @@ exports.unfeature 		= function (req, res) {
 };
 // Show curated Pieces
 exports.showCurated 	= function (req, res) {
-	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({curated: true}, '_id projectUUID location curated featured title client url files content description type popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -200,7 +200,7 @@ exports.showCurated 	= function (req, res) {
 };
 // Show Hidden Pieces
 exports.showHidden 		= function (req, res) {
-	var query 			= Piece.find({curated: false}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
+	var query 			= Piece.find({curated: false}, '_id projectUUID location curated featured title client url files content description type popularity social tags createdAt updatedAt', {sort: {updatedAt: -1}});
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -209,7 +209,7 @@ exports.showHidden 		= function (req, res) {
 };
 // Show Featured
 exports.showFeatured 	= function (req, res) {
-	var query 			= Piece.find({featured: true}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt');
+	var query 			= Piece.find({featured: true}, '_id projectUUID location curated featured title client url files content description type popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
@@ -232,7 +232,7 @@ exports.delete 			= function (req, res) {
 			return arr;
 		},
 		request 			= {
-			"Bucket" 			: process.env.AWS_BUCKET 		|| credentials.aws.bucket,
+			"Bucket" 			: process.env.AWS_BUCKET || credentials.aws.bucket,
 			"Delete" 			: {
 				"Objects" 			: s3MultiDelete(files)
 			}
@@ -257,7 +257,7 @@ exports.delete 			= function (req, res) {
 exports.search 	= function (req, res) {
 	var queryStr = validate.str(req.param("query"));
 		queryArr = (validate.str(queryStr)).toLowerCase().split(" ");
-		query 			= Piece.find({tags: {$in: queryArr}}, '_id projectUUID location curated featured title client url files content description postType popularity social tags createdAt updatedAt');
+		query 			= Piece.find({tags: {$in: queryArr}}, '_id projectUUID location curated featured title client url files content description type popularity social tags createdAt updatedAt');
 		query.exec(function (error, pieces) {
 			if (error) return console.log(error);
 			console.log(pieces);
