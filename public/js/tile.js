@@ -58,70 +58,60 @@ Tile.prototype = {
 				slideshow 	: function (id, data) {
 					var config = {
 						id 			: id,
-						data 		: data,
-						container 	: ".tile",
-						element 	: ".slideshow",
-						slide 		: ".image",
-						direction 	: "left",
-						duration 	: 550,
-						easing 		: "linear",
-						width	 	: 600,
-						height 		: 600,
-						navigation 	: ".navigation"
+						data 		: data
 					};
 					tile.content = new Slideshow(config);
-					return tile.content
+					return tile.content;
 				},
 				blogpost 	: function (id, data) {
 					var config = {
-
+						id			: id,
+						data 		: data 
 					};
 					tile.content = new Blogpost(config);
-					return tile.content
+					return tile.content;
 				},
 				soundcloud 	: function (id, data) {
 					var config = {
-						player 		: "",
-						link 		: ""
+						id 			: id,
+						data 		: data
 					};
 					tile.content = new Soundcloud(config);
-					return tile.content
+					return tile.content;
 				},
 				instagram 	: function (id, data) {
 					var config = {
-
+						id 	 		: id,
+						data 		: data
 					};
 					tile.content = new Instagram(config);
 					return tile.content;
 				},
 				default 	: function (id, data) {
-					console.log("Default tile render mode");
-					// var config = {
-					// 	id 			: id,
-					// 	container 	: ".tile",
-					// 	element 	: ".slideshow",
-					// 	slide 		: ".slide",
-					// 	direction 	: "left",
-					// 	duration 	: 550,
-					// 	easing 		: "linear",
-					// 	width	 	: 600,
-					// 	height 		: 600,
-					// 	navigation 	: ".navigation"
-					// };
-					// tile.content =  new Slideshow(config);
-					// return tile.content
+					console.log("Init Default Tile Rendering");
+					var config = {
+						id 			: id,
+						data 		: data
+					}
+					// tile.content = new Default(config);
+					// return tile.content;
 				},
 				error 		: function (id, data, e) {
-					console.log("Error on tile render: ");
-					console.log("\t", id);
-					// console.log("\t", data);
-					console.log("\t", e.message);
+					var error = {
+						id			: id,
+						data 		: data,
+						e 			: e
+					};
+					tile.content = null;
+					console.log(error);
+					return tile.content;
 				}
 			};
 		try {
 			return types[type](id, data);
 		} catch (e) {
-			return types["default"](id, data) || types["error"](e, id, data);
+			console.log("Error Rendering Tile:", "\n\t ID:", id, "\n\t Message:", e.message, "\n\t Type Data:", data.type);
+			return types["default"](id, data);
 		}
 	},
 

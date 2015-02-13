@@ -201,7 +201,7 @@
 				admin.explorer.generateTiles();
 			}).fail(function () {
 				console.debug("XHR Alert: Request Failed");
-				console.log(type, route, data);
+				console.log("POST", "/cms/submit", data);
 			}).always(function () {
 				console.debug("XHR Notification: Request Complete");
 			});
@@ -262,7 +262,7 @@
 	*/
 
 	admin = new Admin (config);
-	ko.applyBindings(admin, document.getElementById("type-input"));
+	ko.applyBindings(admin, document.getElementById(admin.form.split("#")[1]));
 
 	/*
 	Event Bindings
@@ -365,10 +365,29 @@
 
 	// Submit Piece Form
 	$(admin.submit).on("submit", function (e) {
-		var form = $(this)[0];
+		var form = $(admin.form)[0];
+		console.log(form);
 		e.preventDefault();
 		admin.submitForm(form);
+	});
+
+	// Close Submission
+	$(admin.submit).on("click", function (e) {
 		$(admin.sub).removeClass('active');
+		var delay = setTimeout(
+			function () { 
+				admin.explorer.request({
+					type 		: "GET",
+					route 		: "/cms/new",
+					data 		: {}
+				},  function () {
+					var key = "updatedAt",
+						val = null;
+					admin.explorer.generateTiles(key, val);
+					admin.deselectAllTiles();
+					console.log("GET done");
+				})
+			}, 2000);
 	});
 
 })(jQuery, ko, Explorer, Tile)

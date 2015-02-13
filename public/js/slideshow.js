@@ -16,13 +16,13 @@ Slideshow.prototype = {
 			show.data 		= config.data,
 			show.container 	= "#" + show.id + " " + config.container 	|| "#" + show.id + " .tile",
 			show.element 	= "#" + show.id + " " + config.element 		|| "#" + show.id + " .slideshow",
-			show.slide 		= "#" + show.id + " " + config.slide 		|| "#" + show.id + " .slide",
+			show.slide 		= "#" + show.id + " " + config.slide 		|| "#" + show.id + " .image",
 			show.navigation = "#" + show.id + " " + config.navigation 	|| "#" + show.id + " .navigation",
 			show.direction 	= config.direction 							|| "left",
 			show.duration 	= config.duration 							|| 600,
 			show.easing 	= config.easing 							|| "linear",
-			show.width 		= config.width 								|| "100%",
-			show.height 	= config.height 							|| "100%",
+			show.width 		= config.width 								|| 600,
+			show.height 	= config.height 							|| 600,
 			show.length 	= config.width * show.data.files.length,
 			show.position 	= 0,
 			show.home 		= 0;
@@ -61,6 +61,7 @@ Slideshow.prototype = {
 			attr 	: show.direction,
 			value 	: show.position + "px"
 		});
+		console.log("meow");
 	},
 	prev: function (e) {
 		var show = this;

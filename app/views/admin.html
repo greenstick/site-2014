@@ -102,7 +102,7 @@
 					<div class="ddOption active" data-bind="text: $data, click: function (data, event) {admin.selectedType($data);}"></div>
 				</div>
 			</div>
-			<input name="type" type="hidden" value="" data-bind="text: admin.selectedType(), valueAllowUnset: true"/>
+			<input id="hidden-type-input" class="input-field" name="type" type="text" data-bind="value: selectedType" />
 			<textarea id="description-input" name="description" type="text" class="input-field" placeholder="DESCRIPTION"></textarea>
 			<input id="tags-input" type="text" name="tags" class="input-field" placeholder="TAGS" />
 			<input id="file-input-mask" class="input-field" placeholder="FILE UPLOAD" />
@@ -115,46 +115,46 @@
 		<iframe id="uploader" name="uploader" style="display: none;"></iframe>
 	</div>
 	<div id="explorer" class="content w d-bg active" data-bind="foreach: tiles">
-		<div class="flip-container">
-			<div data-bind="attr: {'class': element, 'id': id, 'data-tags': tags}, click: function (data, event) {admin.toggleTile($data);}, style: {width: width() + 'px', height: height() + 'px'}">
-				<div class="card">
-					<div class="face front">
-						<!-- ko if: type() === "slideshow" -->
-						<div class="viewport">
-							<div class="slideshow" data-bind="foreach: data().files">
-								<div class="image">
-									<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
-								</div>
+		<!-- ko if: data() -->
+		<div class="flip-container" data-bind="attr: {'class': element + ' flip-container', 'id': id, 'data-tags': tags}, click: function (data, event) {admin.toggleTile($data);}, style: {width: width() + 'px', height: height() + 'px'}">
+			<div class="card">
+				<div class="face front">
+					<!-- ko if: type() === "slideshow" -->
+					<div class="viewport">
+						<div class="slideshow" data-bind="foreach: data().files">
+							<div class="image">
+								<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
 							</div>
 						</div>
-						<!-- /ko -->
-						<!-- ko if: type() === "blogpost" -->
-						<div class="blogpost">
-							
-						</div>
-						<!-- /ko -->
-						<div class="navigation">
-							<div class="next" data-bind="click: function (data, event) {data.content.next(event);}">NEXT</div>
-							<div class="prev" data-bind="click: function (data, event) {data.content.prev(event);}">PREV</div>
-						</div>
-						<div class="flip-handle" data-bind="click: function (data, event) {admin.explorer.flipTile(data, event);}">
-							<img src="../img/rotate-l.ico" />
-						</div>
 					</div>
-					<div class="face back">
-						<div class="title">
-							<a data-bind="html: data().title, attr{href: data().url}" target="_blank"></a>
-						</div>
-						<div class="client" data-bind="html: data().client"></div>
-						<div class="content" data-bind="html: data().content"></div>
-						<div class="description" data-bind="html: data().description"></div>
-						<div class="flip-handle" data-bind="click: function (data, event) {admin.explorer.flipTile(data, event);}">
-							<img src="../img/rotate-r.ico" />
-						</div>
+					<!-- /ko -->
+					<!-- ko if: type() === "blogpost" -->
+					<div class="blogpost">
+						
+					</div>
+					<!-- /ko -->
+					<div class="navigation">
+						<div class="next" data-bind="click: function (data, event) {data.content.next(event);}">NEXT</div>
+						<div class="prev" data-bind="click: function (data, event) {data.content.prev(event);}">PREV</div>
+					</div>
+					<div class="flip-handle" data-bind="click: function (data, event) {admin.explorer.flipTile(data, event);}">
+						<img src="../img/rotate-l.ico" />
 					</div>
 				</div>
-			<div>
+				<div class="face back">
+					<div class="title">
+						<a data-bind="html: data().title, attr{href: data().url}" target="_blank"></a>
+					</div>
+					<div class="client" data-bind="html: data().client"></div>
+					<div class="content" data-bind="html: data().content"></div>
+					<div class="description" data-bind="html: data().description"></div>
+					<div class="flip-handle" data-bind="click: function (data, event) {admin.explorer.flipTile(data, event);}">
+						<img src="../img/rotate-r.ico" />
+					</div>
+				</div>
+			</div>
 		</div>
+		<!-- /ko -->
 	</div>
 	<div id="footer">
 		FOOTER

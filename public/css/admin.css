@@ -185,6 +185,9 @@ Piece Submission Pane
     width: 80%;
     resize: none;
 }
+#submission-pane #hidden-type-input {
+    display: none;
+}
 #submission-pane .input-field {
     position: absolute;
     width: 580px;

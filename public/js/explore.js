@@ -62,7 +62,6 @@ Explorer.prototype = {
 			explr.generateTiles();
 			ko.applyBindings(explr, document.querySelector(explr.element));
 		});
-		if (typeof callback === 'function') callback();
 		console.log("Status: Explorer Initialized");
 	},
 

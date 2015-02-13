@@ -604,12 +604,6 @@ Slideshow
     width: 600px;
     height: 600px;
 }
-.face.front .viewport .slideshow .image:nth-child(1) {
-    background-color: blue;
-}
-.face.front .viewport .slideshow .image:nth-child(2) {
-    background-color: red;
-}
 .face.front .navigation {
     position: absolute;
     top: 270px;
