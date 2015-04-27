@@ -39,34 +39,40 @@
 		init: function (config) {
 			console.log("Status: App Controller Initializing...");
 			var admin = this;
-				admin.element 			= config.element 				|| 	'#wrapper',
-				admin.navigation 		= config.navigation 			|| 	'#navigation',
-				admin.menu 				= config.menu 					|| 	'.menu',
-				admin.sub 				= config.sub 					|| 	'#submission-pane',
-				admin.openSub			= config.openSub 				|| 	'#open-submission',
-				admin.createSub 		= config.create 				|| 	'#create-submission',
-				admin.closeSub 			= config.closeSub 				|| 	'#close-submission',
-				admin.selectTiles		= config.selectTiles 			|| 	'#selectTiles',
-				admin.deselectTiles		= config.deselectTiles 			|| 	'#deselectTiles',
-				admin.adminGet 			= config.adminGet 				|| 	'.get',
-				admin.adminPost 		= config.adminPost 				|| 	'.post',
-				admin.searchBar 		= config.searchBar 				|| 	'.search .bar',
-				admin.searchGo 			= config.searchGo 				|| 	'.search .submit',
-				admin.scrollable 		= config.scrollable 			|| 	'.scrollable',
-				admin.fileInput 		= config.fileInput 				|| 	'#file-input',
-				admin.fileMask 			= config.fileMask 				|| 	'#file-input-mask',
-				admin.form 				= config.form 					|| 	'#form',
-				admin.submit 			= config.submit 				|| 	'#create-submission',
-				admin.explorer 			= new Explorer (config.explorer),
-				admin.selectedTiles 	= [],
-				admin.selectedFiles 	= [],
-				admin.scrollBar(),
-				admin.typeOptions 		= ko.observableArray(config.typeOptions),
-				admin.selectedType 		= ko.observable(""),
-				admin.selectedTypeText 	= ko.computed(function () {
+				admin.element 				= config.element 				|| 	'#wrapper',
+				admin.navigation 			= config.navigation 			|| 	'#navigation',
+				admin.menu 					= config.menu 					|| 	'.menu',
+				admin.sub 					= config.sub 					|| 	'#submission-pane',
+				admin.openSub				= config.openSub 				|| 	'#open-submission',
+				admin.createSub 			= config.create 				|| 	'#create-submission',
+				admin.closeSub 				= config.closeSub 				|| 	'#close-submission',
+				admin.selectTiles			= config.selectTiles 			|| 	'#selectTiles',
+				admin.deselectTiles			= config.deselectTiles 			|| 	'#deselectTiles',
+				admin.adminGet 				= config.adminGet 				|| 	'.get',
+				admin.adminPost 			= config.adminPost 				|| 	'.post',
+				admin.searchBar 			= config.searchBar 				|| 	'.search .bar',
+				admin.searchGo 				= config.searchGo 				|| 	'.search .submit',
+				admin.scrollable 			= config.scrollable 			|| 	'.scrollable',
+				admin.fileInput 			= config.fileInput 				|| 	'#file-input',
+				admin.fileMask 				= config.fileMask 				|| 	'#file-input-mask',
+				admin.form 					= config.form 					|| 	'#form',
+				admin.submit 				= config.submit 				|| 	'#create-submission',
+				admin.explorer 				= new Explorer (config.explorer),
+				admin.selectedTiles 		= [],
+				admin.selectedFiles 		= [],
+				admin.contentOpts 			= ko.observableArray(config.contentOpts),
+				admin.typeOpts 				= ko.observableArray(config.typeOpts),
+				admin.selectedContent 		= ko.observable(""),
+				admin.selectedContentText	= ko.computed(function () {
+					if (admin.selectedContent() === "") return "CONTENT";
+					return admin.selectedContent();
+				}),
+				admin.selectedType 			= ko.observable(""),
+				admin.selectedTypeText 		= ko.computed(function () {
 					if (admin.selectedType() === "") return "TYPE";
 					return admin.selectedType();
-				});
+				}),
+				admin.scrollBar();
 				console.log("Status: App Controller Initialized");
 		},
 
@@ -254,7 +260,8 @@
 					search 			: 		"/cms/search"
 			}
 		},
-		typeOptions : 		["Slideshow", "Blogpost", "Soundcloud", "Instagram"]
+		typeOpts 	: 		["Slideshow", "Blogpost", "Soundcloud", "Instagram"],
+		contentOpts : 		["About", "Website", "Interactive", "Music", "Sound", "Photography", "Technology", "Codesnippets", "Experience"]
 	};
 
 	/*

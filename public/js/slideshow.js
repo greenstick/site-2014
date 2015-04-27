@@ -26,73 +26,24 @@ Slideshow.prototype = {
 			show.length 	= config.width * show.data.files.length,
 			show.position 	= 0,
 			show.home 		= 0;
-			$(show.element).width(show.length);
+			console.log($(show.slide));
 		return show
 	},
 	update: function () {
 
 	},
-	animate: function (args) {
-		var selector = args.selector, duration = args.duration, animation = {};
-		animation[args.attr] = args.value;
- 		return $(selector).stop().animate(animation, duration);
-	},
-	style: function (args) {
-		var selector = args.selector, style = {}; 
-		style[args.attr] = args.value;
- 		return $(selector).css(style);
-	},
 	next: function (e) {
 		var show = this;
 		e.stopPropagation();
-		if (show.position - show.width * (show.length / show.width) < - show.length) {
-			show.position = show.home;
-			show.style({
-				selector: show.element,
-				attr 	: show.direction,
-				value 	: show.home - show.width + "px"
-			});
-		} else {
-			show.position = show.position - show.width;
-		};
-		show.animate({
-			selector: show.element,
-			duration: show.duration,
-			attr 	: show.direction,
-			value 	: show.position + "px"
-		});
-		console.log("meow");
+		if ($(show.slide).hasClass('active') === false) $(show.slide).first().addClass('active');
+		$(show.slide + '.active').removeClass('active').next().addClass('active');
+		if ($(show.slide).hasClass('active') === false) $(show.slide).first().addClass('active');
 	},
 	prev: function (e) {
 		var show = this;
-		e.stopPropagation();	
-		if (show.position + show.width * (show.length / show.width) > show.home) {
-			show.position = show.home;
-			show.style({
-				selector: show.element,
-				attr 	: show.direction,
-				value 	: show.home + show.width + "px"
-			});
-		} else {
-			show.position = show.position + show.width;
-		};
-		show.animate({
-			selector: show.element,
-			duration: show.duration,
-			attr 	: show.direction,
-			value 	: show.position + "px"
-		});
-	},
-	to: function () {
-
-	},
-	home: function () {
-
-	},
-	pause: function () {
-
-	},
-	transition: function () {
-
+		e.stopPropagation();
+		if ($(show.slide).hasClass('active') === false) $(show.slide).last().addClass('active');
+		$(show.slide + '.active').removeClass('active').prev().addClass('active');
+		if ($(show.slide).hasClass('active') === false) $(show.slide).last().addClass('active');
 	}
 };

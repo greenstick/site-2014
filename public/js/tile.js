@@ -58,7 +58,16 @@ Tile.prototype = {
 				slideshow 	: function (id, data) {
 					var config = {
 						id 			: id,
-						data 		: data
+						data 		: data,
+						container 	: ".tile",
+						element 	: ".slideshow",
+						slide 		: ".image",
+						navigation 	: ".navigation",
+						direction 	: "left",
+						duration 	: 900,
+						easing 		: "linear",
+						width	 	: 600,
+						height 		: 600
 					};
 					tile.content = new Slideshow(config);
 					return tile.content;
@@ -86,6 +95,13 @@ Tile.prototype = {
 					};
 					tile.content = new Instagram(config);
 					return tile.content;
+				},
+				iframe 		: function (id, data) {
+					var config = {
+
+					};
+					tile.content = new Iframe(config);
+					return tile.content
 				},
 				default 	: function (id, data) {
 					console.log("Init Default Tile Rendering");

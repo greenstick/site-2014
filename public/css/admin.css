@@ -102,10 +102,6 @@ Dropdown Menu
          -o-transition: height 550ms;
             transition: height 550ms;
 }
-.dropdown:hover .ddList, .dropdown.active .ddList {
-    position: relative;
-    height: 210px;
-}
 .dropdown .ddList .ddOption {
     width: 275px;
     left: 10px;
@@ -185,7 +181,7 @@ Piece Submission Pane
     width: 80%;
     resize: none;
 }
-#submission-pane #hidden-type-input {
+#submission-pane #hidden-type-input, #submission-pane #hidden-content-input {
     display: none;
 }
 #submission-pane .input-field {
@@ -218,29 +214,37 @@ Piece Submission Pane
     height: 40px;
     width: 275px;
 }
-#submission-pane .input-field:nth-child(5) {
+#submission-pane .input-field:nth-child(4).dropdown:hover .ddList, .dropdown.active .ddList {
+    position: relative;
+    height: 464px;
+}
+#submission-pane .input-field:nth-child(6) {
     top: 230px;
     left: 315px;
     height: 40px;
     width: 275px;
 }
-#submission-pane .input-field:nth-child(7) {
+#submission-pane .input-field:nth-child(6).dropdown:hover .ddList, .dropdown.active .ddList {
+    position: relative;
+    height: 210px;
+}
+#submission-pane .input-field:nth-child(8) {
     top: 280px;
     left: 10px;
     height: 260px;
 }
-#submission-pane .input-field:nth-child(8) {
+#submission-pane .input-field:nth-child(9) {
     top: 550px;
     left: 10px;
     height: 40px;
 }
-#submission-pane .input-field:nth-child(9) {
+#submission-pane .input-field:nth-child(10) {
     top: 600px;
     left: 10px;
     height: 40px;
     width: 275px;
 }
-#submission-pane .input-field:nth-child(10) {
+#submission-pane .input-field:nth-child(11) {
     top: 600px;
     left: 10px;
     height: 40px;
@@ -249,19 +253,19 @@ Piece Submission Pane
     z-index: 10;
     cursor: pointer;
 }
-#submission-pane .input-field:nth-child(11) {
+#submission-pane .input-field:nth-child(12) {
     top: 600px;
     left: 315px;
     height: 40px;
     width: 275px;
 }
-#submission-pane .input-field:nth-child(12) {
+#submission-pane .input-field:nth-child(13) {
     top: 650px;
     left: 10px;
     height: 40px;
     width: 275px;
 }
-#submission-pane .input-field:nth-child(13) {
+#submission-pane .input-field:nth-child(14) {
     top: 650px;
     left: 315px;
     height: 40px;

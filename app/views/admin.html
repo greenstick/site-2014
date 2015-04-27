@@ -94,11 +94,18 @@
 			<input id="title-input" name="title" type="text" class="input-field" placeholder="TITLE" />
 			<input id="client-input" name="client" type="text" class="input-field" placeholder="CLIENT" />
 			<input id="url-input" name="url" type="text" class="input-field" placeholder="URL" />
-			<input id="content-input" name="content" type="text" class="input-field" placeholder="CONTENT" />
+			<div id="content-input" class="input-field dropdown">
+				<div class="ddSelected" data-bind="text: selectedContentText()"></div>
+				<img src="img/down-arrow.svg" />
+				<div class="ddList" data-bind="foreach: contentOpts">
+					<div class="ddOption active" data-bind="text: $data, click: function (data, event) {admin.selectedContent($data);}"></div>
+				</div>
+			</div>
+			<input id="hidden-content-input" class="input-field" name="content" type="text" data-bind="value: selectedContent" />
 			<div id="type-input" class="input-field dropdown">
 				<div class="ddSelected" data-bind="text: selectedTypeText()"></div>
 				<img src="img/down-arrow.svg" />
-				<div class="ddList" data-bind="foreach: typeOptions">
+				<div class="ddList" data-bind="foreach: typeOpts">
 					<div class="ddOption active" data-bind="text: $data, click: function (data, event) {admin.selectedType($data);}"></div>
 				</div>
 			</div>

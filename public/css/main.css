@@ -603,6 +603,25 @@ Slideshow
     float: left;
     width: 600px;
     height: 600px;
+    left: 0px;
+    opacity: 0;
+    -webkit-transition: all 1s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+}
+/*.face.front .viewport .slideshow .image:first-child {
+    position: ;
+}*/
+.face.front .viewport .slideshow .image.active {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    opacity: 1;
+    -webkit-transition: all 1s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
 }
 .face.front .navigation {
     position: absolute;
