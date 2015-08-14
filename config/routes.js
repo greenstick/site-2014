@@ -1,4 +1,4 @@
-module.exports = function(app){
+module.exports = function (app) {
 
 	// Require Portfolio Controller
 	var portfolio 		= require('../app/controllers/portfolio.js'),
