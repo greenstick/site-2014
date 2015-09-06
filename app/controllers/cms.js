@@ -3,6 +3,7 @@ Require Modules
 */
 
 var Piece 		= require('../models/piece.js'),
+	Streamer 	= require('../utility/stream.js'),
 	fs 			= require('fs'),
 	formidable 	= require('formidable'),
 	zlib 		= require('zlib'),

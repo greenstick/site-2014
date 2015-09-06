@@ -1,5 +1,5 @@
 var Explorer = function (config) {
-	this.init(config);
+	return this.__init__(config);
 };
 
 /*
@@ -29,47 +29,48 @@ Explorer.prototype = {
 	*/
 
 	// Initialize
-	init: function (config) {
-		var explr = this;
-			explr.parent 		= config.parent 		|| explr.parent 			|| "#wrapper",
-			explr.element 		= config.element 		|| explr.element 			|| "#explorer",
-			explr.tile 			= config.tile 			|| explr.tile 				|| ".tile",
-			explr.filter 		= config.filter 		|| explr.filter 			|| "filter",
-			explr.loader 		= config.loader 		|| explr.loader 			|| "loader",
-			explr.focus 		= config.focus 			|| explr.focus 				|| "focus",
-			explr.duration 		= config.duration 		|| explr.duration 			|| 600,
-			explr.flipTarget 	= config.flipTarget 	|| explr.flipTarget 		|| ".card",
-			explr.routes 		= {
-				def 			: 						config.routes.def 			|| "/api/retrieve",
-				new 			: 						config.routes.new 			|| "/api/new",
-				retrieve 		: 						config.routes.retrieve 		|| "/api/retrieve",
-				getTiles 		:  						config.routes.getTiles 		|| "/api/getTiles",
-				getByTag		: 						config.routes.getByTag 		|| "/api/getByTag",
-				search 			: 						config.routes.search 		|| "/api/search"
+	__init__ 		: function (config) {
+		var xplr = this;
+			xplr.parent 		= typeof config.parent 		=== 'string' ? config.parent 		: "#wrapper",
+			xplr.element 		= typeof config.element 	=== 'string' ? config.element  		: "#explorer",
+			xplr.tile 			= typeof config.tile 		=== 'string' ? config.tile 		 	: ".tile",
+			xplr.filter 		= typeof config.filter 		=== 'string' ? config.filter 	 	: "filter",
+			xplr.loader 		= typeof config.loader 		=== 'string' ? config.loader 	 	: "loader",
+			xplr.focus 			= typeof config.focus 		=== 'string' ? config.focus 	 	: "focus",
+			xplr.duration 		= typeof config.duration 	=== 'number' ? config.duration 	 	: 600,
+			xplr.flipTarget 	= typeof config.flipTarget 	=== 'string' ? config.flipTarget 	: ".card",
+			xplr.routes 		= {
+				def 			: typeof config.routes.def 		=== 'string' ? config.def				: "/api/retrieve",
+				new 			: typeof config.routes.new 		=== 'string' ? config.new 				: "/api/new",
+				retrieve 		: typeof config.routes.retrieve === 'string' ? config.retrieve 			: "/api/retrieve",
+				getTiles 		: typeof config.routes.getTiles === 'string' ? config.getTiles 			: "/api/getTiles",
+				getByTag		: typeof config.routes.getByTag === 'string' ? config.routes.getByTag 	: "/api/getByTag",
+				search 			: typeof config.routes.search 	=== 'string' ? config.routes.search 	: "/api/search"
 			},
-			explr.settings 		= config,
-			explr.tiles 		= ko.observableArray([]),
-			explr.tagSearch 	= false,
-			explr.tagData,
-			explr.data,
-			explr.loc;
+			xplr.tiles 		= ko.observableArray([]),
+			xplr.tagSearch 	= false,
+			xplr.tagData,
+			xplr.data,
+			xplr.loc;
 		// Initial Get
-		explr.request({
+		xplr.request({
 			type 			: "GET",
-			route 			: explr.routes.def,
+			route 			: xplr.routes.def,
 			data 			: {}
 		}, function () {
-			explr.generateTiles();
-			ko.applyBindings(explr, document.querySelector(explr.element));
+			xplr.generateTiles();
+			ko.applyBindings(xplr, document.querySelector(xplr.element));
 		});
 		console.log("Status: Explorer Initialized");
+		return this;
 	},
 
 	// Update
-	update: function (callback) {
-		var explr = this;
-		explr.generateTiles();
+	update 			: function (callback) {
+		var xplr = this;
+		xplr.generateTiles();
 		if (typeof callback === 'function') callback();
+		return this;
 	},
 
 	/*
@@ -77,9 +78,10 @@ Explorer.prototype = {
 	*/
 
 	// Toggle Loader
-	toggleLoader: function () {
-		var explr = this;
-		// $(explr.loader).toggleFade(explr.duration);
+	toggleLoader 	: function () {
+		var xplr = this;
+		// $(xplr.loader).toggleFade(xplr.duration);
+		return this;
 	},
 
 	/*
@@ -87,13 +89,13 @@ Explorer.prototype = {
 	*/
 
 	// Basic API request
-	request: function (args, callback) {
-		var explr 		= this,
+	request 		: function (args, callback) {
+		var xplr 		= this,
 			type 		= args.type,
 			route 		= args.route,
 			data 		= args.data;
 		// Toggle Loader On
-		explr.toggleLoader();
+		xplr.toggleLoader();
 		// Construct Request
 		$.ajax({
 			type 		: type,
@@ -101,31 +103,33 @@ Explorer.prototype = {
 			dataType 	: "json",
 			data 		: data,
 		}).done(function (res) {
-			explr.tagSearch === true ? explr.tagData = res : explr.data = res;
+			xplr.tagSearch === true ? xplr.tagData = res : xplr.data = res;
 			console.log("XHR Notification: Request Response "); 
-			console.log(explr.data);
+			console.log(xplr.data);
 		}).fail(function () {
 			console.debug("XHR Alert: Request Failed");
 			console.log(type, route, data);
 		}).always(function () {
 			console.debug("XHR Notification: Request Complete");
-			explr.toggleLoader();
+			xplr.toggleLoader();
 			if (typeof callback === 'function') callback();
 		});
+		return this;
 	},
 
 	// Search API Request
-	search: function (query, callback) {
-		var explr = this;
-		explr.tagSearch = true;
-		explr.request({
+	search 			: function (query, callback) {
+		var xplr = this;
+		xplr.tagSearch = true;
+		xplr.request({
 			type 			: "GET", 
-			route 			: explr.routes.search, 
+			route 			: xplr.routes.search, 
 			data 			: {query: query}
 		},  function () {
-			explr.update();
+			xplr.update();
 		});
 		if (typeof callback === 'function') callback();
+		return this;
 	},
 
 	/*
@@ -133,14 +137,15 @@ Explorer.prototype = {
 	*/
 
 	//Set Window Locaton
-	setLocation: function (location) {
-		var explr = this;
-		explr.location = location;
+	setLocation 	: function (location) {
+		var xplr = this;
+		xplr.location = location;
 		console.log(location);
-		explr.loc = (explr.loc !== null && explr.loc !== undefined) ? explr.loc : (location.hash) ? location.hash : '#', link = explr.loc.substr(1);
-		// console.log(explr.loc);
-		history.pushState ? history.pushState({}, document.title, explr.loc) : location.hash = explr.loc;
+		xplr.loc = (xplr.loc !== null && xplr.loc !== undefined) ? xplr.loc : (location.hash) ? location.hash : '#', link = xplr.loc.substr(1);
+		// console.log(xplr.loc);
+		history.pushState ? history.pushState({}, document.title, xplr.loc) : location.hash = xplr.loc;
 		window.dispatchEvent(new HashChangeEvent("hashchange"));
+		return this;
 	},
 
 	/*
@@ -148,87 +153,91 @@ Explorer.prototype = {
 	*/
 
 	// Create a Tile
-	createTile: function (data) {
-		var explr 		= this,
+	createTile 		: function (data) {
+		var xplr 		= this,
 			tile  		= new Tile ({
-				parent 		: explr.tile.parent,
-				element 	: explr.tile.element,
-				ratio 		: explr.tile.ratio,
-				width 		: explr.tile.width,
+				parent 		: xplr.tile.parent,
+				element 	: xplr.tile.element,
+				ratio 		: xplr.tile.ratio,
+				width 		: xplr.tile.width,
 				data		: ko.observable(data)
 			});
-		explr.tiles.push(tile);
+		xplr.tiles.push(tile);
+		return this;
 	},
 
 	// Generate Tiles From Data 
-	generateTiles: function (key, val) {
-		var explr = this;
-		explr.tiles([]);
+	generateTiles 	: function (key, val) {
+		var xplr = this;
+		xplr.tiles([]);
 		if ((typeof key !== 'undefined') && (typeof val !== 'undefined')) {
-			if (explr.tagSearch === false) {
-				for (var i = 0; i < explr.data.length; i++) {
-					if (explr.data[i][key] === val) {
-						explr.createTile(explr.data[i]);
+			if (xplr.tagSearch === false) {
+				for (var i = 0; i < xplr.data.length; i++) {
+					if (xplr.data[i][key] === val) {
+						xplr.createTile(xplr.data[i]);
 					};
 				};
 			} else {
-				for (var i = 0; i < explr.tagData.length; i++) {
-					if (explr.tagData[i][key] === val) {
-						explr.createTile(explr.tagData[i]);
+				for (var i = 0; i < xplr.tagData.length; i++) {
+					if (xplr.tagData[i][key] === val) {
+						xplr.createTile(xplr.tagData[i]);
 					};
 				};
 			};
 		} else {
-			if (explr.tagSearch === false) {
-				for (var i = 0; i < explr.data.length; i++) {
-					explr.createTile(explr.data[i]);
+			if (xplr.tagSearch === false) {
+				for (var i = 0; i < xplr.data.length; i++) {
+					xplr.createTile(xplr.data[i]);
 				};
 			} else {
-				for (var i = 0; i < explr.tagData.length; i++) {
-					explr.createTile(explr.tagData[i]);
+				for (var i = 0; i < xplr.tagData.length; i++) {
+					xplr.createTile(xplr.tagData[i]);
 				};
 			};
 		};
 		console.log("Status: Tiles Generated");
+		return this;
 	},
 
 	// Filter Tiles
-	filterTiles: function (filter, callback) {
-		var explr = this;
-		explr.tiles([]);
-		if (filter === "all") explr.tagSearch = false;
-		if (explr.tagSearch === false && filter === "all") {
-			explr.setLocation("");
-			for (var i = 0; i < explr.data.length; i++) {
-				explr.createTile(explr.data[i]);
+	filterTiles 	: function (filter, callback) {
+		var xplr = this;
+		xplr.tiles([]);
+		if (filter === "all") xplr.tagSearch = false;
+		if (xplr.tagSearch === false && filter === "all") {
+			xplr.setLocation("");
+			for (var i = 0; i < xplr.data.length; i++) {
+				xplr.createTile(xplr.data[i]);
 			};
-		} else if (explr.tagSearch === false) {
-			explr.setLocation(filter);
-			for (var i = 0; i < explr.data.length; i++) {
-				for (var j = 0; j < explr.data[i].tags.length; j++) {
-					if (explr.data[i].tags[j] === filter) {
-						explr.createTile(explr.data[i]);
+		} else if (xplr.tagSearch === false) {
+			xplr.setLocation(filter);
+			for (var i = 0; i < xplr.data.length; i++) {
+				for (var j = 0; j < xplr.data[i].tags.length; j++) {
+					if (xplr.data[i].tags[j] === filter) {
+						xplr.createTile(xplr.data[i]);
 					};
 				};
 			};
 		} else {
-			explr.setLocation(filter);
-			for (var i = 0; i < explr.tagData.length; i++) {
-				for (var j = 0; j < explr.tagData[i].tags.length; j++) {
-					if (explr.tagData[i].tags[j] === filter) {
-						explr.createTile(explr.tagData[i]);
+			xplr.setLocation(filter);
+			for (var i = 0; i < xplr.tagData.length; i++) {
+				for (var j = 0; j < xplr.tagData[i].tags.length; j++) {
+					if (xplr.tagData[i].tags[j] === filter) {
+						xplr.createTile(xplr.tagData[i]);
 					};
 				};
 			};
 		};
 		if (typeof callback === 'function') callback();
+		return this;
 	},
 
 	// Flip Tile
-	flipTile: function (tile, e) {
-		var explr = this;
+	flipTile 		: function (tile, e) {
+		var xplr = this;
 		e.stopPropagation();
-		$('#' + tile.id() + " " + explr.flipTarget).toggleClass('flipped');
+		$('#' + tile.id() + " " + xplr.flipTarget).toggleClass('flipped');
+		return this;
 	}
 };
 

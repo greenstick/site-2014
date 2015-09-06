@@ -1,7 +1,7 @@
 (function () {
 
 	var Admin = function (config) {
-		this.init(config);
+		return this.__init__(config);
 	};
 
 	/*
@@ -9,6 +9,7 @@
 
 	@Params
 			- Object
+			- Object.explorer 		(Module)
 			- Object.element 	 	(String)
 			- Object.navigation  	(String)
 			- Object.menu 		 	(String)
@@ -26,7 +27,6 @@
 			- Object.fileMask	 	(String)
 			- Object.form 		 	(String)
 			- Object.submit	  		(String)
-			- Object.explorer 		(Module)
 	*/
 
 	Admin.prototype = {
@@ -36,32 +36,32 @@
 		*/
 
 		//Initialize
-		init: function (config) {
+		__init__ 			: function (config) {
 			console.log("Status: App Controller Initializing...");
 			var admin = this;
-				admin.element 				= config.element 				|| 	'#wrapper',
-				admin.navigation 			= config.navigation 			|| 	'#navigation',
-				admin.menu 					= config.menu 					|| 	'.menu',
-				admin.sub 					= config.sub 					|| 	'#submission-pane',
-				admin.openSub				= config.openSub 				|| 	'#open-submission',
-				admin.createSub 			= config.create 				|| 	'#create-submission',
-				admin.closeSub 				= config.closeSub 				|| 	'#close-submission',
-				admin.selectTiles			= config.selectTiles 			|| 	'#selectTiles',
-				admin.deselectTiles			= config.deselectTiles 			|| 	'#deselectTiles',
-				admin.adminGet 				= config.adminGet 				|| 	'.get',
-				admin.adminPost 			= config.adminPost 				|| 	'.post',
-				admin.searchBar 			= config.searchBar 				|| 	'.search .bar',
-				admin.searchGo 				= config.searchGo 				|| 	'.search .submit',
-				admin.scrollable 			= config.scrollable 			|| 	'.scrollable',
-				admin.fileInput 			= config.fileInput 				|| 	'#file-input',
-				admin.fileMask 				= config.fileMask 				|| 	'#file-input-mask',
-				admin.form 					= config.form 					|| 	'#form',
-				admin.submit 				= config.submit 				|| 	'#create-submission',
 				admin.explorer 				= new Explorer (config.explorer),
+				admin.element 				= typeof config.element 		=== 'string' ? config.element		: '#wrapper',
+				admin.navigation 			= typeof config.navigation 		=== 'string' ? config.navigation 	: '#navigation',
+				admin.menu 					= typeof config.menu 			=== 'string' ? config.menu 			: '.menu',
+				admin.sub 					= typeof config.sub 			=== 'string' ? config.sub 			: '#submission-pane',
+				admin.openSub				= typeof config.openSub 		=== 'string' ? config.openSub 		: '#open-submission',
+				admin.createSub 			= typeof config.create 			=== 'string' ? config.create 		: '#create-submission',
+				admin.closeSub 				= typeof config.closeSub 		=== 'string' ? config.closeSub 		: '#close-submission',
+				admin.selectTiles			= typeof config.selectTiles 	=== 'string' ? config.selectTiles 	: '#selectTiles',
+				admin.deselectTiles			= typeof config.deselectTiles 	=== 'string' ? config.deselectTiles : '#deselectTiles',
+				admin.adminGet 				= typeof config.adminGet 		=== 'string' ? config.adminGet 		: '.get',
+				admin.adminPost 			= typeof config.adminPost 		=== 'string' ? config.adminPost 	: '.post',
+				admin.searchBar 			= typeof config.searchBar 		=== 'string' ? config.searchBar 	: '.search .bar',
+				admin.searchGo 				= typeof config.searchGo 		=== 'string' ? config.searchGo 		: '.search .submit',
+				admin.scrollable 			= typeof config.scrollable		=== 'string' ? config.scrollable 	: '.scrollable',
+				admin.fileInput 			= typeof config.fileInput 		=== 'string' ? config.fileInput 	: '#file-input',
+				admin.fileMask 				= typeof config.fileMask 		=== 'string' ? config.fileMask 		: '#file-input-mask',
+				admin.form 					= typeof config.form 			=== 'string' ? config.form 			: '#form',
+				admin.submit 				= typeof config.submit 			=== 'string' ? config.submit 		: '#create-submission',
 				admin.selectedTiles 		= [],
 				admin.selectedFiles 		= [],
-				admin.contentOpts 			= ko.observableArray(config.contentOpts),
-				admin.typeOpts 				= ko.observableArray(config.typeOpts),
+				admin.contentOpts 			= Array.isArray(config.contentOpts) ? ko.observableArray(config.contentOpts) 	: ko.observableArray([]),
+				admin.typeOpts 				= Array.isArray(config.typeOpts) 	? ko.observableArray(config.typeOpts) 		: ko.observableArray([]),
 				admin.selectedContent 		= ko.observable(""),
 				admin.selectedContentText	= ko.computed(function () {
 					if (admin.selectedContent() === "") return "CONTENT";
@@ -73,12 +73,8 @@
 					return admin.selectedType();
 				}),
 				admin.scrollBar();
-				console.log("Status: App Controller Initialized");
-		},
-
-		//Update
-		update: function (args) {
-
+			console.log("Status: App Controller Initialized");
+			return this;
 		},
 
 		/*
@@ -86,29 +82,32 @@
 		*/
 
 		//Toggle Le Menu
-		toggleMenu: function () {
+		toggleMenu 			: function () {
 			var admin = this;
 			$(admin.menu).toggleClass('close');
 			$(admin.navigation).toggleClass('active');
+			return this;
 		},
 
 		// Toggle Submissions
-		toggleSub: function () {
+		toggleSub 			: function () {
 			var admin = this;
 			$(admin.sub).toggleClass('active');
 			$(admin.explorer.element).toggleClass('active');
+			return this;
 		},
 
 		//Instantiate Scroll Bar
-		scrollBar: function () {
+		scrollBar 			: function () {
 			var admin = this;
 			$(admin.scrollable).perfectScrollbar();
 			$(admin.scrollable).perfectScrollbar('update');
+			return this;
 		},
 
 		//Toggles Selection Class of Tiles & Tile Adds/Removes Tile ID & Tile 
 		//File Paths From selectedTiles and selectedFiles Arrays Respectively
-		toggleTile: function (data) {
+		toggleTile 			: function (data) {
 			console.log(data);
 			var admin 	= this,
 				id 		= data.id(),
@@ -135,10 +134,11 @@
 				});
 				console.log(admin.selectedFiles);
 			};
+			return this;
 		},
 
 		//Select All Tiles
-		selectAllTiles: function () {
+		selectAllTiles 		: function () {
 			var admin = this;
 			if ($('.' + admin.explorer.tile.element).hasClass('selected')) {
 				return 
@@ -156,17 +156,19 @@
 					});
 				});
 			}
+			return this;
 		},
 
 		//Deselect All Tiles
-		deselectAllTiles: function () {
+		deselectAllTiles 	: function () {
 			admin.selectedTiles = [];
 			admin.selectedFiles = [];
 			$('.' + admin.explorer.tile.element).removeClass('selected');
+			return this;
 		},
 
 		//Image Previewer
-		previewImage: function (input) {
+		previewImage 		: function (input) {
 		    if (input.files && input.files[0]) {
 		        var reader = new FileReader();
 		        reader.onload = function (e) {
@@ -174,23 +176,26 @@
 		        };
 		        reader.readAsDataURL(input.files[0]);
 		    };
+		    return this;
 		},
 
 		// Update File Placeholder Text
-		showFilePath: function (path) {
+		showFilePath 		: function (path) {
 			var admin 	= this;
 			if (path.length) $(admin.fileMask).val("UPLOAD READY");
+			return this;
 		},
 
 		// Clear Form Inputs
-		clearForm: function () {
+		clearForm 			: function () {
 			setTimeout(function () {
 				$('.input-field').val('');
 			}, 500);
+			return this;
 		},
 
 		// Get Form Values
-		submitForm: function (form) {
+		submitForm 			: function (form) {
 			var data = new FormData(form);
 			console.log(data);
 			$.ajax({
@@ -211,6 +216,7 @@
 			}).always(function () {
 				console.debug("XHR Notification: Request Complete");
 			});
+			return this;
 		},
 
 		/*
@@ -218,7 +224,7 @@
 		*/
 
 		//Remove Value From Array
-		removeArrayValue: function (arr) {
+		removeArrayValue 	: function (arr) {
 			var what, a = arguments, l = a.length, ax;
 		    while (l > 1 && arr.length) {
 		        what = a[--l];

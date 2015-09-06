@@ -1,8 +1,7 @@
 (function () {
 
 	var App = function (config) {
-		this.init(config);
-		return this
+		this.__init__(config);
 	};
 
 	/*
@@ -26,24 +25,18 @@
 		*/
 
 		//Initialize
-		init: function (config) {
+		__init__ 		: function (config) {
 			var app = this;
-				app.element 		= config.element 		|| 		'#wrapper',
-				app.navigation 		= config.navigation 	|| 		'#navigation',
-				app.menu 			= config.menu 			|| 		'.menu',
-				app.searchBar 		= config.searchBar 		|| 		'.search .bar',
-				app.searchGo		= config.searchGo		|| 		'.search .submit',
-				app.scrollable 		= config.scrollable 	|| 		'.scrollable',
-				app.settings 		= config,
 				app.explorer 		= new Explorer (config.explorer),
+				app.element 		= typeof config.element 	=== 'string' ? config.element 		: '#wrapper',
+				app.navigation 		= typeof config.navigation 	=== 'string' ? config.navigation 	: '#navigation',
+				app.menu 			= typeof config.menu 		=== 'string' ? config.menu 			: '.menu',
+				app.searchBar 		= typeof config.searchBar 	=== 'string' ? config.searchBar 	: '.search .bar',
+				app.searchGo		= typeof config.searchGo	=== 'string' ? config.searchGo		: '.search .submit',
+				app.scrollable 		= typeof config.scrollable 	=== 'string' ? config.scrollable 	: '.scrollable',
 				app.scrollBar(),
 				app.data;
-			return app.settings
-		},
-
-		//Update
-		update: function () {
-
+			return this;
 		},
 
 		/*
@@ -51,17 +44,19 @@
 		*/
 
 		// Toggle Menu
-		toggleMenu: function () {
+		toggleMenu		: function () {
 			var app = this;
 			$(app.menu).toggleClass('close');
 			$(app.navigation).toggleClass('active');
+			return this;
 		},
 
 		// Init & Update Scroll Bar
-		scrollBar: function () {
+		scrollBar 		: function () {
 			var app = this;
 			$(app.scrollable).perfectScrollbar();
 			$(app.scrollable).perfectScrollbar('update');
+			return this;
 		}
 	};
 

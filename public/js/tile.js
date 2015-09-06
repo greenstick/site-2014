@@ -46,10 +46,6 @@ Tile.prototype = {
 			};
 		tile.setContent(tile.type(), tile.id(), tile.data());
 	},
-	//Update
-	update: function (args) {
-
-	},
 
 	//Set Tile Type
 	setContent: function (type, id, data) {
