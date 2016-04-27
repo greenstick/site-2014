@@ -1,0 +1,169 @@
+<div id="wrapper">
+	<div id="navigation">
+		<div class="menu-open">
+			<span class="menu-line outer top"></span>
+			<span class="menu-line inner"></span>
+			<span class="menu-line outer bottom"></span>
+		</div>
+		<div class="filters-expanded">
+			<div class="filter-items scrollable">
+				<div id="open-submission" class="button admin">
+					CREATE
+				</div>
+				<div id="selectTiles" class="button admin">
+					SELECT ALL
+				</div>
+				<div id="deselectTiles" class="button admin">
+					DESELECT ALL
+				</div>
+				<div class="button admin post" data-call="/admin/curate" data-key="curated" data-val=true>
+					CURATE
+				</div>
+				<div class="button admin post" data-call="/admin/hide" data-key="curated" data-val=false>
+					HIDE
+				</div>
+				<div class="button admin post" data-call="/admin/feature" data-key="featured" data-val=true>
+					FEATURE
+				</div>
+				<div class="button admin post" data-call="/admin/unfeature" data-key="featured" data-val=false>
+					UNFEATURE
+				</div>
+				<div class="button admin post" data-call="/admin/delete">
+					DELETE
+				</div>
+				<div class="button admin get" data-call="/admin/showFeatured" data-key="featured" data-val=true>
+					FEATURED
+				</div>
+				<div class="button admin get" data-call="/admin/showCurated" data-key="curated" data-val=true>
+					CURATED
+				</div>
+				<div class="button admin get" data-call="/admin/showHidden" data-key="curated" data-val=false>
+					HIDDEN
+				</div>
+				<div class="button admin get" data-call="/admin/new" data-key="updatedAt" data-val=null>
+					NEW
+				</div>
+				<div class="button filter" data-filter="all">
+					ALL
+				</div>
+				<div class="button filter" data-filter="about">
+					ABOUT
+				</div>
+				<div class="button filter" data-filter="website">
+					WEBSITES
+				</div>
+				<div class="button filter" data-filter="interactive">
+					INTERACTIVES
+				</div>
+				<div class="button filter" data-filter="music">
+					MUSIC
+				</div>
+				<div class="button filter" data-filter="sound">
+					SOUND DESIGN
+				</div>
+				<div class="button filter" data-filter="photography">
+					PHOTOGRAPHY
+				</div>
+				<div class="button filter" data-filter="technology">
+					TECHNOLOGIES
+				</div>
+				<div class="button filter" data-filter="codesnippets">
+					CODE SNIPPETS
+				</div>
+				<div class="button filter" data-filter="experience">
+					EXPERIENCE
+				</div>
+			</div>
+		</div>
+		<div class="search">
+			<div class="bar" contenteditable></div>
+			<div class="submit button">SEARCH</div>
+		</div>
+	</div>
+	<div id="submission-pane">
+		<div id="close-submission">
+			<div class="close">
+				<span class="close-line top"></span>
+				<span class="close-line bottom"></span>
+			</div>
+		</div>
+		<div class="header">
+			Post That Shit
+		</div>
+		<form id="piece" action="/admin/submit" enctype="multipart/form-data" method="post" target="uploader">
+			<input id="title-input" name="title" type="text" class="input-field" placeholder="TITLE" />
+			<input id="client-input" name="client" type="text" class="input-field" placeholder="CLIENT" />
+			<input id="url-input" name="url" type="text" class="input-field" placeholder="URL" />
+			<div id="content-input" class="input-field dropdown">
+				<div class="ddSelected" data-bind="text: selectedContentText()"></div>
+				<img src="img/down-arrow.svg" />
+				<div class="ddList" data-bind="foreach: contentOpts">
+					<div class="ddOption active" data-bind="text: $data, click: function (data, event) {admin.selectedContent($data);}"></div>
+				</div>
+			</div>
+			<input id="hidden-content-input" class="input-field" name="content" type="text" data-bind="value: selectedContent" />
+			<div id="type-input" class="input-field dropdown">
+				<div class="ddSelected" data-bind="text: selectedTypeText()"></div>
+				<img src="img/down-arrow.svg" />
+				<div class="ddList" data-bind="foreach: typeOpts">
+					<div class="ddOption active" data-bind="text: $data, click: function (data, event) {admin.selectedType($data);}"></div>
+				</div>
+			</div>
+			<input id="hidden-type-input" class="input-field" name="type" type="text" data-bind="value: selectedType" />
+			<textarea id="description-input" name="description" type="text" class="input-field" placeholder="DESCRIPTION"></textarea>
+			<input id="tags-input" type="text" name="tags" class="input-field" placeholder="TAGS" />
+			<input id="file-input-mask" class="input-field" placeholder="FILE UPLOAD" />
+			<input id="file-input" type="file" name="files" class="input-field" multiple/>
+			<input id="facebook-input" type="text" class="input-field" placeholder="FACEBOOK" />
+			<input id="twitter-input" type="text" class="input-field" placeholder="TWITTER" />
+			<input id="linkedin-input" type="text" class="input-field" placeholder="LINKEDIN" />
+			<input id="create-submission" type="submit" value="DONE">
+		</form>
+		<iframe id="uploader" name="uploader" style="display: none;"></iframe>
+	</div>
+	<div id="explorer" class="content w d-bg active" data-bind="foreach: tiles">
+		<!-- ko if: data() -->
+		<div class="flip-container" data-bind="attr: {'class': element + ' flip-container', 'id': id, 'data-tags': tags}, click: function (data, event) {admin.toggleTile($data);}, style: {width: width() + 'px', height: height() + 'px'}">
+			<div class="card">
+				<div class="face front">
+					<!-- ko if: type() === "slideshow" -->
+					<div class="viewport">
+						<div class="slideshow" data-bind="foreach: data().files">
+							<div class="image">
+								<img data-bind='attr: {src: "https://d2osuiq5lifihc.cloudfront.net/" + $data.path}' />
+							</div>
+						</div>
+					</div>
+					<!-- /ko -->
+					<!-- ko if: type() === "blogpost" -->
+					<div class="blogpost">
+						
+					</div>
+					<!-- /ko -->
+					<div class="navigation">
+						<div class="next" data-bind="click: function (data, event) {data.content.next(event);}">NEXT</div>
+						<div class="prev" data-bind="click: function (data, event) {data.content.prev(event);}">PREV</div>
+					</div>
+					<div class="flip-handle" data-bind="click: function (data, event) {admin.explorer.flipTile(data, event);}">
+						<img src="../img/rotate-l.ico" />
+					</div>
+				</div>
+				<div class="face back">
+					<div class="title">
+						<a data-bind="html: data().title, attr{href: data().url}" target="_blank"></a>
+					</div>
+					<div class="client" data-bind="html: data().client"></div>
+					<div class="content" data-bind="html: data().content"></div>
+					<div class="description" data-bind="html: data().description"></div>
+					<div class="flip-handle" data-bind="click: function (data, event) {admin.explorer.flipTile(data, event);}">
+						<img src="../img/rotate-r.ico" />
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /ko -->
+	</div>
+	<div id="footer">
+		FOOTER
+    </div>
+</div>

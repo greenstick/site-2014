@@ -9,17 +9,19 @@ var config = {
             name    : 'site-2014'
         },
         port    : 3000,
+        wssport : 4000,
         db      : 'mongodb://localhost/site-2014-development'
     },
 
     production  : {
         root    : rootPath,
         app     : {
-            name    : 'portfolio-benjamin-cordier'
+            name    : 'portfolio'
         },
         port    : 5000,
+        wssport : 4000,
         db      : 'mongodb://' + process.env.MONGO_USERNAME + ':' + process.env.MONGO_PASSWORD + '@' + process.env.MONGO_DATABASE
     }
 };
 
-module.exports = config[env];
+module.exports = config[env]; 

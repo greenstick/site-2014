@@ -1,0 +1,12 @@
+doctype html
+html(lang='en')
+	title= title
+	if ENV_DEVELOPMENT
+			script(src= 'http://localhost:35729/livereload.js')
+	include head
+		if css
+			link(href= 'css/' + css, rel= 'stylesheet', type= 'text/css')
+	block content
+	if error
+		block error
+	include scripts

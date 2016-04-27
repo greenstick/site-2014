@@ -1,0 +1,8 @@
+extends ../core/layout.jade
+block content
+	include ../html/error.html
+block error
+	#error
+		h1.error-message= message
+		h2.error-status= error.status
+		pre.error-stack #{error.stack}

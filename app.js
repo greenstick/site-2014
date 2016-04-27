@@ -1,22 +1,25 @@
-// Require Dependencies
-var app             = require('express')(),
-    mongoose        = require('mongoose'),
-    fs              = require('fs'),
-    config          = require('./config/config'),
-    knox            = require('knox'),
-    instagram       = require('instagram-node').instagram(),
-    // io              = require('socket.io')(app),
-    Authenticator   = require('./app/utility/authenticate.js');
-   
-// Configure
-require('./config/express')(app, config);
-require('./config/routes')(app);
+/*
+Load Express, Authentication, Database, & Routes
+*/
+
+
+// Initialize App
+var app                         = require('express')(),
+    fs                          = require('fs'),
+    auth                        = require('./app/modules/security/authenticate.js'),
+    mongoose                    = require('mongoose'),
+
+// Configure Server / Routing
+    config                      = require('./config/config'),
+    server                      = require('./config/server')(app, config),
+
+// Set Environment 
+    env                         = process.env.NODE_ENV || 'development';
+    app.locals.ENV              = env;
+    app.locals.ENV_DEVELOPMENT  = env == 'development';
 
 // Initialize Authentication
-Authenticator.basic();
-
-// Set Port
-app.listen(process.env.PORT || config.port);
+auth.basic();
 
 // Connect to DB
 mongoose.connect(config.db);
@@ -25,8 +28,11 @@ var db = mongoose.connection;
       throw new Error('unable to connect to database at ' + config.db);
     });
 
-// Access Models
+// Require DB Models
 var modelsPath = __dirname + '/app/models';
 fs.readdirSync(modelsPath).forEach(function (file) {
     if (file.indexOf('.js') >= 0) require(modelsPath + '/' + file);
 });
+
+// Initialize
+app.listen(config.port);
