@@ -12,7 +12,7 @@ var express 	= require('express'),
 	formidable 	= require('formidable'),
 	zlib 		= require('zlib'),
 	AWS 		= require('aws-sdk'),
-	Stream 		= require('s3-upload-stream').Uploader,
+	s3 			= new AWS.S3(),
 	uuid 		= require('node-uuid'),
 	instagram   = require('instagram-node').instagram(),
 	credentials = process.env.NODE_ENV ? false : require('../development/credentials.js');
@@ -25,16 +25,13 @@ Configure
 router.use(passport.authenticate('basic', {session: false}));
 
 // Configure AWS Credentials
-AWS.config.credentials = {
-	"accessKeyId" 		: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
-	"secretAccessKey" 	: process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey
-};
+s3.config.update({
+	accessKeyId 	: process.env.AWS_ACCESSKEY 	|| credentials.aws.accesskey,
+	secretAccessKey	: process.env.AWS_SECRETKEY 	|| credentials.aws.secretkey
+});
 
-// Configure AWS Connection Timeout
-AWS.config.httpOptions = {
-	timeout 			: 2500
-};
-
+// Configure AWS Region
+s3.config.update({region: 'us standard'});
 
 /*
 Apply
@@ -54,20 +51,28 @@ Admin Routes & Methods
 // Submit Piece
 router.post('/submit', function (req, res) {
 	// Define date, form, form options
-	var date 	 			= new Date(),
+	var data 				= {},
+		date 	 			= new Date(),
 		dateString 			= date.valueOf(),
 		projectUUID 		= uuid.v4(),
+		filesDetected 		= 0,
+		s3Paths				= [],
 		form 				= new formidable.IncomingForm({
 			multiples 		: true,
 			keepExtensions 	: true
 		}),
-		filesDetected 		= 0,
-		filesUploaded 		= 0,
-		s3FilePaths			= [],
 		sanitize 			= new Sanitizer();
+	// Print Form Upload Progress
+	form.on('progress', function (received, expected) {
+		console.log("Status: Form " + ((received/expected) * 100).toFixed(0) + "% Uploaded");
+	});
 	// Parse Form Using Formidable
 	form.parse(req, function (error, fields, files) {
 		if (error) return console.log(error);
+	});
+	// Write Processed Fields to Data Object
+	form.on('field', function (key, value) {
+		data[key] = value;
 	});
 	// When File is Detected
 	form.on('file', function (name, file) {
@@ -80,44 +85,33 @@ router.post('/submit', function (req, res) {
 			request 			= {
 				"Bucket" 			: process.env.AWS_BUCKET || credentials.aws.bucket,
 				"Key" 				: fileName,
+				"Body" 				: read.pipe(compress),
 				"ContentType" 		: file.type,
 				"ContentEncoding" 	: "gzip"
-			},
-			stream 				= new Stream(request, function (error, uploadStream) {
-				if (error) return console.log(error, error.stack);
-				// Read File, Compress, & Stream to S3
-				read.pipe(compress).pipe(uploadStream);
-				// Once File Has Been Uploaded
-				uploadStream.on('uploaded', function (data) {
-					s3FilePaths.push({path: data.Key});
-					filesUploaded++;
-					// Save Piece
-					if (filesUploaded === filesDetected && s3FilePaths.length > 0) {
-						var query 		= Piece.update({projectUUID: projectUUID}, {$set: {files: s3FilePaths}});
-							query.exec(function (error, updated) {
-								if (error) return console.log(error);
-								console.log("MONGO STATUS: Image Update Successful");
-							});
-					}
-				});
+			};
+			s3.upload(request, function(error, data) {
+				if (error) console.log(error, data);
+				s3Paths.push({path: data.Key});
+				if (s3Paths.length === filesDetected) {
+					var query 		= Piece.update({projectUUID: projectUUID}, {$set: {files: s3Paths}});
+						query.exec(function (error, updated) {
+							if (error) return console.log(error);
+							console.log("MONGO STATUS: Image Update Successful");
+						});	
+				}
 			});
-	});
-	// Formidable Upload Progress Event - Use This To Roll Progress Bar
-	form.on('progress', function (received, expected) {
-		console.log("Status: Form " + ((received/expected) * 100).toFixed(0) + "% Uploaded");
 	});
 	// Once Form Data Has Been Uploaded
 	form.on('end', function () {
-		// Setup Client Sent Data
-		var data 			= req.body,
-			locationX 		= null,
+		// Setup / Validate Data Received From Client
+		var locationX 		= null,
 			locationY 		= null,
 			title 			= sanitize.str(data.title),
 			client 			= sanitize.str(data.client),
 			url 			= sanitize.url(data.url),
-			files	 		= s3FilePaths,
+			files	 		= s3Paths,
 			content 		= sanitize.str(data.content),
-			type 			= sanitize.str(data.type),
+			type 			= sanitize.str(data.type).toLowerCase(),
 			description 	= sanitize.str(data.description),
 			twitter 		= sanitize.str(data.twitter),
 			facebook 		= sanitize.str(data.facebook),
@@ -150,7 +144,6 @@ router.post('/submit', function (req, res) {
 				createdAt 			: createdAt,
 				updatedAt 			: null
 			});
-			console.log(req);
 		// Save Piece to Mongo
 		var query = piece.save(function (error, piece, count) {
 			if (error) return console.log(error);

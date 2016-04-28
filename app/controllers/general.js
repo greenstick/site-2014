@@ -1,5 +1,5 @@
 /*
-Import Dependencies, etc.
+Import Dependencies, Set Include Paths, Etc.
 */
 
 var express 	= require('express'),
@@ -29,7 +29,6 @@ var express 	= require('express'),
 
 	// CSS
 	css 		= {
-		main 		: "core/main.css",
 		admin 		: "admin.css",
 		previous 	: "previous.css"
 	};
@@ -59,7 +58,6 @@ General Methods
 router.get('/', function (req, res) {
 	res.render('', {
 		title 	: 'Welcome',
-		css 	: [],
 		libs 	: [lib.d3, lib.jquery, lib.analytics],
 		js 		: [js.iris]
 	});
@@ -68,8 +66,7 @@ router.get('/', function (req, res) {
 // Explore
 router.get('/explore', function (req, res) {
 	res.render('explore', {
-		title: 'Explore',
-		css 	: [],
+		title	: 'Explore',
 		libs 	: [lib.d3, lib.jquery, lib.analytics, lib.ko, lib.scrollbar],
 		js 		: [js.tile, js.explore, js.app]
 	});
@@ -78,8 +75,8 @@ router.get('/explore', function (req, res) {
 // Admin - Private
 router.get('/admin', passport.authenticate('basic', {session: false}), function (req, res) {
 	res.render('admin', {
-		title: 'Admin',
-		css 	: [css.admin],
+		title	: 'Admin',
+		css 	: css.admin,
 		libs 	: [lib.d3, lib.jquery, lib.analytics, lib.ko, lib.scrollbar],
 		js 		: [js.tile, js.explore, js.admin]
 	});
